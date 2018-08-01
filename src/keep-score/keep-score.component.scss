@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  ks-main-bar {
+    flex: 0 0 30px;
+  }
+
+  router-outlet {
+    flex: 0;
+  }
+}

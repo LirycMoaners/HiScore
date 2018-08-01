@@ -1,0 +1,21 @@
+@import './color';
+
+div {
+  &.page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    header {
+      flex: 0 0 30px;
+    }
+
+    section {
+      flex: 1;
+    }
+
+    footer {
+      flex: 0 0 30px;
+    }
+  }
+}

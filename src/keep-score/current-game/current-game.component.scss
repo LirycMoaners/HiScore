@@ -1,0 +1,51 @@
+@import '../shared/theme';
+
+:host {
+  flex: 1;
+
+  .score-grid {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(2, 1fr);
+    height: 100%;
+
+    .score-content {
+      display: grid;
+      grid-template-rows: auto;
+      grid-template-columns: 10% 80% 10%;
+      text-align: center;
+      margin: 10px;
+      padding: 5px;
+      border: 2px solid $first-color;
+      border-radius: 15px;
+      box-shadow: 2px 2px $shadow-color;
+
+      .round-score {
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+
+        .input-score {
+          text-align: center;
+          flex: 0 0 30px;
+          margin: 10px auto;
+          width: 50%;
+        }
+
+        .score-button {
+          flex: 1;
+        }
+      }
+
+      .current-score {
+        h2 {
+          margin: 0;
+          height: 50%;
+          justify-content: center;
+          display: flex;
+          flex-direction: column;
+        }
+      }
+    }
+  }
+}

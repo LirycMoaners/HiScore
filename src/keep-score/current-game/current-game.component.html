@@ -1,0 +1,52 @@
+<div class="page">
+  <header>
+    <h1 *ngIf="game">{{game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')'}}</h1>
+  </header>
+  <section>
+    <div *ngIf="game" class="score-grid">
+      <div *ngFor="let score of game.scoreList" class="score-content">
+        <div class="round-score">
+          <button
+            class="score-button"
+            (click)="onClickPlus(score)"
+            ksLongPress
+            (longPressDetected)="switchScorePopupVisibility(score)">
+            +
+          </button>
+          <input
+            class="input-score"
+            [(ngModel)]="score.roundScoreList[score.roundScoreList.length - 1]"
+            (blur)="onBlurInputScore(score)">
+          <button
+            class="score-button"
+            (click)="onClickMinus(score)"
+            ksLongPress
+            (longPressDetected)="switchScorePopupVisibility(score)">
+            -
+          </button>
+        </div>
+        <div class="current-score">
+          <h2>{{score.player.name}}</h2>
+          <h2>{{score.total}}</h2>
+        </div>
+        <div class="histo-score">
+          <div *ngFor="let roundScore of score.roundScoreList; let i = index">
+            <ng-container *ngIf="i !== score.roundScoreList.length - 1">
+              {{roundScore}}
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <button (click)="validateRound()">Next Round</button>
+  </footer>
+</div>
+
+<ks-score-popup
+  *ngIf="isScorePopupVisible"
+  [(score)]="modifiedScore.roundScoreList[modifiedScore.roundScoreList.length - 1]"
+  (onCancel)="switchScorePopupVisibility()"
+  (onValidate)="switchScorePopupVisibility($event)">
+</ks-score-popup>
