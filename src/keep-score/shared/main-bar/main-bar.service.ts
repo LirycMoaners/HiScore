@@ -1,14 +1,12 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 
 @Injectable()
-export class MainBarService implements OnInit {
+export class MainBarService {
   private titleSubject: Subject<string> = new Subject<string>();
   private title$: Observable<string>;
 
-  constructor() { }
-
-  public ngOnInit(): void {
+  constructor() {
     this.title$ = this.titleSubject.asObservable();
   }
 

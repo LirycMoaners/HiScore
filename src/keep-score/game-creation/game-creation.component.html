@@ -1,0 +1,9 @@
+<div *ngFor="let player of gamePlayerList; let i = index">
+  <select [(ngModel)]="gamePlayerList[i]">
+    <option *ngFor="let pl of playerList" [ngValue]="pl">{{pl.name}}</option>
+  </select>
+</div>
+
+<select [(ngModel)]="addedPlayer" (change)="addPlayer()">
+  <option *ngFor="let pl of playerList" [ngValue]="pl">{{pl.name}}</option>
+</select>

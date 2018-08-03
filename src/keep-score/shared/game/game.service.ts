@@ -18,72 +18,56 @@ export class GameService {
       },
       scoreList: [
         {
-          player: {
-            name: 'Laëtitia'
-          },
+          playerId: '1',
           roundScoreList: [
             13, 20, 0, 5, 14, 4
           ],
           total: 52
         },
         {
-          player: {
-            name: 'Kévin'
-          },
+          playerId: '2',
           roundScoreList: [
             0, 62, 29, 17, 104, 91
           ],
           total: 212
         },
         {
-          player: {
-            name: 'Jean-Emanuel'
-          },
+          playerId: '3',
           roundScoreList: [
             7, 4, 1, 15, 23, 76
           ],
           total: 50
         },
         {
-          player: {
-            name: 'Ludovic'
-          },
+          playerId: '4',
           roundScoreList: [
             20, 18, 43, 6, 40, 4
           ],
           total: 127
         },
         {
-          player: {
-            name: 'Matthieu'
-          },
+          playerId: '5',
           roundScoreList: [
             29, 15, 16, 55, 3, 2
           ],
           total: 118
         },
         {
-          player: {
-            name: 'Aurélie'
-          },
+          playerId: '6',
           roundScoreList: [
             10, 0, 3, 36, 14, 0
           ],
           total: 63
         },
         {
-          player: {
-            name: 'Jessie'
-          },
+          playerId: '7',
           roundScoreList: [
             8, 11, 15, 0, 0, 21
           ],
           total: 34
         },
         {
-          player: {
-            name: 'Cyril'
-          },
+          playerId: '8',
           roundScoreList: [
             11, 0, 6, 8, 9, 0
           ],
@@ -101,36 +85,28 @@ export class GameService {
       },
       scoreList: [
         {
-          player: {
-            name: 'Laëtitia'
-          },
+          playerId: '1',
           roundScoreList: [
             30, 10, 8, 15
           ],
           total: 63
         },
         {
-          player: {
-            name: 'Kévin'
-          },
+          playerId: '2',
           roundScoreList: [
             0, 13, 20, 5
           ],
           total: 38
         },
         {
-          player: {
-            name: 'Jean-Emanuel'
-          },
+          playerId: '3',
           roundScoreList: [
             1, 80, 56, 14
           ],
           total: 151
         },
         {
-          player: {
-            name: 'Ludovic'
-          },
+          playerId: '4',
           roundScoreList: [
             15, 14, 4, 0
           ],

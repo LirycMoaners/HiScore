@@ -2,50 +2,69 @@
 
 :host {
   flex: 1;
+  height: calc(100% - 40px);
 
-  .score-grid {
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(2, 1fr);
-    height: 100%;
+  section {
+    overflow: hidden;
 
-    .score-content {
+    .score-grid {
       display: grid;
       grid-template-rows: auto;
-      grid-template-columns: 10% 80% 10%;
-      text-align: center;
-      margin: 10px;
-      padding: 5px;
-      border: 2px solid $first-color;
-      border-radius: 15px;
-      box-shadow: 2px 2px $shadow-color;
+      grid-template-columns: repeat(2, 1fr);
+      grid-column-gap: 1px;
+      grid-row-gap: 1px;
+      height: 100%;
+      padding: 1px;
+      background-color: black;
+      overflow: auto;
+      box-sizing: border-box;
 
-      .round-score {
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
+      .score-content {
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: 20% 60% 20%;
+        text-align: center;
+        padding: 5px;
+        background-color: $second-color;
+        overflow: hidden;
+        min-height: 100px;
 
-        .input-score {
-          text-align: center;
-          flex: 0 0 30px;
-          margin: 10px auto;
-          width: 50%;
-        }
-
-        .score-button {
-          flex: 1;
-        }
-      }
-
-      .current-score {
-        h2 {
-          margin: 0;
-          height: 50%;
+        .round-score {
           justify-content: center;
           display: flex;
           flex-direction: column;
+
+          .input-score {
+            text-align: center;
+            flex: 0 0 30px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+          }
+
+          .score-button {
+            flex: 1;
+          }
+        }
+
+        .current-score {
+          h1, h3 {
+            margin: 0;
+            height: 50%;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+          }
+        }
+
+        .histo-score {
+          overflow: auto;
         }
       }
     }
+  }
+
+  footer {
+    text-align: center;
   }
 }

@@ -5,37 +5,48 @@ import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class PlayerService {
+  private playerList: Player[] = [
+    {
+      id: '1',
+      name: 'Laëtitia'
+    },
+    {
+      id: '2',
+      name: 'Kévin'
+    },
+    {
+      id: '3',
+      name: 'Jean-Emanuel'
+    },
+    {
+      id: '4',
+      name: 'Ludovic'
+    },
+    {
+      id: '5',
+      name: 'Matthieu'
+    },
+    {
+      id: '6',
+      name: 'Aurélie'
+    },
+    {
+      id: '7',
+      name: 'Jessie'
+    },
+    {
+      id: '8',
+      name: 'Cyril'
+    }
+  ];
 
   constructor() { }
 
   public getPlayerList(): Observable<Player[]> {
-    const playerList: Player[] = [
-      {
-        name: 'Laëtitia'
-      },
-      {
-        name: 'Kévin'
-      },
-      {
-        name: 'Jean-Emanuel'
-      },
-      {
-        name: 'Ludovic'
-      },
-      {
-        name: 'Matthieu'
-      },
-      {
-        name: 'Aurélie'
-      },
-      {
-        name: 'Jessie'
-      },
-      {
-        name: 'Cyril'
-      }
-    ];
+    return of(this.playerList);
+  }
 
-    return of(playerList);
+  public getPlayerById(id: string): Observable<Player> {
+    return of(this.playerList.find((player: Player) => player.id === id));
   }
 }

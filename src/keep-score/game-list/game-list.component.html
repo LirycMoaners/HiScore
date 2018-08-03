@@ -1,15 +1,16 @@
 <div class="page">
-  <header>
-    <h1>Game List</h1>
-  </header>
   <section>
+    <div class="new-game">
+      <button routerLink="/game-creation">+</button>
+      <span>Start a new game !</span>
+    </div>
     <div *ngFor="let game of gameList">
       <h2>
         {{game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')'}}
         <button [routerLink]="'/current-game/' + game.id">Enter</button>
       </h2>
       <span *ngFor="let score of game.scoreList">
-        {{score.player.name + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
+        {{(score.playerId | playerName | async) + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
       </span>
     </div>
   </section>

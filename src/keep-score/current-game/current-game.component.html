@@ -1,7 +1,4 @@
 <div class="page">
-  <header>
-    <h1 *ngIf="game">{{game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')'}}</h1>
-  </header>
   <section>
     <div *ngIf="game" class="score-grid">
       <div *ngFor="let score of game.scoreList" class="score-content">
@@ -26,12 +23,12 @@
           </button>
         </div>
         <div class="current-score">
-          <h2>{{score.player.name}}</h2>
-          <h2>{{score.total}}</h2>
+          <h3>{{score.playerId | playerName | async}}</h3>
+          <h1>{{score.total}}</h1>
         </div>
         <div class="histo-score">
-          <div *ngFor="let roundScore of score.roundScoreList; let i = index">
-            <ng-container *ngIf="i !== score.roundScoreList.length - 1">
+          <div *ngFor="let roundScore of score.roundScoreList.slice().reverse(); let i = index">
+            <ng-container *ngIf="i !== 0">
               {{roundScore}}
             </ng-container>
           </div>
