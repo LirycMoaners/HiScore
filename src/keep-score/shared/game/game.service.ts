@@ -130,4 +130,9 @@ export class GameService {
     const gameToModify: Game = this.gameList.find((g: Game) => g.id === game.id);
     gameToModify.scoreList = game.scoreList;
   }
+
+  public createGame(game: Game): Observable<Game> {
+    this.gameList.push(game);
+    return of(game);
+  }
 }

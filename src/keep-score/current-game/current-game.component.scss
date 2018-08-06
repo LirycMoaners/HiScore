@@ -11,13 +11,11 @@
       display: grid;
       grid-template-rows: auto;
       grid-template-columns: repeat(2, 1fr);
-      grid-column-gap: 1px;
-      grid-row-gap: 1px;
       height: 100%;
-      padding: 1px;
-      background-color: black;
       overflow: auto;
       box-sizing: border-box;
+      border-left: 1px solid $first-color;
+      border-top: 1px solid $first-color;
 
       .score-content {
         display: grid;
@@ -28,6 +26,8 @@
         background-color: $second-color;
         overflow: hidden;
         min-height: 100px;
+        border-right: 1px solid $first-color;
+        border-bottom: 1px solid $first-color;
 
         .round-score {
           justify-content: center;
