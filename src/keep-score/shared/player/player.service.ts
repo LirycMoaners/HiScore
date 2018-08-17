@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Player } from './player.model';
-import { Observable, of } from 'rxjs';
+import { Observable, of, empty } from 'rxjs';
 
 @Injectable()
 export class PlayerService {
@@ -48,5 +48,10 @@ export class PlayerService {
 
   public getPlayerById(id: string): Observable<Player> {
     return of(this.playerList.find((player: Player) => player.id === id));
+  }
+
+  public createPlayer(player: Player): Observable<Player> {
+    this.playerList.push(player);
+    return of(player);
   }
 }

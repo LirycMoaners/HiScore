@@ -1,5 +1,4 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { Score } from '../../shared/score/score.model';
 
 @Component({
   selector: 'ks-score-popup',

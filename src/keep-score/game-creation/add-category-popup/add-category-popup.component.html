@@ -1,0 +1,17 @@
+<div class="popup" (click)="cancel()">
+  <div class="content" (click)="$event.stopPropagation()">
+    <label for="name">Name</label>
+    <input id="name" type="text" [(ngModel)]="newGameCategory.name">
+    <label for="type">Ending type</label>
+    <select id="type" [(ngModel)]="newGameCategory.endingType">
+      <option *ngFor="let endingType of EndingType | keyEnum" value="endingType.key">{{endingType.value}}</option>
+    </select>
+    <label for="number">Ending number</label>
+    <input id="number" type="number" [(ngModel)]="newGameCategory.endingNumber">
+    <label for="goal">Goal</label>
+    <select id="goal" [(ngModel)]="newGameCategory.goal">
+      <option *ngFor="let goal of Goal | keyEnum" value="goal.key">{{goal.value}}</option>
+    </select>
+    <button (click)="createGameCategory()">Create</button>
+  </div>
+</div>

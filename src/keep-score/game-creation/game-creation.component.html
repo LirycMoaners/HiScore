@@ -1,19 +1,31 @@
-<h2>Player List</h2>
+<div class="player-list">
+  <h2>Player List</h2>
 
-<div *ngFor="let player of gamePlayerList; let i = index">
-  <select [(ngModel)]="gamePlayerList[i]">
-    <option *ngFor="let pl of playerList" [ngValue]="pl">{{pl.name}}</option>
-  </select>
+  <div *ngFor="let player of gamePlayerList; let i = index">
+    <input type="text" [value]="gamePlayerList[i].name" (change)="changePlayer(player, $event.target.value)" list="players">
+  </div>
+
+  <input type="text" (change)="addPlayer($event)" list="players">
+
+  <datalist id="players">
+    <option *ngFor="let pl of selectablePlayerList" [ngValue]="pl">{{pl.name}}</option>
+  </datalist>
 </div>
 
-<select [(ngModel)]="addedPlayer" (change)="addPlayer()">
-  <option *ngFor="let pl of playerList" [ngValue]="pl">{{pl.name}}</option>
-</select>
+<div class="game-category">
+  <h2>Game Category</h2>
 
-<h2>Game Category</h2>
+  <select [(ngModel)]="chosenGameCategory" required>
+    <option *ngFor="let cat of gameCategoryList" [ngValue]="cat">{{cat.name}}</option>
+  </select>
 
-<select [(ngModel)]="chosenGameCategory" required>
-  <option *ngFor="let cat of gameCategoryList" [ngValue]="cat">{{cat.name}}</option>
-</select>
+  <button (click)="switchVisibilityAddCategoryPopup()">Add category</button>
+</div>
 
 <button (click)="startGame()">Start !</button>
+
+<ks-add-category-popup
+  *ngIf="isShownAddCategoryPopup"
+  (onCancel)="switchVisibilityAddCategoryPopup()"
+  (onValidate)="selectGameCategory($event)">
+</ks-add-category-popup>

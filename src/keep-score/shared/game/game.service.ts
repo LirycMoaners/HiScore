@@ -16,6 +16,7 @@ export class GameService {
         endingNumber: 500,
         goal: Goal.lowestScore
       },
+      date: new Date(2018, 6, 6, 14),
       scoreList: [
         {
           playerId: '1',
@@ -83,6 +84,7 @@ export class GameService {
         endingNumber: 500,
         goal: Goal.lowestScore
       },
+      date: new Date(2018, 6, 7, 12),
       scoreList: [
         {
           playerId: '1',

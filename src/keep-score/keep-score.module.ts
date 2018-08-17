@@ -13,6 +13,8 @@ import { LongPressDirective } from './shared/long-press.directive';
 import { ScorePopupComponent } from './current-game/score-popup/score-popup.component';
 import { MainBarService } from './shared/main-bar/main-bar.service';
 import { PlayerNamePipe } from './shared/player/player-name.pipe';
+import { AddCategoryPopupComponent } from './game-creation/add-category-popup/add-category-popup.component';
+import { KeyEnumPipe } from './shared/key-enum.pipe';
 
 @NgModule({
   declarations: [
@@ -21,8 +23,10 @@ import { PlayerNamePipe } from './shared/player/player-name.pipe';
     MainBarComponent,
     OptionMenuComponent,
     ScorePopupComponent,
+    AddCategoryPopupComponent,
     LongPressDirective,
-    PlayerNamePipe
+    PlayerNamePipe,
+    KeyEnumPipe
   ],
   imports: [
     FormsModule,

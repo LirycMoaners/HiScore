@@ -7,31 +7,41 @@ import { Goal } from './goal.enum';
 
 @Injectable()
 export class GameCategoryService {
+  private gameCategoryList: GameCategory[] = [
+    {
+      name: '',
+      endingType: null,
+      endingNumber: null,
+      goal: null
+    },
+    {
+      name: 'Uno',
+      endingType: EndingType.point,
+      endingNumber: 500,
+      goal: Goal.lowestScore
+    },
+    {
+      name: '6 qui prend',
+      endingType: EndingType.point,
+      endingNumber: 66,
+      goal: Goal.lowestScore
+    },
+    {
+      name: 'Roi des nains',
+      endingType: EndingType.round,
+      endingNumber: 7,
+      goal: Goal.highestScore
+    }
+  ];
 
   constructor() { }
 
   public getGameCategoryList(): Observable<GameCategory[]> {
-    const gameCategoryList: GameCategory[] = [
-      {
-        name: 'Uno',
-        endingType: EndingType.point,
-        endingNumber: 500,
-        goal: Goal.lowestScore
-      },
-      {
-        name: '6 qui prend',
-        endingType: EndingType.point,
-        endingNumber: 66,
-        goal: Goal.lowestScore
-      },
-      {
-        name: 'Roi des nains',
-        endingType: EndingType.round,
-        endingNumber: 7,
-        goal: Goal.highestScore
-      }
-    ];
+    return of(this.gameCategoryList);
+  }
 
-    return of(gameCategoryList);
+  public createGameCategory(gameCategory: GameCategory): Observable<GameCategory> {
+    this.gameCategoryList.push(gameCategory);
+    return of(gameCategory);
   }
 }
