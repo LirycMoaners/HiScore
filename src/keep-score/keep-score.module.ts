@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule, MatButtonModule, MatInputModule } from '@angular/material';
 
 import { KeepScoreComponent } from './keep-score.component';
 import { KeepScoreRoutingModule, routedComponents } from './keep-score.routing.module';
@@ -10,10 +12,10 @@ import { GameService } from './shared/game/game.service';
 import { PlayerService } from './shared/player/player.service';
 import { GameCategoryService } from './shared/game-category/game-category.service';
 import { LongPressDirective } from './shared/long-press.directive';
-import { ScorePopupComponent } from './current-game/score-popup/score-popup.component';
+import { ScoreDialogComponent } from './current-game/score-dialog/score-dialog.component';
 import { MainBarService } from './shared/main-bar/main-bar.service';
 import { PlayerNamePipe } from './shared/player/player-name.pipe';
-import { AddCategoryPopupComponent } from './game-creation/add-category-popup/add-category-popup.component';
+import { AddCategoryDialogComponent } from './game-creation/add-category-dialog/add-category-dialog.component';
 import { KeyEnumPipe } from './shared/key-enum.pipe';
 
 @NgModule({
@@ -22,15 +24,23 @@ import { KeyEnumPipe } from './shared/key-enum.pipe';
     routedComponents,
     MainBarComponent,
     OptionMenuComponent,
-    ScorePopupComponent,
-    AddCategoryPopupComponent,
+    ScoreDialogComponent,
+    AddCategoryDialogComponent,
     LongPressDirective,
     PlayerNamePipe,
     KeyEnumPipe
   ],
+  entryComponents: [
+    ScoreDialogComponent,
+    AddCategoryDialogComponent
+  ],
   imports: [
     FormsModule,
     BrowserModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatInputModule,
     KeepScoreRoutingModule
   ],
   providers: [

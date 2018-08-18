@@ -3,8 +3,9 @@ import { GameService } from '../shared/game/game.service';
 import { ActivatedRoute } from '@angular/router';
 import { Game } from '../shared/game/game.model';
 import { Score } from '../shared/score/score.model';
-import { flatMap, tap } from 'rxjs/operators';
 import { MainBarService } from '../shared/main-bar/main-bar.service';
+import { MatDialog } from '@angular/material';
+import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 
 @Component({
   selector: 'ks-current-game',
@@ -14,13 +15,13 @@ import { MainBarService } from '../shared/main-bar/main-bar.service';
 
 export class CurrentGameComponent implements OnInit {
   public game: Game;
-  public isScorePopupVisible = false;
   public modifiedScore: Score;
 
   constructor(
     private gameService: GameService,
     private route: ActivatedRoute,
-    private mainBarService: MainBarService
+    private mainBarService: MainBarService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -56,15 +57,15 @@ export class CurrentGameComponent implements OnInit {
     }
   }
 
-  public switchScorePopupVisibility(score?: Score | number) {
-    this.isScorePopupVisible = !this.isScorePopupVisible;
+  public openDialog(score: Score, roundIndex: number) {
+    const dialogRef = this.dialog.open(ScoreDialogComponent, {
+      width: '420px',
+      data: score.roundScoreList[roundIndex]
+    });
 
-    if (score) {
-      if (this.isScorePopupVisible && typeof score !== 'number') {
-        this.modifiedScore = score as Score;
-      } else if (!this.isScorePopupVisible && typeof score === 'number') {
-        this.modifiedScore.roundScoreList[this.modifiedScore.roundScoreList.length - 1] = score as number;
-      }
-    }
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      score.roundScoreList[roundIndex] = result || score.roundScoreList[roundIndex];
+    });
   }
 }

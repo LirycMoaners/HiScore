@@ -1,0 +1,17 @@
+@import '../../shared/theme';
+
+:host {
+  text-align: center;
+
+  .score-buttons {
+    button {
+      margin: 2px;
+    }
+  }
+
+  mat-dialog-actions {
+    .buttons {
+      margin: 0 auto;
+    }
+  }
+}

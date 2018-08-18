@@ -1,9 +1,11 @@
 <div class="page">
-  <section>
+  <header>
     <div class="new-game">
       <button routerLink="/game-creation">+</button>
       <span>Start a new game !</span>
     </div>
+  </header>
+  <section>
     <div *ngFor="let game of gameList">
       <h2>
         {{game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')'}}

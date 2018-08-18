@@ -7,7 +7,7 @@
             class="score-button"
             (click)="onClickPlus(score)"
             ksLongPress
-            (longPressDetected)="switchScorePopupVisibility(score)">
+            (longPressDetected)="openDialog(score, score.roundScoreList.length - 1)">
             +
           </button>
           <input
@@ -18,7 +18,7 @@
             class="score-button"
             (click)="onClickMinus(score)"
             ksLongPress
-            (longPressDetected)="switchScorePopupVisibility(score)">
+            (longPressDetected)="openDialog(score, score.roundScoreList.length - 1)">
             -
           </button>
         </div>
@@ -40,10 +40,3 @@
     <button (click)="validateRound()">Next Round</button>
   </footer>
 </div>
-
-<ks-score-popup
-  *ngIf="isScorePopupVisible"
-  [(score)]="modifiedScore.roundScoreList[modifiedScore.roundScoreList.length - 1]"
-  (onCancel)="switchScorePopupVisibility()"
-  (onValidate)="switchScorePopupVisibility($event)">
-</ks-score-popup>

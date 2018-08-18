@@ -1,70 +1,60 @@
 @import '../shared/theme';
 
-:host {
-  flex: 1;
-  height: calc(100% - 40px);
+.score-grid {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(2, 1fr);
+  height: 100%;
+  box-sizing: border-box;
+  border-left: 1px solid $first-color;
+  border-top: 1px solid $first-color;
 
-  section {
+  .score-content {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 20% 60% 20%;
+    text-align: center;
+    padding: 5px;
+    background-color: $second-color;
     overflow: hidden;
+    min-height: 100px;
+    border-right: 1px solid $first-color;
+    border-bottom: 1px solid $first-color;
 
-    .score-grid {
-      display: grid;
-      grid-template-rows: auto;
-      grid-template-columns: repeat(2, 1fr);
-      height: 100%;
-      overflow: auto;
-      box-sizing: border-box;
-      border-left: 1px solid $first-color;
-      border-top: 1px solid $first-color;
+    .round-score {
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
 
-      .score-content {
-        display: grid;
-        grid-template-rows: auto;
-        grid-template-columns: 20% 60% 20%;
+      .input-score {
         text-align: center;
-        padding: 5px;
-        background-color: $second-color;
-        overflow: hidden;
-        min-height: 100px;
-        border-right: 1px solid $first-color;
-        border-bottom: 1px solid $first-color;
+        flex: 0 0 30px;
+        margin: 0 auto;
+        width: 100%;
+        box-sizing: border-box;
+      }
 
-        .round-score {
-          justify-content: center;
-          display: flex;
-          flex-direction: column;
-
-          .input-score {
-            text-align: center;
-            flex: 0 0 30px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
-          }
-
-          .score-button {
-            flex: 1;
-          }
-        }
-
-        .current-score {
-          h1, h3 {
-            margin: 0;
-            height: 50%;
-            justify-content: center;
-            display: flex;
-            flex-direction: column;
-          }
-        }
-
-        .histo-score {
-          overflow: auto;
-        }
+      .score-button {
+        flex: 1;
       }
     }
-  }
 
-  footer {
-    text-align: center;
+    .current-score {
+      h1, h3 {
+        margin: 0;
+        height: 50%;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    .histo-score {
+      overflow: auto;
+    }
   }
+}
+
+footer {
+  text-align: center;
 }

@@ -8,8 +8,10 @@ import { Game } from '../shared/game/game.model';
 import { UUID } from 'angular2-uuid';
 import { GameService } from '../shared/game/game.service';
 import { Router } from '@angular/router';
-import { Observable, forkJoin, empty, of } from 'rxjs';
-import { tap, flatMap } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
 
 @Component({
   selector: 'ks-game-creation',
@@ -30,7 +32,8 @@ export class GameCreationComponent implements OnInit {
     private playerService: PlayerService,
     private gameCategoryService: GameCategoryService,
     private gameService: GameService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -115,13 +118,15 @@ export class GameCreationComponent implements OnInit {
     }
   }
 
-  public switchVisibilityAddCategoryPopup() {
-    this.isShownAddCategoryPopup = !this.isShownAddCategoryPopup;
-  }
+  public openDialog() {
+    const dialogRef = this.dialog.open(AddCategoryDialogComponent, {
+      width: '400px'
+    });
 
-  public selectGameCategory(gameCategory: GameCategory) {
-    this.chosenGameCategory = gameCategory;
-    this.switchVisibilityAddCategoryPopup();
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.chosenGameCategory = result || this.chosenGameCategory;
+    });
   }
 
   private refreshSelectablePlayerList() {

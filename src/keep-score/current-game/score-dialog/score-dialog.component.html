@@ -1,0 +1,21 @@
+<mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]="score">
+  </mat-form-field>
+  <div class="score-buttons">
+    <button mat-raised-button (click)="modifyScore(1)">+1</button>
+    <button mat-raised-button (click)="modifyScore(5)">+5</button>
+    <button mat-raised-button (click)="modifyScore(10)">+10</button>
+    <button mat-raised-button (click)="modifyScore(100)">+100</button>
+    <button mat-raised-button (click)="modifyScore(-1)">-1</button>
+    <button mat-raised-button (click)="modifyScore(-5)">-5</button>
+    <button mat-raised-button (click)="modifyScore(-10)">-10</button>
+    <button mat-raised-button (click)="modifyScore(-100)">-100</button>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="buttons">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button cdkfocusinitial [mat-dialog-close]="score">Ok</button>
+  </div>
+</mat-dialog-actions>
