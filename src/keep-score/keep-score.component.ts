@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,5 +6,15 @@ import { Router } from '@angular/router';
   templateUrl: './keep-score.component.html',
   styleUrls: ['./keep-score.component.scss']
 })
-export class KeepScoreComponent {
+export class KeepScoreComponent implements OnInit {
+  ngOnInit(): void {
+    window.oncontextmenu = function(e) {
+      if (e.button === 2) {
+        return;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    };
+  }
 }

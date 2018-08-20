@@ -9,12 +9,6 @@ import { Goal } from './goal.enum';
 export class GameCategoryService {
   private gameCategoryList: GameCategory[] = [
     {
-      name: '',
-      endingType: null,
-      endingNumber: null,
-      goal: null
-    },
-    {
       name: 'Uno',
       endingType: EndingType.point,
       endingNumber: 500,

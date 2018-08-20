@@ -24,7 +24,7 @@ export class GameCreationComponent implements OnInit {
   public playerList: Player[] = [];
   public gamePlayerList: Player[] = [];
   public gameCategoryList: GameCategory[] = [];
-  public chosenGameCategory: GameCategory = new GameCategory();
+  public chosenGameCategory: GameCategory;
   public isShownAddCategoryPopup = false;
 
   constructor(
@@ -38,8 +38,6 @@ export class GameCreationComponent implements OnInit {
 
   ngOnInit() {
     this.mainBarService.setTitle('New Game');
-
-    this.chosenGameCategory.name = '';
 
     this.playerService.getPlayerList()
       .subscribe((playerList: Player[]) => {
