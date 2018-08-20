@@ -1,30 +1,30 @@
 <div class="page">
   <section>
     <div *ngIf="game" class="score-grid">
-      <div *ngFor="let score of game.scoreList" class="score-content">
+      <div *ngFor="let score of game.scoreList" class="score-content block">
         <div class="round-score">
-          <button
+          <button mat-icon-button
             class="score-button"
             (click)="onClickPlus(score)"
             ksLongPress
             (longPressDetected)="openDialog(score, score.roundScoreList.length - 1)">
-            +
+            <mat-icon>add</mat-icon>
           </button>
-          <input
+          <input matInput
             class="input-score"
             [(ngModel)]="score.roundScoreList[score.roundScoreList.length - 1]"
             (blur)="onBlurInputScore(score)">
-          <button
+          <button mat-icon-button
             class="score-button"
             (click)="onClickMinus(score)"
             ksLongPress
             (longPressDetected)="openDialog(score, score.roundScoreList.length - 1)">
-            -
+            <mat-icon>remove</mat-icon>
           </button>
         </div>
         <div class="current-score">
-          <h3>{{score.playerId | playerName | async}}</h3>
-          <h1>{{score.total}}</h1>
+          <h2>{{score.playerId | playerName | async}}</h2>
+          <h1 class="mat-display-1">{{score.total}}</h1>
         </div>
         <div class="histo-score">
           <div *ngFor="let roundScore of score.roundScoreList.slice().reverse(); let i = index">
@@ -37,6 +37,8 @@
     </div>
   </section>
   <footer>
-    <button (click)="validateRound()">Next Round</button>
+    <button mat-flat-button color="accent" (click)="validateRound()">
+      <mat-icon>checked</mat-icon>
+    </button>
   </footer>
 </div>

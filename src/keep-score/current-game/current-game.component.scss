@@ -1,60 +1,82 @@
 @import '../shared/theme';
 
-.score-grid {
-  display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: repeat(2, 1fr);
-  height: 100%;
-  box-sizing: border-box;
-  border-left: 1px solid $first-color;
-  border-top: 1px solid $first-color;
+div {
+  &.page {
+    @media screen and (min-width: $break-small) {
+      flex-direction: row;
+    }
 
-  .score-content {
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: 20% 60% 20%;
-    text-align: center;
-    padding: 5px;
-    background-color: $second-color;
-    overflow: hidden;
-    min-height: 100px;
-    border-right: 1px solid $first-color;
-    border-bottom: 1px solid $first-color;
-
-    .round-score {
-      justify-content: center;
-      display: flex;
-      flex-direction: column;
-
-      .input-score {
-        text-align: center;
-        flex: 0 0 30px;
-        margin: 0 auto;
-        width: 100%;
+    section {
+      .score-grid {
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: 1fr;
+        height: calc(100% - 10px);
         box-sizing: border-box;
-      }
+        grid-gap: 5px;
+       margin: 5px;
 
-      .score-button {
-        flex: 1;
+        @media screen and (min-width: $break-small) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .score-content {
+          display: grid;
+          grid-template-rows: auto;
+          grid-template-columns: 20% 60% 20%;
+          text-align: center;
+          overflow: hidden;
+          min-height: 100px;
+
+          .round-score {
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+
+            .input-score {
+              text-align: center;
+              flex: 0 0 30px;
+              margin: 0 auto;
+              width: 100%;
+              box-sizing: border-box;
+            }
+
+            .score-button {
+              flex: 1;
+              width: auto;
+              height: auto;
+              line-height: 1;
+              margin: auto;
+            }
+          }
+
+          .current-score {
+            h1, h2 {
+              margin: 0;
+              height: 50%;
+              justify-content: center;
+              display: flex;
+              flex-direction: column;
+            }
+          }
+
+          .histo-score {
+            overflow: auto;
+          }
+        }
       }
     }
 
-    .current-score {
-      h1, h3 {
-        margin: 0;
-        height: 50%;
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-      }
-    }
+    footer {
+      text-align: center;
 
-    .histo-score {
-      overflow: auto;
+      button {
+        width: 100%;
+        height: 100%;
+        min-width: 40px;
+        min-height: 56px;
+        overflow: hidden;
+      }
     }
   }
-}
-
-footer {
-  text-align: center;
 }

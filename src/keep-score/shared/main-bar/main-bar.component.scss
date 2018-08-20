@@ -1,24 +1,14 @@
 @import '../theme';
 
-:host {
-  display: flex;
-  flex-direction: row;
+button {
+  flex: 0 0 40px;
+}
 
-  button {
-    flex: 0 0 40px;
-  }
+span {
+  flex: 1;
+  text-align: center;
+}
 
-  .title {
-    flex: 1;
-    text-align: center;
-    line-height: 40px;
-
-    h2 {
-      margin: 0;
-    }
-  }
-
-  ks-option-menu {
-    flex: 0 0 40px;
-  }
+ks-option-menu {
+  flex: 0 0 40px;
 }

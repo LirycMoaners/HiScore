@@ -1,19 +1,25 @@
 <div class="page">
   <header>
     <div class="new-game">
-      <button routerLink="/game-creation">+</button>
+      <button mat-fab routerLink="/game-creation">
+        <mat-icon>add</mat-icon>
+      </button>
       <span>Start a new game !</span>
     </div>
   </header>
   <section>
-    <div *ngFor="let game of gameList">
+    <button mat-raised-button *ngFor="let game of gameList" [routerLink]="'/current-game/' + game.id">
       <h2>
         {{game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')'}}
-        <button [routerLink]="'/current-game/' + game.id">Enter</button>
+        <span class="mat-caption">
+          {{game.date | date:'dd/MM/yyyy HH:mm'}}
+        </span>
       </h2>
-      <span *ngFor="let score of game.scoreList">
-        {{(score.playerId | playerName | async) + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
-      </span>
-    </div>
+      <p>
+        <ng-container *ngFor="let score of game.scoreList">
+          {{(score.playerId | playerName | async) + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
+        </ng-container >
+      </p>
+    </button>
   </section>
 </div>

@@ -2,7 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDialogModule, MatButtonModule, MatInputModule, MatSelectModule, MatAutocompleteModule } from '@angular/material';
+import { MatDialogModule, MatButtonModule, MatInputModule,
+  MatSelectModule, MatAutocompleteModule, MatIconModule, MatToolbarModule } from '@angular/material';
 
 import { KeepScoreComponent } from './keep-score.component';
 import { KeepScoreRoutingModule, routedComponents } from './keep-score.routing.module';
@@ -43,6 +44,8 @@ import { KeyEnumPipe } from './shared/key-enum.pipe';
     MatInputModule,
     MatSelectModule,
     MatAutocompleteModule,
+    MatIconModule,
+    MatToolbarModule,
     KeepScoreRoutingModule
   ],
   providers: [
