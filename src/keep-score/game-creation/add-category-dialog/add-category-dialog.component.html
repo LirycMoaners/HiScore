@@ -1,13 +1,28 @@
-<label for="name">Name</label>
-<input id="name" type="text" [(ngModel)]="newGameCategory.name">
-<label for="type">Ending type</label>
-<select id="type" [(ngModel)]="newGameCategory.endingType">
-  <option *ngFor="let endingType of EndingType | keyEnum" value="endingType.key">{{endingType.value}}</option>
-</select>
-<label for="number">Ending number</label>
-<input id="number" type="number" [(ngModel)]="newGameCategory.endingNumber">
-<label for="goal">Goal</label>
-<select id="goal" [(ngModel)]="newGameCategory.goal">
-  <option *ngFor="let goal of Goal | keyEnum" value="goal.key">{{goal.value}}</option>
-</select>
-<button (click)="createGameCategory()">Create</button>
+<mat-dialog-content>
+  <mat-form-field>
+    <input matInput type="text" [(ngModel)]="newGameCategory.name" placeholder="Name">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select [(ngModel)]="newGameCategory.endingType" placeholder="Ending type">
+      <mat-option *ngFor="let endingType of EndingType | keyEnum" [value]="endingType.key">
+        {{endingType.value}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="number" [(ngModel)]="newGameCategory.endingNumber" placeholder="Ending number">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select [(ngModel)]="newGameCategory.goal" placeholder="Goal">
+      <mat-option *ngFor="let goal of Goal | keyEnum" [value]="goal.key">
+        {{goal.value}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="buttons">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button cdkfocusinitial (click)="createGameCategory()">Create</button>
+  </div>
+</mat-dialog-actions>
