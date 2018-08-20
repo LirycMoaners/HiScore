@@ -4,27 +4,44 @@
         <h2>Player List</h2>
 
         <div *ngFor="let player of gamePlayerList; let i = index">
-          <input type="text" [value]="gamePlayerList[i].name" (change)="changePlayer(player, $event.target.value)" list="players">
+          <mat-form-field>
+            <input type="text"
+              matInput
+              [value]="gamePlayerList[i].name"
+              (change)="changePlayer(player, $event.target.value)"
+              [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="changePlayer(player, $event.option.value)" [displayWith]="displayName()">
+                <mat-option *ngFor="let pl of selectablePlayerList" [value]="pl">{{pl.name}}</mat-option>
+              </mat-autocomplete>
+          </mat-form-field>
         </div>
 
-        <input type="text" (change)="addPlayer($event)" list="players">
-
-        <datalist id="players">
-          <option *ngFor="let pl of selectablePlayerList" [ngValue]="pl">{{pl.name}}</option>
-        </datalist>
+        <mat-form-field>
+          <input #newPlayer
+            type="text"
+            matInput
+            (change)="addPlayer($event)"
+            [matAutocomplete]="auto2"
+            placeholder="Add player">
+            <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="addPlayer($event, newPlayer)" [displayWith]="displayName()">
+              <mat-option *ngFor="let pl of selectablePlayerList" [value]="pl">{{pl.name}}</mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
       </div>
 
       <div class="game-category">
         <h2>Game Category</h2>
 
-        <select [(ngModel)]="chosenGameCategory" required>
-          <option *ngFor="let cat of gameCategoryList" [ngValue]="cat">{{cat.name}}</option>
-        </select>
+        <mat-form-field>
+          <mat-select [(ngModel)]="chosenGameCategory" placeholder="Game category" required>
+            <mat-option *ngFor="let cat of gameCategoryList" [value]="cat">{{cat.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-        <button (click)="openDialog()">Add category</button>
+        <button mat-raised-button (click)="openDialog()">Add category</button>
       </div>
   </section>
   <footer>
-    <button (click)="startGame()">Start !</button>
+    <button mat-button cdkfocusinitial (click)="startGame()">Start !</button>
   </footer>
 </div>

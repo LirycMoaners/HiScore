@@ -10,7 +10,7 @@ import { GameService } from '../shared/game/game.service';
 import { Router } from '@angular/router';
 import { Observable, forkJoin, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatAutocompleteSelectedEvent, MatOption } from '@angular/material';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
 
 @Component({
@@ -51,41 +51,53 @@ export class GameCreationComponent implements OnInit {
       .subscribe((gameCategoryList: GameCategory[]) => this.gameCategoryList = gameCategoryList);
   }
 
-  public addPlayer(event: any): void {
-    const name: string = event.target.value;
-    if (name) {
-      const findedPlayer: Player = this.playerList.find((player: Player) => player.name === name);
+  public addPlayer(event: Event | MatAutocompleteSelectedEvent, input?: HTMLInputElement): void {
+    let player: Player;
 
-      if (findedPlayer) {
-        this.gamePlayerList.push(Object.assign({}, findedPlayer));
-      } else {
-        const newPlayer = new Player();
-        newPlayer.id = UUID.UUID();
-        newPlayer.name = name;
-        this.gamePlayerList.push(newPlayer);
+    if (event instanceof Event) {
+      player = this.playerList.find((pl: Player) => pl.name === event.target['value']);
+
+      if (!player) {
+        player = new Player();
+        player.id = UUID.UUID();
+        player.name = event.target['value'];
       }
 
-      this.refreshSelectablePlayerList();
+      event.target['value'] = '';
+    } else {
+      player = Object.assign({}, event.option.value);
+      input.value = '';
     }
-    event.target.value = '';
+
+    this.gamePlayerList.push(player);
+    this.refreshSelectablePlayerList();
   }
 
-  public changePlayer(oldPlayer: Player, newName: string) {
-    if (newName) {
-      const findedPlayer: Player = this.playerList.find((player: Player) => player.name === newName);
+  public changePlayer(oldPlayer: Player, player: Player | string) {
+    if (player) {
+      if (typeof player === 'string') {
+        const newPlayer: Player = this.playerList.find((pl: Player) => pl.name === player);
 
-      if (findedPlayer) {
-        oldPlayer.id = findedPlayer.id;
-        oldPlayer.name = findedPlayer.name;
+        if (newPlayer) {
+          oldPlayer.id = newPlayer.id;
+          oldPlayer.name = newPlayer.name;
+        } else {
+          oldPlayer.id = UUID.UUID();
+          oldPlayer.name = player;
+        }
       } else {
-        oldPlayer.id = UUID.UUID();
-        oldPlayer.name = newName;
+        oldPlayer.id = player.id;
+        oldPlayer.name = player.name;
       }
     } else {
       this.gamePlayerList.splice(this.gamePlayerList.indexOf(oldPlayer), 1);
     }
 
     this.refreshSelectablePlayerList();
+  }
+
+  public displayName() {
+    return (player: Player) => player.name;
   }
 
   public startGame() {
