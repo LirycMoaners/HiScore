@@ -10,17 +10,18 @@ div {
     height: 100%;
 
     header {
-      flex: 0 0 30px;
+      flex: 0 0 56px;
     }
 
     section {
       flex: 1;
       overflow: auto;
+      padding: 5px 5px 0 5px;
     }
 
     footer {
-      flex: 0 0 30px;
-      line-height: 30px;
+      flex: 0 0 56px;
+      line-height: 56px;
     }
   }
 

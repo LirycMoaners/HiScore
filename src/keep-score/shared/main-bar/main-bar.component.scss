@@ -1,14 +1,18 @@
 @import '../theme';
 
-button {
-  flex: 0 0 40px;
-}
+.mat-toolbar-single-row {
+  height: 56px;
 
-span {
-  flex: 1;
-  text-align: center;
-}
+  button {
+    flex: 0 0 40px;
+  }
 
-ks-option-menu {
-  flex: 0 0 40px;
+  span {
+    flex: 1;
+    text-align: center;
+  }
+
+  ks-option-menu {
+    flex: 0 0 40px;
+  }
 }
