@@ -135,6 +135,7 @@ export class GameService {
 
   public createGame(game: Game): Observable<Game> {
     this.gameList.push(game);
+    this.gameList.sort((g1: Game, g2: Game) => g1.date < g2.date ? 1 : -1);
     return of(game);
   }
 }
