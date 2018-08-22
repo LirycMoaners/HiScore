@@ -20,12 +20,13 @@ import { AddCategoryDialogComponent } from './add-category-dialog/add-category-d
 })
 
 export class GameCreationComponent implements OnInit {
-  public selectablePlayerList: Player[] = [];
+  public filteredPlayerList: Player[] = [];
   public playerList: Player[] = [];
   public gamePlayerList: Player[] = [];
   public gameCategoryList: GameCategory[] = [];
   public chosenGameCategory: GameCategory;
   public isShownAddCategoryPopup = false;
+  public newPlayerName = '';
 
   constructor(
     private mainBarService: MainBarService,
@@ -42,33 +43,37 @@ export class GameCreationComponent implements OnInit {
     this.playerService.getPlayerList()
       .subscribe((playerList: Player[]) => {
         this.playerList = playerList;
-        this.selectablePlayerList = playerList;
+        this.filteredPlayerList = playerList;
       });
 
     this.gameCategoryService.getGameCategoryList()
       .subscribe((gameCategoryList: GameCategory[]) => this.gameCategoryList = gameCategoryList);
   }
 
-  public addPlayer(event: Event | MatAutocompleteSelectedEvent, input?: HTMLInputElement): void {
+  public addPlayer(event: FocusEvent | MatAutocompleteSelectedEvent, input?: HTMLInputElement): void {
     let player: Player;
 
     if (event instanceof Event) {
-      player = this.playerList.find((pl: Player) => pl.name === event.target['value']);
+      if (event.target['value']) {
+        player = this.playerList.find((pl: Player) => pl.name === event.target['value']);
 
-      if (!player) {
-        player = new Player();
-        player.id = UUID.UUID();
-        player.name = event.target['value'];
+        if (!player) {
+          player = new Player();
+          player.id = UUID.UUID();
+          player.name = event.target['value'];
+        }
+
+        event.target['value'] = '';
+        this.gamePlayerList.push(player);
       }
-
-      event.target['value'] = '';
     } else {
       player = Object.assign({}, event.option.value);
       input.value = '';
+      this.gamePlayerList.push(player);
     }
 
-    this.gamePlayerList.push(player);
-    this.refreshSelectablePlayerList();
+    this.newPlayerName = '';
+    this.filterPlayerList();
   }
 
   public changePlayer(oldPlayer: Player, player: Player | string) {
@@ -91,11 +96,26 @@ export class GameCreationComponent implements OnInit {
       this.gamePlayerList.splice(this.gamePlayerList.indexOf(oldPlayer), 1);
     }
 
-    this.refreshSelectablePlayerList();
+    this.filterPlayerList();
   }
 
-  public displayName() {
-    return (player: Player) => player.name;
+  public filterPlayerList(name?: string) {
+    const filteredValue = name && typeof name === 'string' ? name.toLowerCase() : '';
+    this.filteredPlayerList = this.playerList.filter(
+      (player: Player) => !this.gamePlayerList.find((pl: Player) => pl.name === player.name)
+        && player.name.toLowerCase().includes(filteredValue)
+      );
+  }
+
+  public openDialog() {
+    const dialogRef = this.dialog.open(AddCategoryDialogComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.chosenGameCategory = result || this.chosenGameCategory;
+    });
   }
 
   public startGame() {
@@ -126,20 +146,5 @@ export class GameCreationComponent implements OnInit {
         )
         .subscribe((createdGame: Game) => this.router.navigate(['/current-game/' + createdGame.id]));
     }
-  }
-
-  public openDialog() {
-    const dialogRef = this.dialog.open(AddCategoryDialogComponent, {
-      width: '400px'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.chosenGameCategory = result || this.chosenGameCategory;
-    });
-  }
-
-  private refreshSelectablePlayerList() {
-    this.selectablePlayerList = this.playerList.filter((player: Player) => !this.gamePlayerList.find((pl: Player) => pl.id === player.id));
   }
 }
