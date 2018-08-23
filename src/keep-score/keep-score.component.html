@@ -1,2 +1,4 @@
-<ks-main-bar></ks-main-bar>
-<router-outlet></router-outlet>
+<ks-main-bar [class.isHidden]="!isBarVisible"></ks-main-bar>
+<div class="component" [class.isFullscreen]="!isBarVisible">
+  <router-outlet></router-outlet>
+</div>

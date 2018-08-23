@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { MainBarService } from './shared/main-bar/main-bar.service';
 
 @Component({
   selector: 'ks-root',
@@ -7,8 +7,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./keep-score.component.scss']
 })
 export class KeepScoreComponent implements OnInit {
+  public isBarVisible = true;
+
+  constructor(
+    private mainBarService: MainBarService
+  ) {}
+
   ngOnInit(): void {
-    window.oncontextmenu = function(e) {
+    window.oncontextmenu = (e) => {
       if (e.button === 2) {
         return;
       }
@@ -16,5 +22,8 @@ export class KeepScoreComponent implements OnInit {
       e.stopPropagation();
       return false;
     };
+
+    this.mainBarService.getIsBarVisible()
+      .subscribe((isBarVisible: boolean) => this.isBarVisible = isBarVisible);
   }
 }

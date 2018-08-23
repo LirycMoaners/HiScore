@@ -39,6 +39,7 @@ export class GameCreationComponent implements OnInit {
 
   ngOnInit() {
     this.mainBarService.setTitle('New Game');
+    this.mainBarService.setIsBarVisible(true);
 
     this.playerService.getPlayerList()
       .subscribe((playerList: Player[]) => {
