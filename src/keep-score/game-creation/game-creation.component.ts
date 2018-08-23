@@ -50,30 +50,33 @@ export class GameCreationComponent implements OnInit {
       .subscribe((gameCategoryList: GameCategory[]) => this.gameCategoryList = gameCategoryList);
   }
 
-  public addPlayer(event: FocusEvent | MatAutocompleteSelectedEvent, input?: HTMLInputElement): void {
+  public addPlayer(event: FocusEvent | MatAutocompleteSelectedEvent, input: HTMLInputElement) {
     let player: Player;
 
-    if (event instanceof Event) {
-      if (event.target['value']) {
-        player = this.playerList.find((pl: Player) => pl.name === event.target['value']);
+    if (event instanceof FocusEvent) {
+      if (input.value && (!event.relatedTarget || event.relatedTarget['tagName'] !== 'MAT-OPTION')) {
+        player = this.playerList.find((pl: Player) => pl.name === input.value);
 
         if (!player) {
           player = new Player();
           player.id = UUID.UUID();
-          player.name = event.target['value'];
+          player.name = input.value;
         }
 
-        event.target['value'] = '';
+        input.value = '';
         this.gamePlayerList.push(player);
+
+        this.newPlayerName = '';
+        this.filterPlayerList();
       }
     } else {
       player = Object.assign({}, event.option.value);
       input.value = '';
       this.gamePlayerList.push(player);
-    }
 
-    this.newPlayerName = '';
-    this.filterPlayerList();
+      this.newPlayerName = '';
+      this.filterPlayerList();
+    }
   }
 
   public changePlayer(oldPlayer: Player, player: Player | string) {

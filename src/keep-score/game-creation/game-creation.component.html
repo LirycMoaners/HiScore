@@ -11,9 +11,9 @@
               (ngModelChange)="filterPlayerList($event)"
               (change)="changePlayer(player, $event.target.value)"
               [matAutocomplete]="auto">
-              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="changePlayer(player, $event.option.value)">
-                <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
-              </mat-autocomplete>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="changePlayer(player, $event.option.value)">
+              <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
+            </mat-autocomplete>
           </mat-form-field>
         </div>
 
@@ -23,12 +23,12 @@
             matInput
             [(ngModel)]="newPlayerName"
             (ngModelChange)="filterPlayerList($event)"
-            (blur)="addPlayer($event)"
+            (blur)="addPlayer($event, newPlayer)"
             [matAutocomplete]="auto2"
             placeholder="Add player">
-            <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="addPlayer($event, newPlayer)">
-              <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
-            </mat-autocomplete>
+          <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="addPlayer($event, newPlayer)">
+            <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
+          </mat-autocomplete>
         </mat-form-field>
       </div>
 
