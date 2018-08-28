@@ -11,9 +11,10 @@
             <mat-icon>add</mat-icon>
           </button>
           <input matInput
+            pattern="[0-9]"
             class="input-score"
-            [(ngModel)]="score.roundScoreList[score.roundScoreList.length - 1]"
-            (blur)="onBlurInputScore(score)">
+            [ngModel]="score.roundScoreList[score.roundScoreList.length - 1]"
+            (change)="onChangeRoundScore(score, $event.target)">
           <button mat-icon-button
             class="score-button"
             (click)="onClickMinus(score)"

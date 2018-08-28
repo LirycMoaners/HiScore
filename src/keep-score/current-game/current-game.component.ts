@@ -35,27 +35,26 @@ export class CurrentGameComponent implements OnInit {
 
   public validateRound() {
     for (const score of this.game.scoreList) {
-      score.total = score.roundScoreList.reduce((total: number, roundScore: number) => total + Number(roundScore));
       score.roundScoreList.push(0);
     }
+    this.refreshBestScore();
     this.gameService.saveGame(this.game);
   }
 
   public onClickPlus(score: Score) {
     score.roundScoreList[score.roundScoreList.length - 1] += 1;
+    this.calculateTotal(score);
   }
 
   public onClickMinus(score: Score) {
     score.roundScoreList[score.roundScoreList.length - 1] -= 1;
+    this.calculateTotal(score);
   }
 
-  public onBlurInputScore(score: Score) {
-    const inputScore: number = Number(score.roundScoreList[score.roundScoreList.length - 1]);
-    if (Number.isNaN(inputScore)) {
-      score.roundScoreList[score.roundScoreList.length - 1] = 0;
-    } else {
-      score.roundScoreList[score.roundScoreList.length - 1] = inputScore;
-    }
+  public onChangeRoundScore(score: Score, inputScore: HTMLInputElement) {
+    inputScore.value = inputScore.value ? inputScore.value : '0';
+    score.roundScoreList[score.roundScoreList.length - 1] = Number(inputScore.value);
+    this.calculateTotal(score);
   }
 
   public openDialog(score: Score, roundIndex: number) {
@@ -67,6 +66,11 @@ export class CurrentGameComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       score.roundScoreList[roundIndex] = result || score.roundScoreList[roundIndex];
+      this.calculateTotal(score);
     });
+  }
+
+  private calculateTotal(score: Score) {
+    score.total = score.roundScoreList.reduce((total: number, roundScore: number) => total + Number(roundScore));
   }
 }
