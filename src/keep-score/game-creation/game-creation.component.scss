@@ -2,6 +2,39 @@
 
 :host {
   text-align: center;
+  .page {
+    section {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      .player-list {
+        flex: 0 1 auto;
+        display: flex;
+        flex-direction: column;
+
+        .list {
+          overflow: auto;
+        }
+      }
+
+      .game-category {
+        margin-bottom: 10px;
+      }
+
+      @media screen and (min-width: $break-small) {
+        flex-direction: row;
+
+        .player-list {
+          flex: 1;
+        }
+
+        .game-category {
+          flex: 1;
+        }
+      }
+    }
+  }
 
   footer {
     button {
