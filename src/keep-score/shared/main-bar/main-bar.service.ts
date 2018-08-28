@@ -5,12 +5,12 @@ import { Subject, Observable } from 'rxjs';
 export class MainBarService {
   private titleSubject: Subject<string> = new Subject<string>();
   private title$: Observable<string>;
-  private isBarVisibleSubject: Subject<boolean> = new Subject<boolean>();
-  private isBarVisible$: Observable<boolean>;
+  private isLeftSideSubject: Subject<boolean> = new Subject<boolean>();
+  private isLeftSide$: Observable<boolean>;
 
   constructor() {
     this.title$ = this.titleSubject.asObservable();
-    this.isBarVisible$ = this.isBarVisibleSubject.asObservable();
+    this.isLeftSide$ = this.isLeftSideSubject.asObservable();
   }
 
   public setTitle(title: string): void {
@@ -21,11 +21,11 @@ export class MainBarService {
     return this.title$;
   }
 
-  public setIsBarVisible(isBarVisible: boolean): void {
-    this.isBarVisibleSubject.next(isBarVisible);
+  public setIsLeftSide(isLeftSide: boolean): void {
+    this.isLeftSideSubject.next(isLeftSide);
   }
 
-  public getIsBarVisible(): Observable<boolean> {
-    return this.isBarVisible$;
+  public getIsLeftSide(): Observable<boolean> {
+    return this.isLeftSide$;
   }
 }

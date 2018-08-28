@@ -19,7 +19,7 @@ export class GameListComponent implements OnInit {
 
   ngOnInit() {
     this.mainBarService.setTitle('Game List');
-    this.mainBarService.setIsBarVisible(true);
+    this.mainBarService.setIsLeftSide(false);
     this.gameService.getGameList().subscribe((gameList: Game[]) => this.gameList = gameList);
   }
 }

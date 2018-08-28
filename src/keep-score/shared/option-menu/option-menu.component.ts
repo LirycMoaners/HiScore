@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MainBarService } from '../main-bar/main-bar.service';
 
 @Component({
   selector: 'ks-option-menu',
@@ -7,7 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class OptionMenuComponent implements OnInit {
-  constructor() { }
+  public isHoriz: boolean;
 
-  ngOnInit() { }
+  constructor(
+    private mainBarService: MainBarService
+  ) { }
+
+  ngOnInit() {
+    this.mainBarService.getIsLeftSide().subscribe(
+      (isLeftSide: boolean) => this.isHoriz = isLeftSide
+    );
+  }
 }

@@ -1,7 +1,9 @@
 <mat-toolbar color="primary">
-    <button mat-icon-button routerLink="/game-list">
+    <button mat-icon-button routerLink="/game-list" class="home">
       <mat-icon>home</mat-icon>
     </button>
-    <span>{{title}}</span>
+    <div class="title">
+      {{title}}
+    </div>
     <ks-option-menu></ks-option-menu>
 </mat-toolbar>

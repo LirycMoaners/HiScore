@@ -1,7 +1,10 @@
 @import '../shared/theme';
 
 :host {
-  top: 0;
+  @media screen and (min-width: $break-small) {
+    top: 0;
+    left: 56px;
+  }
 
   div {
     &.page {

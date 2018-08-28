@@ -8,7 +8,7 @@ declare const AndroidFullScreen;
   styleUrls: ['./keep-score.component.scss']
 })
 export class KeepScoreComponent implements OnInit {
-  public isBarVisible = true;
+  public isLeftSide = false;
 
   constructor(
     private mainBarService: MainBarService
@@ -25,6 +25,8 @@ export class KeepScoreComponent implements OnInit {
     };
 
     AndroidFullScreen.immersiveMode();
-      .subscribe((isBarVisible: boolean) => this.isBarVisible = isBarVisible);
+
+    this.mainBarService.getIsLeftSide()
+      .subscribe((isLeftSide: boolean) => this.isLeftSide = isLeftSide);
   }
 }

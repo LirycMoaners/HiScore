@@ -16,8 +16,6 @@ import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 export class CurrentGameComponent implements OnInit {
   public game: Game;
   public modifiedScore: Score;
-  private isBarVisible = false;
-  private swipeCoord: {x: number, y: number};
 
   constructor(
     private gameService: GameService,
@@ -32,43 +30,7 @@ export class CurrentGameComponent implements OnInit {
         this.game = game;
         this.mainBarService.setTitle(game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')');
       });
-    this.mainBarService.setIsBarVisible(this.isBarVisible);
-  }
-
-  @HostListener('window:touchstart', ['$event'])
-  @HostListener('window:touchend', ['$event'])
-  private swipe(e: TouchEvent): void {
-    const coord: {x: number, y: number} = {x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageY};
-
-    if (e.type === 'touchstart') {
-        this.swipeCoord = coord;
-        if (this.swipeCoord.y > 56 && this.isBarVisible) {
-          this.isBarVisible = false;
-          this.mainBarService.setIsBarVisible(this.isBarVisible);
-        }
-    } else if (e.type === 'touchend') {
-      const direction = {x: coord.x - this.swipeCoord.x, y: coord.y - this.swipeCoord.y};
-
-      if (this.swipeCoord.y <= 56) {
-        if (direction.y > 100) {
-          this.isBarVisible = true;
-          this.mainBarService.setIsBarVisible(this.isBarVisible);
-        } else if (direction.y < 0 && this.isBarVisible) {
-          this.isBarVisible = false;
-          this.mainBarService.setIsBarVisible(this.isBarVisible);
-        }
-      }
-    }
-  }
-
-  public showBar(event): void {
-    if (document.body.scrollTop === 0) {
-      this.isBarVisible = true;
-      this.mainBarService.setIsBarVisible(this.isBarVisible);
-    } else if (this.isBarVisible) {
-      this.isBarVisible = false;
-      this.mainBarService.setIsBarVisible(this.isBarVisible);
-    }
+    this.mainBarService.setIsLeftSide(true);
   }
 
   public validateRound() {
