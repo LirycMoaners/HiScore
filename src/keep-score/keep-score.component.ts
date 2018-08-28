@@ -24,9 +24,11 @@ export class KeepScoreComponent implements OnInit {
       return false;
     };
 
-    AndroidFullScreen.immersiveMode();
-
     this.mainBarService.getIsLeftSide()
-      .subscribe((isLeftSide: boolean) => this.isLeftSide = isLeftSide);
+      .subscribe((isLeftSide: boolean) => {
+        this.isLeftSide = isLeftSide;
+      });
+
+    AndroidFullScreen.immersiveMode();
   }
 }
