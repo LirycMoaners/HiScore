@@ -6,6 +6,7 @@ import { Score } from '../shared/score/score.model';
 import { MainBarService } from '../shared/main-bar/main-bar.service';
 import { MatDialog } from '@angular/material';
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
+import { Goal } from '../shared/game-category/goal.enum';
 
 @Component({
   selector: 'ks-current-game',
@@ -72,5 +73,19 @@ export class CurrentGameComponent implements OnInit {
 
   private calculateTotal(score: Score) {
     score.total = score.roundScoreList.reduce((total: number, roundScore: number) => total + Number(roundScore));
+
+    if (this.game.scoreList[0].roundScoreList.length > 1) {
+      this.refreshBestScore();
+    }
+  }
+
+  private refreshBestScore() {
+    let bestScore: number;
+    if (this.game.gameCategory.goal === Goal.highestScore) {
+      bestScore = Math.max(...this.game.scoreList.map((sc: Score) => sc.total));
+    } else {
+      bestScore = Math.min(...this.game.scoreList.map((sc: Score) => sc.total));
+    }
+    this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.playerId);
   }
 }

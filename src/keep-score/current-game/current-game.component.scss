@@ -51,17 +51,25 @@
               width: auto;
               height: auto;
               line-height: 1;
-              margin: auto;
+              margin: 5px;
             }
           }
 
           .current-score {
-            h1, h2 {
+            .name, h1 {
               margin: 0;
               height: 50%;
               justify-content: center;
               display: flex;
               flex-direction: column;
+
+              h2 {
+                display: inline;
+
+                .star {
+                  color: $star-color;
+                }
+              }
             }
           }
 

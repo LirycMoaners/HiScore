@@ -17,41 +17,42 @@ export class GameService {
         goal: Goal.lowestScore
       },
       date: new Date(2018, 6, 6, 14),
+      firstPlayerList: ['8'],
       scoreList: [
         {
           playerId: '1',
           roundScoreList: [
             13, 20, 0, 5, 14, 4
           ],
-          total: 52
+          total: 56
         },
         {
           playerId: '2',
           roundScoreList: [
             0, 62, 29, 17, 104, 91
           ],
-          total: 212
+          total: 303
         },
         {
           playerId: '3',
           roundScoreList: [
             7, 4, 1, 15, 23, 76
           ],
-          total: 50
+          total: 126
         },
         {
           playerId: '4',
           roundScoreList: [
             20, 18, 43, 6, 40, 4
           ],
-          total: 127
+          total: 131
         },
         {
           playerId: '5',
           roundScoreList: [
             29, 15, 16, 55, 3, 2
           ],
-          total: 118
+          total: 120
         },
         {
           playerId: '6',
@@ -65,7 +66,7 @@ export class GameService {
           roundScoreList: [
             8, 11, 15, 0, 0, 21
           ],
-          total: 34
+          total: 55
         },
         {
           playerId: '8',
@@ -85,6 +86,7 @@ export class GameService {
         goal: Goal.lowestScore
       },
       date: new Date(2018, 6, 7, 12),
+      firstPlayerList: ['4'],
       scoreList: [
         {
           playerId: '1',

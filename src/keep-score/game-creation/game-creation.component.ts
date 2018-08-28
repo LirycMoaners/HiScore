@@ -124,6 +124,7 @@ export class GameCreationComponent implements OnInit {
       game.id = UUID.UUID();
       game.gameCategory = this.chosenGameCategory;
       game.date = new Date();
+      game.firstPlayerList = [];
       game.scoreList = [];
 
       const newPlayerList$: Observable<Player>[] = [];

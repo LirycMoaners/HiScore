@@ -16,9 +16,9 @@
         </span>
       </h2>
       <p>
-        <ng-container *ngFor="let score of game.scoreList">
+        <span *ngFor="let score of game.scoreList" [class.bold]="game.firstPlayerList.includes(score.playerId)">
           {{(score.playerId | playerName | async) + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
-        </ng-container >
+        </span>
       </p>
     </button>
   </section>

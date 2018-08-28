@@ -24,7 +24,12 @@
           </button>
         </div>
         <div class="current-score">
-          <h2>{{score.playerId | playerName | async}}</h2>
+          <div class="name">
+            <h2>
+              <mat-icon *ngIf="game.firstPlayerList.includes(score.playerId)" class="star">star</mat-icon>
+              {{score.playerId | playerName | async}}
+            </h2>
+          </div>
           <h1 class="mat-display-1">{{score.total}}</h1>
         </div>
         <div class="histo-score">
