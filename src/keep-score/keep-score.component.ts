@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MainBarService } from './shared/main-bar/main-bar.service';
+declare const AndroidFullScreen;
 
 @Component({
   selector: 'ks-root',
@@ -23,7 +24,7 @@ export class KeepScoreComponent implements OnInit {
       return false;
     };
 
-    this.mainBarService.getIsBarVisible()
+    AndroidFullScreen.immersiveMode();
       .subscribe((isBarVisible: boolean) => this.isBarVisible = isBarVisible);
   }
 }
