@@ -10,7 +10,7 @@ import { GameService } from '../shared/game/game.service';
 import { Router } from '@angular/router';
 import { Observable, forkJoin, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { MatDialog, MatAutocompleteSelectedEvent, MatOption } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
 
 @Component({
@@ -51,32 +51,28 @@ export class GameCreationComponent implements OnInit {
       .subscribe((gameCategoryList: GameCategory[]) => this.gameCategoryList = gameCategoryList);
   }
 
-  public addPlayer(event: FocusEvent | MatAutocompleteSelectedEvent, input: HTMLInputElement) {
+  public onNewPlayerOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
     let player: Player;
+    let shouldAddPlayer = false;
 
-    if (event instanceof FocusEvent) {
-      if (input.value && (!event.relatedTarget || event.relatedTarget['tagName'] !== 'MAT-OPTION')) {
-        player = this.playerList.find((pl: Player) => pl.name === input.value);
-
-        if (!player) {
-          player = new Player();
-          player.id = UUID.UUID();
-          player.name = input.value;
-        }
-
-        input.value = '';
-        this.gamePlayerList.push(player);
-
-        this.newPlayerName = '';
-        this.filterPlayerList();
+    if (input.value) {
+      if (event instanceof FocusEvent && (!event.relatedTarget || event.relatedTarget['tagName'] !== 'MAT-OPTION')) {
+        shouldAddPlayer = true;
+      } else if (event instanceof KeyboardEvent && event.key === 'Enter') {
+        shouldAddPlayer = true;
       }
-    } else {
-      player = Object.assign({}, event.option.value);
-      input.value = '';
-      this.gamePlayerList.push(player);
+    }
 
-      this.newPlayerName = '';
-      this.filterPlayerList();
+    if (shouldAddPlayer) {
+      player = this.playerList.find((pl: Player) => pl.name === input.value);
+
+      if (!player) {
+        player = new Player();
+        player.id = UUID.UUID();
+        player.name = input.value;
+      }
+
+      this.addPlayer(player, input);
     }
   }
 
@@ -150,5 +146,14 @@ export class GameCreationComponent implements OnInit {
         )
         .subscribe((createdGame: Game) => this.router.navigate(['/current-game/' + createdGame.id]));
     }
+  }
+
+  public addPlayer(newPlayer: Player, input: HTMLInputElement) {
+    const player = Object.assign({}, newPlayer);
+    input.value = '';
+    this.gamePlayerList.push(player);
+
+    this.newPlayerName = '';
+    this.filterPlayerList();
   }
 }

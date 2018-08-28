@@ -23,10 +23,11 @@
             matInput
             [(ngModel)]="newPlayerName"
             (ngModelChange)="filterPlayerList($event)"
-            (blur)="addPlayer($event, newPlayer)"
+            (blur)="onNewPlayerOut($event, newPlayer)"
+            (keypress)="onNewPlayerOut($event, newPlayer)"
             [matAutocomplete]="auto2"
             placeholder="Add player">
-          <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="addPlayer($event, newPlayer)">
+          <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="addPlayer($event.option.value, newPlayer)">
             <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
           </mat-autocomplete>
         </mat-form-field>
