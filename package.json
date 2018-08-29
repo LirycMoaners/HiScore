@@ -14,7 +14,7 @@
     "build:desktop": "ng build --base-href ./ && electron .",
     "build:prod": "ng build --prod",
     "build:prod:android": "ng build --base-href ./ --prod && cordova build android",
-    "build:prod:windows": "ng build --base-href ./ --prod && electron-packager . --platform=win32",
+    "build:prod:windows": "ng build --base-href ./ --prod && electron-packager . --platform=win32 --arch=x64 --asar=true --overwrite",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
