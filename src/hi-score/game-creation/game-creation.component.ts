@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
 
 @Component({
-  selector: 'ks-game-creation',
+  selector: 'hs-game-creation',
   templateUrl: 'game-creation.component.html',
   styleUrls: ['game-creation.component.scss']
 })

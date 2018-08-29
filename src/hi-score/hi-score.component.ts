@@ -3,11 +3,11 @@ import { MainBarService } from './shared/main-bar/main-bar.service';
 declare const AndroidFullScreen;
 
 @Component({
-  selector: 'ks-root',
-  templateUrl: './keep-score.component.html',
-  styleUrls: ['./keep-score.component.scss']
+  selector: 'hs-root',
+  templateUrl: './hi-score.component.html',
+  styleUrls: ['./hi-score.component.scss']
 })
-export class KeepScoreComponent implements OnInit {
+export class HiScoreComponent implements OnInit {
   public isLeftSide = false;
 
   constructor(

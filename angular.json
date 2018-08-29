@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "keep-score": {
+    "hi-score": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -48,18 +48,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "keep-score:build"
+            "browserTarget": "hi-score:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "keep-score:build:production"
+              "browserTarget": "hi-score:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "keep-score:build"
+            "browserTarget": "hi-score:build"
           }
         },
         "test": {
@@ -93,7 +93,7 @@
         }
       }
     },
-    "keep-score-e2e": {
+    "hi-score-e2e": {
       "root": "",
       "sourceRoot": "e2e",
       "projectType": "application",
@@ -102,7 +102,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "keep-score:serve"
+            "devServerTarget": "hi-score:serve"
           }
         },
         "lint": {
@@ -119,7 +119,7 @@
       }
     }
   },
-  "defaultProject": "keep-score",
+  "defaultProject": "hi-score",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

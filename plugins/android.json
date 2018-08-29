@@ -11,7 +11,7 @@
       "PACKAGE_NAME": "io.cordova.hellocordova"
     },
     "cordova-plugin-fullscreen": {
-      "PACKAGE_NAME": "io.cyrillefebvre.keepscore"
+      "PACKAGE_NAME": "io.cyrillefebvre.hiscore"
     }
   },
   "dependent_plugins": {}

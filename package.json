@@ -1,6 +1,6 @@
 {
-  "name": "keep-score",
-  "displayName": "KeepScore",
+  "name": "hi-score",
+  "displayName": "HiScore",
   "version": "0.0.0",
   "description": "An app to keep score running with angular, cordova and electron.",
   "author": "Cyril Lefebvre",

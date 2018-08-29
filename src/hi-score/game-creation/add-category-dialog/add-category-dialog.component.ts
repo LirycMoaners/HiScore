@@ -6,7 +6,7 @@ import { GameCategoryService } from '../../shared/game-category/game-category.se
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: 'ks-add-category-dialog',
+  selector: 'hs-add-category-dialog',
   templateUrl: 'add-category-dialog.component.html',
   styleUrls: ['add-category-dialog.component.scss']
 })

@@ -9,7 +9,7 @@ import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { Goal } from '../shared/game-category/goal.enum';
 
 @Component({
-  selector: 'ks-current-game',
+  selector: 'hs-current-game',
   templateUrl: 'current-game.component.html',
   styleUrls: ['current-game.component.scss']
 })

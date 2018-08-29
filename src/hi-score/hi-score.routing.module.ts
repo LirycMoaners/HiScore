@@ -28,7 +28,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class KeepScoreRoutingModule {}
+export class HiScoreRoutingModule {}
 
 export const routedComponents = [
   GameListComponent,

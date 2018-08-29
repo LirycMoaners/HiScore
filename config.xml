@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.cyrillefebvre.keepscore" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>KeepScore</name>
+<widget id="io.cyrillefebvre.hiscore" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>HiScore</name>
     <description>
         An app to keep player's score during your games.
     </description>
-    <author email="cyril.lefebvre.27@gmail.com" href="https://github.com/LirycMoaners/KeepScore">
+    <author email="cyril.lefebvre.27@gmail.com" href="https://github.com/LirycMoaners/HiScore">
         Cyril Lefebvre
     </author>
     <content src="index.html" />

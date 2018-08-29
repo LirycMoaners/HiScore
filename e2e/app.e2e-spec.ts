@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('keep-score App', () => {
+describe('hi-score App', () => {
   let page: AppPage;
 
   beforeEach(() => {

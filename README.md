@@ -1,6 +1,6 @@
-# KeepScore
+# HiScore
 
-This project is an Angular 5 version of the KeepScore app (Nolan Lawson).
+This project is an Angular 5 version of the HiScore app (Nolan Lawson).
 
 
 It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.0.
@@ -45,7 +45,7 @@ Run `npm run build:prod` to build the project for production (with aot improveme
 
 Run `npm run build:prod:android` to package the project for Android. The apk will be stored in `platforms\android\app\build\outputs\apk\debug\` directory. Dont forget to install the android platform.
 
-Run `npm run build:prod:windows` to package the project for Windows. The exe will be stored in `keep-score-win32-x64\` directory.
+Run `npm run build:prod:windows` to package the project for Windows. The exe will be stored in `hi-score-win32-x64\` directory.
 
 ## Further help
 

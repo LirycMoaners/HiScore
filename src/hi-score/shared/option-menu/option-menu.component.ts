@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MainBarService } from '../main-bar/main-bar.service';
 
 @Component({
-  selector: 'ks-option-menu',
+  selector: 'hs-option-menu',
   templateUrl: 'option-menu.component.html',
   styleUrls: ['option-menu.component.scss']
 })

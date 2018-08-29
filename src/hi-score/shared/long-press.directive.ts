@@ -1,6 +1,6 @@
 import { Directive, HostListener, EventEmitter, Output } from '@angular/core';
 
-@Directive({ selector: '[ksLongPress]' })
+@Directive({ selector: '[hsLongPress]' })
 export class LongPressDirective {
   @Output() longPressDetected: EventEmitter<any> = new EventEmitter<any>();
   private pressTimer: number;

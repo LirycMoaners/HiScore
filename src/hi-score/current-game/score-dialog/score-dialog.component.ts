@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-  selector: 'ks-score-dialog',
+  selector: 'hs-score-dialog',
   templateUrl: 'score-dialog.component.html',
   styleUrls: ['score-dialog.component.scss']
 })

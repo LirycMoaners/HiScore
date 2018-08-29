@@ -5,8 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule, MatButtonModule, MatInputModule,
   MatSelectModule, MatAutocompleteModule, MatIconModule, MatToolbarModule } from '@angular/material';
 
-import { KeepScoreComponent } from './keep-score.component';
-import { KeepScoreRoutingModule, routedComponents } from './keep-score.routing.module';
+import { HiScoreComponent } from './hi-score.component';
+import { HiScoreRoutingModule, routedComponents } from './hi-score.routing.module';
 import { MainBarComponent } from './shared/main-bar/main-bar.component';
 import { OptionMenuComponent } from './shared/option-menu/option-menu.component';
 import { GameService } from './shared/game/game.service';
@@ -21,7 +21,7 @@ import { KeyEnumPipe } from './shared/key-enum.pipe';
 
 @NgModule({
   declarations: [
-    KeepScoreComponent,
+    HiScoreComponent,
     routedComponents,
     MainBarComponent,
     OptionMenuComponent,
@@ -46,7 +46,7 @@ import { KeyEnumPipe } from './shared/key-enum.pipe';
     MatAutocompleteModule,
     MatIconModule,
     MatToolbarModule,
-    KeepScoreRoutingModule
+    HiScoreRoutingModule
   ],
   providers: [
     GameService,
@@ -54,6 +54,6 @@ import { KeyEnumPipe } from './shared/key-enum.pipe';
     GameCategoryService,
     MainBarService
   ],
-  bootstrap: [KeepScoreComponent]
+  bootstrap: [HiScoreComponent]
 })
-export class KeepScoreModule { }
+export class HiScoreModule { }
