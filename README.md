@@ -1,6 +1,6 @@
 # HiScore
 
-This project is an Angular 5 version of the HiScore app (Nolan Lawson).
+The HiScore project is an Angular 5 version of the KeepScore app (Nolan Lawson).
 
 
 It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.0.
