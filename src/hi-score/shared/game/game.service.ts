@@ -17,6 +17,7 @@ export class GameService {
         goal: Goal.lowestScore
       },
       date: new Date(2018, 6, 6, 14),
+      isGameContinuing: false,
       firstPlayerList: ['8'],
       scoreList: [
         {
@@ -86,6 +87,7 @@ export class GameService {
         goal: Goal.lowestScore
       },
       date: new Date(2018, 6, 7, 12),
+      isGameContinuing: false,
       firstPlayerList: ['4'],
       scoreList: [
         {

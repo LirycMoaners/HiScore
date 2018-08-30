@@ -7,7 +7,7 @@
             class="score-button"
             (click)="onClickPlus(score)"
             hsLongPress
-            (longPressDetected)="openDialog(score, score.roundScoreList.length - 1)">
+            (longPressDetected)="openScoreDialog(score, score.roundScoreList.length - 1)">
             <mat-icon>add</mat-icon>
           </button>
           <input matInput
@@ -19,7 +19,7 @@
             class="score-button"
             (click)="onClickMinus(score)"
             hsLongPress
-            (longPressDetected)="openDialog(score, score.roundScoreList.length - 1)">
+            (longPressDetected)="openScoreDialog(score, score.roundScoreList.length - 1)">
             <mat-icon>remove</mat-icon>
           </button>
         </div>

@@ -14,7 +14,7 @@ export class LongPressDirective {
       event.preventDefault();
       this.longPressDetected.emit();
       clearTimeout(this.pressTimer);
-    }, 1000);
+    }, 500);
   }
 
   @HostListener('touchend', ['$event'])

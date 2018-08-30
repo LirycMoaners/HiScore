@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>
+  Game Over
+</h2>
+<mat-dialog-content class="player-list">
+  <table mat-table [dataSource]="orderedScoreList" class="mat-elevation-z8">
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let score"> {{orderedScoreList.indexOf(score) + 1}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let score"> {{score.playerId | playerName | async}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="total">
+      <th mat-header-cell *matHeaderCellDef> Total </th>
+      <td mat-cell *matCellDef="let score"> {{score.total}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['position', 'name', 'total']; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['position', 'name', 'total'];"></tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="buttons">
+    <button mat-button mat-dialog-close>Continue</button>
+    <button mat-button cdkfocusinitial [mat-dialog-close]="isLeaving">Home</button>
+  </div>
+</mat-dialog-actions>

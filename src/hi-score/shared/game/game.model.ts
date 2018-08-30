@@ -5,6 +5,7 @@ export class Game {
   public id: string;
   public gameCategory: GameCategory;
   public date: Date;
+  public isGameContinuing: boolean;
   public firstPlayerList: string[];
   public scoreList: Score[];
 }

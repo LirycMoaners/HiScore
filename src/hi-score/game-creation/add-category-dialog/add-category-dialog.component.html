@@ -4,7 +4,7 @@
   </mat-form-field>
   <mat-form-field>
     <mat-select [(ngModel)]="newGameCategory.endingType" placeholder="Ending type">
-      <mat-option *ngFor="let endingType of EndingType | keyEnum" [value]="endingType.key">
+      <mat-option *ngFor="let endingType of EndingType | keyEnum" [value]="endingType.value">
         {{endingType.value}}
       </mat-option>
     </mat-select>
@@ -14,7 +14,7 @@
   </mat-form-field>
   <mat-form-field>
     <mat-select [(ngModel)]="newGameCategory.goal" placeholder="Goal">
-      <mat-option *ngFor="let goal of Goal | keyEnum" [value]="goal.key">
+      <mat-option *ngFor="let goal of Goal | keyEnum" [value]="goal.value">
         {{goal.value}}
       </mat-option>
     </mat-select>

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule, MatButtonModule, MatInputModule,
-  MatSelectModule, MatAutocompleteModule, MatIconModule, MatToolbarModule } from '@angular/material';
+  MatSelectModule, MatAutocompleteModule, MatIconModule, MatToolbarModule, MatTableModule } from '@angular/material';
 
 import { HiScoreComponent } from './hi-score.component';
 import { HiScoreRoutingModule, routedComponents } from './hi-score.routing.module';
@@ -18,6 +18,7 @@ import { MainBarService } from './shared/main-bar/main-bar.service';
 import { PlayerNamePipe } from './shared/player/player-name.pipe';
 import { AddCategoryDialogComponent } from './game-creation/add-category-dialog/add-category-dialog.component';
 import { KeyEnumPipe } from './shared/key-enum.pipe';
+import { WinDialogComponent } from './current-game/win-dialog/win-dialog.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { KeyEnumPipe } from './shared/key-enum.pipe';
     MainBarComponent,
     OptionMenuComponent,
     ScoreDialogComponent,
+    WinDialogComponent,
     AddCategoryDialogComponent,
     LongPressDirective,
     PlayerNamePipe,
@@ -33,6 +35,7 @@ import { KeyEnumPipe } from './shared/key-enum.pipe';
   ],
   entryComponents: [
     ScoreDialogComponent,
+    WinDialogComponent,
     AddCategoryDialogComponent
   ],
   imports: [
@@ -46,6 +49,7 @@ import { KeyEnumPipe } from './shared/key-enum.pipe';
     MatAutocompleteModule,
     MatIconModule,
     MatToolbarModule,
+    MatTableModule,
     HiScoreRoutingModule
   ],
   providers: [

@@ -1,12 +1,14 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { GameService } from '../shared/game/game.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Game } from '../shared/game/game.model';
 import { Score } from '../shared/score/score.model';
 import { MainBarService } from '../shared/main-bar/main-bar.service';
 import { MatDialog } from '@angular/material';
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { Goal } from '../shared/game-category/goal.enum';
+import { EndingType } from '../shared/game-category/ending-type.enum';
+import { WinDialogComponent } from './win-dialog/win-dialog.component';
 
 @Component({
   selector: 'hs-current-game',
@@ -21,6 +23,7 @@ export class CurrentGameComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private route: ActivatedRoute,
+    private router: Router,
     private mainBarService: MainBarService,
     private dialog: MatDialog
   ) { }
@@ -30,15 +33,24 @@ export class CurrentGameComponent implements OnInit {
       .subscribe((game: Game) => {
         this.game = game;
         this.mainBarService.setTitle(game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')');
+        if (this.isGameEnd() && !this.game.isGameContinuing) {
+          this.openWinDialog();
+        }
       });
     this.mainBarService.setIsLeftSide(true);
   }
 
   public validateRound() {
-    for (const score of this.game.scoreList) {
-      score.roundScoreList.push(0);
-    }
     this.refreshBestScore();
+
+    if (this.isGameEnd() && !this.game.isGameContinuing) {
+      this.openWinDialog();
+    } else {
+      for (const score of this.game.scoreList) {
+        score.roundScoreList.push(0);
+      }
+    }
+    this.mainBarService.setTitle(this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')');
     this.gameService.saveGame(this.game);
   }
 
@@ -58,7 +70,7 @@ export class CurrentGameComponent implements OnInit {
     this.calculateTotal(score);
   }
 
-  public openDialog(score: Score, roundIndex: number) {
+  public openScoreDialog(score: Score, roundIndex: number) {
     const dialogRef = this.dialog.open(ScoreDialogComponent, {
       width: '420px',
       data: score.roundScoreList[roundIndex]
@@ -87,5 +99,32 @@ export class CurrentGameComponent implements OnInit {
       bestScore = Math.min(...this.game.scoreList.map((sc: Score) => sc.total));
     }
     this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.playerId);
+  }
+
+  private isGameEnd(): boolean {
+    if (this.game.gameCategory.endingType === EndingType.point) {
+      return !!this.game.scoreList.find((score: Score) => score.total >= this.game.gameCategory.endingNumber);
+    } else {
+      return this.game.scoreList[0].roundScoreList.length === this.game.gameCategory.endingNumber;
+    }
+  }
+
+  private openWinDialog() {
+    const dialogRef = this.dialog.open(WinDialogComponent, {
+      width: '420px',
+      data: this.game
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.gameService.saveGame(this.game);
+        this.router.navigate(['']);
+      } else {
+        this.game.isGameContinuing = true;
+        for (const score of this.game.scoreList) {
+          score.roundScoreList.push(0);
+        }
+      }
+    });
   }
 }
