@@ -29,6 +29,8 @@ export class HiScoreComponent implements OnInit {
         this.isLeftSide = isLeftSide;
       });
 
+    /* cordova-version-config-off
     AndroidFullScreen.immersiveMode();
+    cordova-version-config-off */
   }
 }
