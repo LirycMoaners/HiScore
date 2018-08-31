@@ -48,7 +48,9 @@ export class GameCreationComponent implements OnInit {
       });
 
     this.gameCategoryService.getGameCategoryList()
-      .subscribe((gameCategoryList: GameCategory[]) => this.gameCategoryList = gameCategoryList);
+      .subscribe((gameCategoryList: GameCategory[]) => {
+        this.gameCategoryList = gameCategoryList;
+      });
   }
 
   public onNewPlayerOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {

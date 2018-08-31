@@ -7,19 +7,22 @@
             class="score-button"
             (click)="onClickPlus(score)"
             hsLongPress
-            (longPressDetected)="openScoreDialog(score, score.roundScoreList.length - 1)">
+            (longPressDetected)="openScoreDialog(score, score.roundScoreList.length - 1)"
+            aria-label="Add one point to player round score">
             <mat-icon>add</mat-icon>
           </button>
           <input matInput
             pattern="[0-9]"
             class="input-score"
             [ngModel]="score.roundScoreList[score.roundScoreList.length - 1]"
-            (change)="onChangeRoundScore(score, $event.target)">
+            (change)="onChangeRoundScore(score, $event.target)"
+            aria-label="Round score">
           <button mat-icon-button
             class="score-button"
             (click)="onClickMinus(score)"
             hsLongPress
-            (longPressDetected)="openScoreDialog(score, score.roundScoreList.length - 1)">
+            (longPressDetected)="openScoreDialog(score, score.roundScoreList.length - 1)"
+            aria-label="Remove one point to player round score">
             <mat-icon>remove</mat-icon>
           </button>
         </div>
@@ -43,7 +46,7 @@
     </div>
   </section>
   <footer>
-    <button mat-flat-button color="accent" (click)="validateRound()">
+    <button mat-flat-button color="accent" (click)="validateRound()" aria-label="Validate round">
       <mat-icon>checked</mat-icon>
     </button>
   </footer>

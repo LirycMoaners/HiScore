@@ -13,7 +13,8 @@
             (blur)="onNewPlayerOut($event, newPlayer)"
             (keypress)="onNewPlayerOut($event, newPlayer)"
             [matAutocomplete]="auto2"
-            placeholder="Add player">
+            placeholder="Add player"
+            aria-label="New player name">
           <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="addPlayer($event.option.value, newPlayer)">
             <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
           </mat-autocomplete>
@@ -26,7 +27,8 @@
               [(ngModel)]="gamePlayerList[i].name"
               (ngModelChange)="filterPlayerList($event)"
               (change)="changePlayer(player, $event.target.value)"
-              [matAutocomplete]="auto">
+              [matAutocomplete]="auto"
+              aria-label="Player name">
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="changePlayer(player, $event.option.value)">
               <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
             </mat-autocomplete>
@@ -39,8 +41,8 @@
       <h2>Game Category</h2>
 
       <mat-form-field>
-        <mat-select [(ngModel)]="chosenGameCategory" placeholder="Game category" required>
-          <mat-option *ngFor="let cat of gameCategoryList" [value]="cat">{{cat.name}}</mat-option>
+        <mat-select [(ngModel)]="chosenGameCategory" placeholder="Game category" required role="listbox">
+          <mat-option role="option" #gameCategory *ngFor="let cat of gameCategoryList" [value]="cat">{{cat.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <div>
@@ -49,6 +51,6 @@
     </div>
   </section>
   <footer>
-    <button mat-flat-button cdkfocusinitial color="accent" (click)="startGame()">Start !</button>
+    <button mat-flat-button cdkfocusinitial color="accent" (click)="startGame()" aria-label="Start game">Start !</button>
   </footer>
 </div>

@@ -1,14 +1,17 @@
 <div class="page">
   <header>
     <div class="new-game">
-      <button mat-fab routerLink="/game-creation">
+      <button mat-fab routerLink="/game-creation" aria-label="Create new game">
         <mat-icon>add</mat-icon>
       </button>
       <span>Start a new game !</span>
     </div>
   </header>
   <section>
-    <button mat-raised-button *ngFor="let game of gameList" [routerLink]="'/current-game/' + game.id">
+    <button mat-raised-button
+      *ngFor="let game of gameList"
+      [routerLink]="'/current-game/' + game.id"
+      aria-label="Open game">
       <h2>
         {{game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')'}}
         <span class="mat-caption">
