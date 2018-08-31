@@ -19,6 +19,8 @@ import { PlayerNamePipe } from './shared/player/player-name.pipe';
 import { AddCategoryDialogComponent } from './game-creation/add-category-dialog/add-category-dialog.component';
 import { KeyEnumPipe } from './shared/key-enum.pipe';
 import { WinDialogComponent } from './current-game/win-dialog/win-dialog.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,8 @@ import { WinDialogComponent } from './current-game/win-dialog/win-dialog.compone
     MatIconModule,
     MatToolbarModule,
     MatTableModule,
-    HiScoreRoutingModule
+    HiScoreRoutingModule,
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     GameService,
