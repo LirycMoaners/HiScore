@@ -20,6 +20,14 @@
 
       .game-category {
         margin-bottom: 10px;
+
+        .game-category-details {
+          mat-form-field {
+            display: block;
+            margin: 0 auto;
+            width: 180px;
+          }
+        }
       }
 
       @media screen and (min-width: $break-small) {

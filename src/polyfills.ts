@@ -74,3 +74,14 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
  * Need to import at least one locale-data with intl.
  */
 // import 'intl/locale-data/jsonp/en';
+
+import {polyfill} from 'mobile-drag-drop';
+
+// optional import of scroll behaviour
+import {scrollBehaviourDragImageTranslateOverride} from 'mobile-drag-drop/scroll-behaviour';
+
+// options are optional ;)
+polyfill({
+    // use this to make use of the scroll behaviour
+    dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride
+});

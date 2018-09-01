@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule, MatButtonModule, MatInputModule,
   MatSelectModule, MatAutocompleteModule, MatIconModule, MatToolbarModule, MatTableModule } from '@angular/material';
+import { DndModule } from 'ng2-dnd';
 
 import { HiScoreComponent } from './hi-score.component';
 import { HiScoreRoutingModule, routedComponents } from './hi-score.routing.module';
@@ -53,7 +54,8 @@ import { environment } from '../environments/environment';
     MatToolbarModule,
     MatTableModule,
     HiScoreRoutingModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
+    DndModule.forRoot()
   ],
   providers: [
     GameService,

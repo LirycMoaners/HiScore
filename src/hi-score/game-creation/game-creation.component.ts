@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { MainBarService } from '../shared/main-bar/main-bar.service';
 import { Player } from '../shared/player/player.model';
 import { PlayerService } from '../shared/player/player.service';
@@ -10,8 +10,10 @@ import { GameService } from '../shared/game/game.service';
 import { Router } from '@angular/router';
 import { Observable, forkJoin, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSelect } from '@angular/material';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
+import { EndingType } from '../shared/game-category/ending-type.enum';
+import { Goal } from '../shared/game-category/goal.enum';
 
 @Component({
   selector: 'hs-game-creation',
@@ -20,6 +22,7 @@ import { AddCategoryDialogComponent } from './add-category-dialog/add-category-d
 })
 
 export class GameCreationComponent implements OnInit {
+  public game: Game;
   public filteredPlayerList: Player[] = [];
   public playerList: Player[] = [];
   public gamePlayerList: Player[] = [];
@@ -27,6 +30,8 @@ export class GameCreationComponent implements OnInit {
   public chosenGameCategory: GameCategory;
   public isShownAddCategoryPopup = false;
   public newPlayerName = '';
+  public EndingType: typeof EndingType = EndingType;
+  public Goal: typeof Goal = Goal;
 
   constructor(
     private mainBarService: MainBarService,
@@ -41,6 +46,12 @@ export class GameCreationComponent implements OnInit {
     this.mainBarService.setTitle('New Game');
     this.mainBarService.setIsLeftSide(false);
 
+    this.game = new Game();
+    this.game.id = UUID.UUID();
+    this.game.isGameContinuing = false;
+    this.game.firstPlayerList = [];
+    this.game.scoreList = [];
+
     this.playerService.getPlayerList()
       .subscribe((playerList: Player[]) => {
         this.playerList = playerList;
@@ -51,6 +62,11 @@ export class GameCreationComponent implements OnInit {
       .subscribe((gameCategoryList: GameCategory[]) => {
         this.gameCategoryList = gameCategoryList;
       });
+  }
+
+  @HostListener('dragenter', ['$event'])
+  public dragEnter(event: any): void {
+    event.preventDefault();
   }
 
   public onNewPlayerOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
@@ -120,20 +136,18 @@ export class GameCreationComponent implements OnInit {
     });
   }
 
+  public onSelectGameCategory(gameCategory: GameCategory) {
+    this.game.gameCategory = Object.assign({}, gameCategory);
+  }
+
   public startGame() {
     if (this.gamePlayerList.length && this.chosenGameCategory) {
-      const game = new Game();
-      game.id = UUID.UUID();
-      game.gameCategory = this.chosenGameCategory;
-      game.date = new Date();
-      game.isGameContinuing = false;
-      game.firstPlayerList = [];
-      game.scoreList = [];
+      this.game.date = new Date();
 
       const newPlayerList$: Observable<Player>[] = [];
 
       for (const player of this.gamePlayerList) {
-        game.scoreList.push({
+        this.game.scoreList.push({
           playerId: player.id,
           roundScoreList: [0],
           total: 0
@@ -146,7 +160,7 @@ export class GameCreationComponent implements OnInit {
 
       (newPlayerList$.length ? forkJoin(newPlayerList$) : of(null))
         .pipe(
-          flatMap(() => this.gameService.createGame(game))
+          flatMap(() => this.gameService.createGame(this.game))
         )
         .subscribe((createdGame: Game) => this.router.navigate(['/current-game/' + createdGame.id]));
     }
@@ -158,6 +172,11 @@ export class GameCreationComponent implements OnInit {
     this.gamePlayerList.push(player);
 
     this.newPlayerName = '';
+    this.filterPlayerList();
+  }
+
+  public removePlayer(player: Player) {
+    this.gamePlayerList.splice(this.gamePlayerList.indexOf(player), 1);
     this.filterPlayerList();
   }
 }

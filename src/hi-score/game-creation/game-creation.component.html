@@ -2,8 +2,7 @@
   <section>
     <div class="player-list">
       <h2>Player List</h2>
-
-      <div class="list">
+      <div>
         <mat-form-field>
           <input #newPlayer
             type="text"
@@ -19,8 +18,13 @@
             <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
           </mat-autocomplete>
         </mat-form-field>
+      </div>
 
-        <div *ngFor="let player of gamePlayerList; let i = index">
+      <div class="list" dnd-sortable-container [sortableData]="gamePlayerList">
+        <div *ngFor="let player of gamePlayerList; let i = index" dnd-sortable [sortableIndex]="i">
+          <button mat-icon-button aria-label="Drag to change order">
+            <mat-icon>drag_handle</mat-icon>
+          </button>
           <mat-form-field>
             <input type="text"
               matInput
@@ -33,6 +37,9 @@
               <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
             </mat-autocomplete>
           </mat-form-field>
+          <button mat-icon-button (click)="removePlayer(player)" aria-label="Remove player">
+            <mat-icon>close</mat-icon>
+          </button>
         </div>
       </div>
     </div>
@@ -41,12 +48,29 @@
       <h2>Game Category</h2>
 
       <mat-form-field>
-        <mat-select [(ngModel)]="chosenGameCategory" placeholder="Game category" required role="listbox">
-          <mat-option role="option" #gameCategory *ngFor="let cat of gameCategoryList" [value]="cat">{{cat.name}}</mat-option>
+        <mat-select  #gameCategory [(ngModel)]="chosenGameCategory" (ngModelChange)="onSelectGameCategory($event)" placeholder="Game category" required role="listbox">
+          <mat-option role="option" *ngFor="let cat of gameCategoryList" [value]="cat">{{cat.name}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <div>
-        <button mat-raised-button (click)="openDialog()">Add category</button>
+      <button mat-raised-button (click)="openDialog()">Add category</button>
+      <div class="game-category-details" *ngIf="!!game.gameCategory">
+        <mat-form-field>
+          <mat-select [(ngModel)]="game.gameCategory.endingType" placeholder="Ending type">
+            <mat-option *ngFor="let endingType of EndingType | keyEnum" [value]="endingType.value">
+              {{endingType.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" [(ngModel)]="game.gameCategory.endingNumber" placeholder="Ending number">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select [(ngModel)]="game.gameCategory.goal" placeholder="Goal">
+            <mat-option *ngFor="let goal of Goal | keyEnum" [value]="goal.value">
+              {{goal.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
     </div>
   </section>
