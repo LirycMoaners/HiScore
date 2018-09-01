@@ -1,3 +1,7 @@
-<button mat-icon-button aria-label="Open option menu">
+<button mat-icon-button [matMenuTriggerFor]="optionMenu" aria-label="Open option menu">
   <mat-icon [class.isHoriz]="isHoriz"></mat-icon>
 </button>
+
+<mat-menu #optionMenu="matMenu">
+  <button *ngIf="currentGameId" mat-menu-item [routerLink]="'/game-edition/' + currentGameId">Modify game</button>
+</mat-menu>

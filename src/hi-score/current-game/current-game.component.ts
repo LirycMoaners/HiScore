@@ -9,6 +9,7 @@ import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { Goal } from '../shared/game-category/goal.enum';
 import { EndingType } from '../shared/game-category/ending-type.enum';
 import { WinDialogComponent } from './win-dialog/win-dialog.component';
+import { OptionMenuService } from '../shared/option-menu/option-menu.service';
 
 @Component({
   selector: 'hs-current-game',
@@ -25,6 +26,7 @@ export class CurrentGameComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private mainBarService: MainBarService,
+    private optionMenuService: OptionMenuService,
     private dialog: MatDialog
   ) { }
 
@@ -33,6 +35,7 @@ export class CurrentGameComponent implements OnInit {
       .subscribe((game: Game) => {
         this.game = game;
         this.mainBarService.setTitle(game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')');
+        this.optionMenuService.setCurrentGameId(game.id);
         if (this.isGameEnd() && !this.game.isGameContinuing) {
           this.openWinDialog();
         }

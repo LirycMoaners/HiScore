@@ -7,21 +7,22 @@ import { GameCategoryService } from '../shared/game-category/game-category.servi
 import { Game } from '../shared/game/game.model';
 import { UUID } from 'angular2-uuid';
 import { GameService } from '../shared/game/game.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, forkJoin, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { MatDialog, MatSelect } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
 import { EndingType } from '../shared/game-category/ending-type.enum';
 import { Goal } from '../shared/game-category/goal.enum';
+import { Score } from '../shared/score/score.model';
 
 @Component({
-  selector: 'hs-game-creation',
-  templateUrl: 'game-creation.component.html',
-  styleUrls: ['game-creation.component.scss']
+  selector: 'hs-game-edition',
+  templateUrl: 'game-edition.component.html',
+  styleUrls: ['game-edition.component.scss']
 })
 
-export class GameCreationComponent implements OnInit {
+export class GameEditionComponent implements OnInit {
   public game: Game;
   public filteredPlayerList: Player[] = [];
   public playerList: Player[] = [];
@@ -32,31 +33,63 @@ export class GameCreationComponent implements OnInit {
   public newPlayerName = '';
   public EndingType: typeof EndingType = EndingType;
   public Goal: typeof Goal = Goal;
+  public isCreationMode = true;
 
   constructor(
     private mainBarService: MainBarService,
     private playerService: PlayerService,
     private gameCategoryService: GameCategoryService,
     private gameService: GameService,
+    private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog
   ) { }
 
   ngOnInit() {
-    this.mainBarService.setTitle('New Game');
     this.mainBarService.setIsLeftSide(false);
 
-    this.game = new Game();
-    this.game.id = UUID.UUID();
-    this.game.isGameContinuing = false;
-    this.game.firstPlayerList = [];
-    this.game.scoreList = [];
+    const gameId: string = this.route.snapshot.params['id'];
+    let game$: Observable<null> = of(null);
 
-    this.playerService.getPlayerList()
-      .subscribe((playerList: Player[]) => {
-        this.playerList = playerList;
-        this.filteredPlayerList = playerList;
-      });
+    if (gameId) {
+      this.mainBarService.setTitle('Game Edition');
+      this.isCreationMode = false;
+
+      game$ = this.gameService.getGameById(gameId)
+        .pipe(
+          flatMap((game: Game) => {
+            this.game = Object.assign({}, game);
+            return forkJoin(
+              this.gameCategoryService.getGameCategoryById(this.game.gameCategory.id),
+              this.playerService.getPlayerListById(this.game.scoreList.map((score: Score) => score.playerId))
+            );
+          }),
+          flatMap(([gameCategory, playerList]: [GameCategory, Player[]]) => {
+            this.chosenGameCategory = gameCategory;
+            playerList.forEach((player: Player) => this.gamePlayerList.push(Object.assign({}, player)));
+            return of(null);
+          })
+        );
+    } else {
+      this.mainBarService.setTitle('New Game');
+
+      this.game = new Game();
+      this.game.id = UUID.UUID();
+      this.game.isGameContinuing = false;
+      this.game.firstPlayerList = [];
+    }
+
+    forkJoin(
+      game$,
+      this.playerService.getPlayerList()
+      .pipe(
+        flatMap((playerList: Player[]) => {
+          this.playerList = playerList;
+          this.filteredPlayerList = playerList;
+          return of(null);
+        })
+      )
+    ).subscribe(() => this.filterPlayerList());
 
     this.gameCategoryService.getGameCategoryList()
       .subscribe((gameCategoryList: GameCategory[]) => {
@@ -142,25 +175,49 @@ export class GameCreationComponent implements OnInit {
 
   public startGame() {
     if (this.gamePlayerList.length && this.chosenGameCategory) {
-      this.game.date = new Date();
+      this.game.date = this.isCreationMode ? new Date() : this.game.date;
+      this.game.scoreList = this.isCreationMode ? [] : this.game.scoreList;
 
       const newPlayerList$: Observable<Player>[] = [];
+      const newScoreList: Score[] = [];
+      const voidRoundScoreList: number[] = [];
 
       for (const player of this.gamePlayerList) {
-        this.game.scoreList.push({
+        newScoreList.push({
           playerId: player.id,
           roundScoreList: [0],
           total: 0
         });
+
+        if (!this.isCreationMode) {
+          const playerScore: Score = this.game.scoreList.find((score: Score) => score.playerId === player.id);
+          if (playerScore) {
+            newScoreList[newScoreList.length - 1].roundScoreList = playerScore.roundScoreList;
+            newScoreList[newScoreList.length - 1].total = playerScore.total;
+          } else {
+            if (!voidRoundScoreList.length) {
+              for (let i = 0; i < this.game.scoreList[0].roundScoreList.length; i++) {
+                voidRoundScoreList.push(0);
+              }
+            }
+            newScoreList[newScoreList.length - 1].roundScoreList = voidRoundScoreList;
+          }
+        }
 
         if (!this.playerList.find((pl: Player) => pl.id === player.id)) {
           newPlayerList$.push(this.playerService.createPlayer(player));
         }
       }
 
+      this.game.scoreList = newScoreList;
+
+      if (!this.isCreationMode) {
+        this.refreshBestScore();
+      }
+
       (newPlayerList$.length ? forkJoin(newPlayerList$) : of(null))
         .pipe(
-          flatMap(() => this.gameService.createGame(this.game))
+          flatMap(() => this.isCreationMode ? this.gameService.createGame(this.game) : this.gameService.modifyGame(this.game))
         )
         .subscribe((createdGame: Game) => this.router.navigate(['/current-game/' + createdGame.id]));
     }
@@ -178,5 +235,15 @@ export class GameCreationComponent implements OnInit {
   public removePlayer(player: Player) {
     this.gamePlayerList.splice(this.gamePlayerList.indexOf(player), 1);
     this.filterPlayerList();
+  }
+
+  private refreshBestScore() {
+    let bestScore: number;
+    if (this.game.gameCategory.goal === Goal.highestScore) {
+      bestScore = Math.max(...this.game.scoreList.map((sc: Score) => sc.total));
+    } else {
+      bestScore = Math.min(...this.game.scoreList.map((sc: Score) => sc.total));
+    }
+    this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.playerId);
   }
 }

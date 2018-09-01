@@ -50,6 +50,10 @@ export class PlayerService {
     return of(this.playerList.find((player: Player) => player.id === id));
   }
 
+  public getPlayerListById(idList: string[]): Observable<Player[]> {
+    return of(this.playerList.filter((player: Player) => idList.includes(player.id)));
+  }
+
   public createPlayer(player: Player): Observable<Player> {
     this.playerList.push(player);
     return of(player);

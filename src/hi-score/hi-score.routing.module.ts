@@ -2,7 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { GameListComponent } from './game-list/game-list.component';
 import { NgModule } from '@angular/core';
 import { CurrentGameComponent } from './current-game/current-game.component';
-import { GameCreationComponent } from './game-creation/game-creation.component';
+import { GameEditionComponent } from './game-edition/game-edition.component';
 
 const routes: Routes = [
   {
@@ -20,7 +20,11 @@ const routes: Routes = [
   },
   {
     path: 'game-creation',
-    component: GameCreationComponent
+    component: GameEditionComponent
+  },
+  {
+    path: 'game-edition/:id',
+    component: GameEditionComponent
   }
 ];
 
@@ -33,5 +37,5 @@ export class HiScoreRoutingModule {}
 export const routedComponents = [
   GameListComponent,
   CurrentGameComponent,
-  GameCreationComponent
+  GameEditionComponent
 ];

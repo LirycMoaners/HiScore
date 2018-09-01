@@ -11,6 +11,7 @@ export class GameService {
     {
       id: '0',
       gameCategory : {
+        id: '1',
         name: 'Uno',
         endingType: EndingType.point,
         endingNumber: 500,
@@ -81,6 +82,7 @@ export class GameService {
     {
       id: '1',
       gameCategory : {
+        id: '1',
         name: 'Uno',
         endingType: EndingType.point,
         endingNumber: 500,
@@ -141,5 +143,11 @@ export class GameService {
     this.gameList.push(game);
     this.gameList.sort((g1: Game, g2: Game) => g1.date < g2.date ? 1 : -1);
     return of(game);
+  }
+
+  public modifyGame(newGame: Game): Observable<Game> {
+    const oldGame: Game = this.gameList.find((game: Game) => game.id === newGame.id);
+    this.gameList.splice(this.gameList.indexOf(oldGame), 1, newGame);
+    return of(newGame);
   }
 }

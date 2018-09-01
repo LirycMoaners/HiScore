@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule, MatButtonModule, MatInputModule,
-  MatSelectModule, MatAutocompleteModule, MatIconModule, MatToolbarModule, MatTableModule } from '@angular/material';
+  MatSelectModule, MatAutocompleteModule, MatIconModule, MatToolbarModule, MatTableModule, MatMenuModule } from '@angular/material';
 import { DndModule } from 'ng2-dnd';
 
 import { HiScoreComponent } from './hi-score.component';
@@ -17,11 +17,12 @@ import { LongPressDirective } from './shared/long-press.directive';
 import { ScoreDialogComponent } from './current-game/score-dialog/score-dialog.component';
 import { MainBarService } from './shared/main-bar/main-bar.service';
 import { PlayerNamePipe } from './shared/player/player-name.pipe';
-import { AddCategoryDialogComponent } from './game-creation/add-category-dialog/add-category-dialog.component';
+import { AddCategoryDialogComponent } from './game-edition/add-category-dialog/add-category-dialog.component';
 import { KeyEnumPipe } from './shared/key-enum.pipe';
 import { WinDialogComponent } from './current-game/win-dialog/win-dialog.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { OptionMenuService } from './shared/option-menu/option-menu.service';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { environment } from '../environments/environment';
     MatIconModule,
     MatToolbarModule,
     MatTableModule,
+    MatMenuModule,
     HiScoreRoutingModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     DndModule.forRoot()
@@ -61,7 +63,8 @@ import { environment } from '../environments/environment';
     GameService,
     PlayerService,
     GameCategoryService,
-    MainBarService
+    MainBarService,
+    OptionMenuService
   ],
   bootstrap: [HiScoreComponent]
 })
