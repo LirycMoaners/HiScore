@@ -47,12 +47,14 @@
     <div class="game-category">
       <h2>Game Category</h2>
 
-      <mat-form-field>
-        <mat-select  #gameCategory [(ngModel)]="chosenGameCategory" (ngModelChange)="onSelectGameCategory($event)" placeholder="Game category" required role="listbox">
-          <mat-option role="option" *ngFor="let cat of gameCategoryList" [value]="cat">{{cat.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-raised-button (click)="openDialog()">Add category</button>
+      <div>
+        <mat-form-field>
+          <mat-select  #gameCategory [(ngModel)]="chosenGameCategory" (ngModelChange)="onSelectGameCategory($event)" placeholder="Game category" required role="listbox">
+            <mat-option role="option" *ngFor="let cat of gameCategoryList" [value]="cat">{{cat.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-raised-button (click)="openDialog()">Add category</button>
+      </div>
       <div class="game-category-details" *ngIf="!!game && !!game.gameCategory">
         <mat-form-field>
           <mat-select [(ngModel)]="game.gameCategory.endingType" placeholder="Ending type">
