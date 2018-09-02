@@ -9,6 +9,7 @@ import { MainBarService } from './main-bar.service';
 
 export class MainBarComponent implements OnInit {
   public title = '';
+  public isOptionMenuVisible = false;
 
   constructor(
     private mainBarService: MainBarService
@@ -17,5 +18,7 @@ export class MainBarComponent implements OnInit {
   ngOnInit() {
     this.mainBarService.getTitle()
       .subscribe((title: string) => this.title = title);
+    this.mainBarService.getIsOptionMenuVisible()
+      .subscribe((isOptionMenuVisible: boolean) => this.isOptionMenuVisible = isOptionMenuVisible);
   }
 }

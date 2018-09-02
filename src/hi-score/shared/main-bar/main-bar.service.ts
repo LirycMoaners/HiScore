@@ -7,10 +7,13 @@ export class MainBarService {
   private title$: Observable<string>;
   private isLeftSideSubject: Subject<boolean> = new Subject<boolean>();
   private isLeftSide$: Observable<boolean>;
+  private isOptionMenuVisibleSubject: Subject<boolean> = new Subject<boolean>();
+  private isOptionMenuVisible$: Observable<boolean>;
 
   constructor() {
     this.title$ = this.titleSubject.asObservable();
     this.isLeftSide$ = this.isLeftSideSubject.asObservable();
+    this.isOptionMenuVisible$ = this.isOptionMenuVisibleSubject.asObservable();
   }
 
   public setTitle(title: string): void {
@@ -27,5 +30,13 @@ export class MainBarService {
 
   public getIsLeftSide(): Observable<boolean> {
     return this.isLeftSide$;
+  }
+
+  public setIsOptionMenuVisible(isOptionMenuVisible: boolean): void {
+    this.isOptionMenuVisibleSubject.next(isOptionMenuVisible);
+  }
+
+  public getIsOptionMenuVisible(): Observable<boolean> {
+    return this.isOptionMenuVisible$;
   }
 }

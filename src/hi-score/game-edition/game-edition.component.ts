@@ -46,8 +46,6 @@ export class GameEditionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.mainBarService.setIsLeftSide(false);
-
     const gameId: string = this.route.snapshot.params['id'];
     let game$: Observable<null> = of(null);
 

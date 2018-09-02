@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { GameService } from '../shared/game/game.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Game } from '../shared/game/game.model';
@@ -17,7 +17,7 @@ import { OptionMenuService } from '../shared/option-menu/option-menu.service';
   styleUrls: ['current-game.component.scss']
 })
 
-export class CurrentGameComponent implements OnInit {
+export class CurrentGameComponent implements OnInit, OnDestroy {
   public game: Game;
   public modifiedScore: Score;
 
@@ -41,6 +41,12 @@ export class CurrentGameComponent implements OnInit {
         }
       });
     this.mainBarService.setIsLeftSide(true);
+    this.mainBarService.setIsOptionMenuVisible(true);
+  }
+
+  ngOnDestroy(): void {
+    this.mainBarService.setIsLeftSide(false);
+    this.mainBarService.setIsOptionMenuVisible(false);
   }
 
   public validateRound() {
