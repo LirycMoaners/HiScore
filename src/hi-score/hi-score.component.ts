@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MainBarService } from './shared/main-bar/main-bar.service';
-declare const AndroidFullScreen;
 
 @Component({
   selector: 'hs-root',
@@ -28,9 +27,5 @@ export class HiScoreComponent implements OnInit {
       .subscribe((isLeftSide: boolean) => {
         this.isLeftSide = isLeftSide;
       });
-
-    /* cordova-version-config-off
-    AndroidFullScreen.immersiveMode();
-    cordova-version-config-off */
   }
 }

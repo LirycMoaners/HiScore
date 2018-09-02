@@ -7,7 +7,7 @@ function replace_string_in_file(filename, to_replace, replace_with) {
     fs.writeFileSync(filename, result, 'utf8');
 }
 
-var filestoreplace = ["src/hi-score/hi-score.component.ts"];
+var filestoreplace = ["src/main.ts"];
 
 filestoreplace.forEach(function(val) {
     if (fs.existsSync(val)) {
