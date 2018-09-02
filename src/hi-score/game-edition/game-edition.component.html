@@ -21,7 +21,7 @@
       </div>
 
       <div class="list" dnd-sortable-container [sortableData]="gamePlayerList">
-        <div *ngFor="let player of gamePlayerList; let i = index" dnd-sortable [sortableIndex]="i">
+        <div *ngFor="let player of gamePlayerList; let i = index" class="player" dnd-sortable [sortableIndex]="i">
           <button mat-icon-button aria-label="Drag to change order">
             <mat-icon>drag_handle</mat-icon>
           </button>
@@ -53,7 +53,7 @@
         </mat-select>
       </mat-form-field>
       <button mat-raised-button (click)="openDialog()">Add category</button>
-      <div class="game-category-details" *ngIf="!!game.gameCategory">
+      <div class="game-category-details" *ngIf="!!game && !!game.gameCategory">
         <mat-form-field>
           <mat-select [(ngModel)]="game.gameCategory.endingType" placeholder="Ending type">
             <mat-option *ngFor="let endingType of EndingType | keyEnum" [value]="endingType.value">
