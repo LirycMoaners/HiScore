@@ -178,7 +178,7 @@ export class GameEditionComponent implements OnInit {
       this.game.date = this.isCreationMode ? new Date() : this.game.date;
       this.game.scoreList = this.isCreationMode ? [] : this.game.scoreList;
 
-      const newPlayerList$: Observable<Player>[] = [];
+      const newPlayerList$: Observable<boolean>[] = [];
       const newScoreList: Score[] = [];
       const voidRoundScoreList: number[] = [];
 
@@ -217,9 +217,9 @@ export class GameEditionComponent implements OnInit {
 
       (newPlayerList$.length ? forkJoin(newPlayerList$) : of(null))
         .pipe(
-          flatMap(() => this.isCreationMode ? this.gameService.createGame(this.game) : this.gameService.modifyGame(this.game))
+          flatMap(() => this.isCreationMode ? this.gameService.createGame(this.game) : this.gameService.updateGame(this.game))
         )
-        .subscribe((createdGame: Game) => this.router.navigate(['/current-game/' + createdGame.id]));
+        .subscribe(() => this.router.navigate(['/current-game/' + this.game.id]));
     }
   }
 

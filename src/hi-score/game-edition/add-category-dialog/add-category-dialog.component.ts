@@ -4,6 +4,7 @@ import { Goal } from '../../shared/game-category/goal.enum';
 import { GameCategory } from '../../shared/game-category/game-category.model';
 import { GameCategoryService } from '../../shared/game-category/game-category.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { UUID } from 'angular2-uuid';
 
 @Component({
   selector: 'hs-add-category-dialog',
@@ -25,8 +26,9 @@ export class AddCategoryDialogComponent {
 
   public createGameCategory() {
     if (this.newGameCategory.name && this.newGameCategory.endingType && this.newGameCategory.endingNumber && this.newGameCategory.goal) {
+      this.newGameCategory.id = UUID.UUID();
       this.gameCategoryService.createGameCategory(this.newGameCategory)
-        .subscribe((gameCategory: GameCategory) => this.dialogRef.close(gameCategory));
+        .subscribe(() => this.dialogRef.close(this.newGameCategory));
     }
   }
 }

@@ -54,7 +54,7 @@ export class CurrentGameComponent implements OnInit {
       }
     }
     this.mainBarService.setTitle(this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')');
-    this.gameService.saveGame(this.game);
+    this.gameService.updateGame(this.game);
   }
 
   public onClickPlus(score: Score) {
@@ -120,7 +120,7 @@ export class CurrentGameComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.gameService.saveGame(this.game);
+        this.gameService.updateGame(this.game);
         this.router.navigate(['']);
       } else {
         this.game.isGameContinuing = true;

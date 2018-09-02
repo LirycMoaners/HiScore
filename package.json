@@ -34,6 +34,7 @@
     "@angular/pwa": "^0.7.5",
     "@angular/router": "^6.0.3",
     "@angular/service-worker": "^6.0.3",
+    "@ngx-pwa/local-storage": "^6.1.0",
     "angular2-uuid": "^1.1.1",
     "cordova": "^8.0.0",
     "cordova-android": "^7.0.0",
