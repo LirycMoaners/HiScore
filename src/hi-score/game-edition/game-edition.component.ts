@@ -164,8 +164,14 @@ export class GameEditionComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.chosenGameCategory = result || this.chosenGameCategory;
+      if (result) {
+        this.gameCategoryService.getGameCategoryList()
+          .subscribe((gameCategoryList: GameCategory[]) => {
+            this.gameCategoryList = gameCategoryList;
+            this.chosenGameCategory = this.gameCategoryList.find((gameCategory: GameCategory) => gameCategory.id === result.id);
+            this.onSelectGameCategory(this.chosenGameCategory);
+          });
+      }
     });
   }
 
@@ -178,7 +184,7 @@ export class GameEditionComponent implements OnInit {
       this.game.date = this.isCreationMode ? new Date() : this.game.date;
       this.game.scoreList = this.isCreationMode ? [] : this.game.scoreList;
 
-      const newPlayerList$: Observable<boolean>[] = [];
+      const newPlayerList: Player[] = [];
       const newScoreList: Score[] = [];
       const voidRoundScoreList: number[] = [];
 
@@ -205,17 +211,17 @@ export class GameEditionComponent implements OnInit {
         }
 
         if (!this.playerList.find((pl: Player) => pl.id === player.id)) {
-          newPlayerList$.push(this.playerService.createPlayer(player));
+          newPlayerList.push(player);
         }
       }
 
       this.game.scoreList = newScoreList;
 
-      if (!this.isCreationMode) {
+      if (!this.isCreationMode && this.game.scoreList[0].roundScoreList.length > 1) {
         this.refreshBestScore();
       }
 
-      (newPlayerList$.length ? forkJoin(newPlayerList$) : of(null))
+      (newPlayerList.length ? this.playerService.createPlayerList(newPlayerList) : of(null))
         .pipe(
           flatMap(() => this.isCreationMode ? this.gameService.createGame(this.game) : this.gameService.updateGame(this.game))
         )

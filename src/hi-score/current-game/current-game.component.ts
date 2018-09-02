@@ -53,8 +53,9 @@ export class CurrentGameComponent implements OnInit {
         score.roundScoreList.push(0);
       }
     }
-    this.mainBarService.setTitle(this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')');
-    this.gameService.updateGame(this.game);
+    this.gameService.updateGame(this.game).subscribe(() => {
+      this.mainBarService.setTitle(this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')');
+    });
   }
 
   public onClickPlus(score: Score) {
