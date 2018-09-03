@@ -21,4 +21,6 @@ const onDeviceReady = () => {
 
 document.addEventListener('deviceready', onDeviceReady, false);
 document.addEventListener('resume', onDeviceReady, false);
+
+document.addEventListener('backbutton', () => {}, false);
 cordova-version-config-off */
