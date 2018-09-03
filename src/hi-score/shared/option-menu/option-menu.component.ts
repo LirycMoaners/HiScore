@@ -26,4 +26,8 @@ export class OptionMenuComponent implements OnInit {
       (currentGameId: string) => this.currentGameId = currentGameId
     );
   }
+
+  public editLastRound() {
+    this.optionMenuService.setEditLastRound();
+  }
 }

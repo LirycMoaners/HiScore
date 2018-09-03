@@ -42,6 +42,18 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       });
     this.mainBarService.setIsLeftSide(true);
     this.mainBarService.setIsOptionMenuVisible(true);
+
+    this.optionMenuService.getEditLastRound().subscribe(() => {
+      if (this.game.scoreList[0].roundScoreList.length > 1) {
+        for (const score of this.game.scoreList) {
+          score.total -= score.roundScoreList.pop();
+          this.refreshBestScore();
+          this.gameService.updateGame(this.game).subscribe(() => {
+            this.mainBarService.setTitle(this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')');
+          });
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {
