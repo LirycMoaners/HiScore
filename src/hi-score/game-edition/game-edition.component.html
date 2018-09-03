@@ -53,7 +53,7 @@
             <mat-option role="option" *ngFor="let cat of gameCategoryList" [value]="cat">{{cat.name}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <button mat-raised-button (click)="openDialog()">Add category</button>
+        <button mat-raised-button (click)="openCategoryDialog()">Add category</button>
       </div>
       <div class="game-category-details" *ngIf="!!game && !!game.gameCategory">
         <mat-form-field>

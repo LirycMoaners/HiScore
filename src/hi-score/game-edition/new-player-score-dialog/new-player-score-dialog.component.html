@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>
+  Zero or Average
+</h2>
+<mat-dialog-content>
+  <p class="mat-body-1">
+    You add a new player to your game.
+    Should his score be the average of the others or just zero ?
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="buttons">
+    <button mat-button mat-dialog-close (click)="closeDialog(false)">Zero</button>
+    <button mat-button cdkfocusinitial (click)="closeDialog(true)">Average</button>
+  </div>
+</mat-dialog-actions>

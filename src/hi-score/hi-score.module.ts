@@ -23,6 +23,7 @@ import { WinDialogComponent } from './current-game/win-dialog/win-dialog.compone
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { OptionMenuService } from './shared/option-menu/option-menu.service';
+import { NewPlayerScoreDialogComponent } from './game-edition/new-player-score-dialog/new-player-score-dialog.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { OptionMenuService } from './shared/option-menu/option-menu.service';
     ScoreDialogComponent,
     WinDialogComponent,
     AddCategoryDialogComponent,
+    NewPlayerScoreDialogComponent,
     LongPressDirective,
     PlayerNamePipe,
     KeyEnumPipe
@@ -40,7 +42,8 @@ import { OptionMenuService } from './shared/option-menu/option-menu.service';
   entryComponents: [
     ScoreDialogComponent,
     WinDialogComponent,
-    AddCategoryDialogComponent
+    AddCategoryDialogComponent,
+    NewPlayerScoreDialogComponent
   ],
   imports: [
     FormsModule,

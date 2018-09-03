@@ -15,6 +15,8 @@ import { AddCategoryDialogComponent } from './add-category-dialog/add-category-d
 import { EndingType } from '../shared/game-category/ending-type.enum';
 import { Goal } from '../shared/game-category/goal.enum';
 import { Score } from '../shared/score/score.model';
+import { isNullOrUndefined } from 'util';
+import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
 
 @Component({
   selector: 'hs-game-edition',
@@ -34,6 +36,7 @@ export class GameEditionComponent implements OnInit {
   public EndingType: typeof EndingType = EndingType;
   public Goal: typeof Goal = Goal;
   public isCreationMode = true;
+  private newPlayerScore: number;
 
   constructor(
     private mainBarService: MainBarService,
@@ -125,6 +128,22 @@ export class GameEditionComponent implements OnInit {
     }
   }
 
+  public addPlayer(newPlayer: Player, input: HTMLInputElement) {
+    const player = Object.assign({}, newPlayer);
+    input.value = '';
+    this.gamePlayerList.push(player);
+
+    if (!this.isCreationMode
+      && !this.game.scoreList.find((score: Score) => score.playerId === player.id)
+      && isNullOrUndefined(this.newPlayerScore)
+    ) {
+      this.openNewPlayerScoreDialog();
+    }
+
+    this.newPlayerName = '';
+    this.filterPlayerList();
+  }
+
   public changePlayer(oldPlayer: Player, player: Player | string) {
     if (player) {
       if (typeof player === 'string') {
@@ -141,10 +160,22 @@ export class GameEditionComponent implements OnInit {
         oldPlayer.id = player.id;
         oldPlayer.name = player.name;
       }
+
+      if (!this.isCreationMode
+        && !this.game.scoreList.find((score: Score) => score.playerId === oldPlayer.id)
+        && isNullOrUndefined(this.newPlayerScore)
+      ) {
+        this.openNewPlayerScoreDialog();
+      }
     } else {
       this.gamePlayerList.splice(this.gamePlayerList.indexOf(oldPlayer), 1);
     }
 
+    this.filterPlayerList();
+  }
+
+  public removePlayer(player: Player) {
+    this.gamePlayerList.splice(this.gamePlayerList.indexOf(player), 1);
     this.filterPlayerList();
   }
 
@@ -156,7 +187,11 @@ export class GameEditionComponent implements OnInit {
       );
   }
 
-  public openDialog() {
+  public onSelectGameCategory(gameCategory: GameCategory) {
+    this.game.gameCategory = Object.assign({}, gameCategory);
+  }
+
+  public openCategoryDialog() {
     const dialogRef = this.dialog.open(AddCategoryDialogComponent, {
       width: '400px'
     });
@@ -171,10 +206,6 @@ export class GameEditionComponent implements OnInit {
           });
       }
     });
-  }
-
-  public onSelectGameCategory(gameCategory: GameCategory) {
-    this.game.gameCategory = Object.assign({}, gameCategory);
   }
 
   public startGame() {
@@ -201,7 +232,12 @@ export class GameEditionComponent implements OnInit {
           } else {
             if (!voidRoundScoreList.length) {
               for (let i = 0; i < this.game.scoreList[0].roundScoreList.length; i++) {
-                voidRoundScoreList.push(0);
+                if (i === this.game.scoreList[0].roundScoreList.length - 2 && !isNullOrUndefined(this.newPlayerScore)) {
+                  voidRoundScoreList.push(this.newPlayerScore);
+                  newScoreList[newScoreList.length - 1].total = this.newPlayerScore;
+                } else {
+                  voidRoundScoreList.push(0);
+                }
               }
             }
             newScoreList[newScoreList.length - 1].roundScoreList = voidRoundScoreList;
@@ -227,20 +263,6 @@ export class GameEditionComponent implements OnInit {
     }
   }
 
-  public addPlayer(newPlayer: Player, input: HTMLInputElement) {
-    const player = Object.assign({}, newPlayer);
-    input.value = '';
-    this.gamePlayerList.push(player);
-
-    this.newPlayerName = '';
-    this.filterPlayerList();
-  }
-
-  public removePlayer(player: Player) {
-    this.gamePlayerList.splice(this.gamePlayerList.indexOf(player), 1);
-    this.filterPlayerList();
-  }
-
   private refreshBestScore() {
     let bestScore: number;
     if (this.game.gameCategory.goal === Goal.highestScore) {
@@ -249,5 +271,25 @@ export class GameEditionComponent implements OnInit {
       bestScore = Math.min(...this.game.scoreList.map((sc: Score) => sc.total));
     }
     this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.playerId);
+  }
+
+  private openNewPlayerScoreDialog() {
+    const dialogRef = this.dialog.open(NewPlayerScoreDialogComponent, {
+      width: '400px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.newPlayerScore = Number((
+            this.game.scoreList
+              .map((score: Score) => score.total)
+              .reduce((scoreTotal: number, score: number) => scoreTotal + score)
+            / this.game.scoreList.length
+          ).toFixed(0));
+      } else {
+        this.newPlayerScore = 0;
+      }
+    });
   }
 }
