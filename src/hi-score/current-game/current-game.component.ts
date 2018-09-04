@@ -46,7 +46,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     this.optionMenuService.getEditLastRound().subscribe(() => {
       if (this.game.scoreList[0].roundScoreList.length > 1) {
         for (const score of this.game.scoreList) {
-          score.total -= score.roundScoreList.pop();
+          score.total -= score.roundScoreList.shift();
           this.refreshBestScore();
           this.gameService.updateGame(this.game).subscribe(() => {
             this.mainBarService.setTitle(this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')');
@@ -68,7 +68,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       this.openWinDialog();
     } else {
       for (const score of this.game.scoreList) {
-        score.roundScoreList.push(0);
+        score.roundScoreList.unshift(0);
       }
     }
     this.gameService.updateGame(this.game).subscribe(() => {
@@ -77,18 +77,18 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   }
 
   public onClickPlus(score: Score) {
-    score.roundScoreList[score.roundScoreList.length - 1] += 1;
+    score.roundScoreList[0] += 1;
     this.calculateTotal(score);
   }
 
   public onClickMinus(score: Score) {
-    score.roundScoreList[score.roundScoreList.length - 1] -= 1;
+    score.roundScoreList[0] -= 1;
     this.calculateTotal(score);
   }
 
   public onChangeRoundScore(score: Score, inputScore: HTMLInputElement) {
     inputScore.value = inputScore.value ? inputScore.value : '0';
-    score.roundScoreList[score.roundScoreList.length - 1] = Number(inputScore.value);
+    score.roundScoreList[0] = Number(inputScore.value);
     this.calculateTotal(score);
   }
 
@@ -144,7 +144,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       } else {
         this.game.isGameContinuing = true;
         for (const score of this.game.scoreList) {
-          score.roundScoreList.push(0);
+          score.roundScoreList.unshift(0);
         }
       }
     });
