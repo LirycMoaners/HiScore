@@ -247,15 +247,15 @@ export class GameEditionComponent implements OnInit {
           } else {
             if (!voidRoundScoreList.length) {
               for (let i = 0; i < this.game.scoreList[0].roundScoreList.length; i++) {
-                if (i === this.game.scoreList[0].roundScoreList.length - 2 && !isNullOrUndefined(this.newPlayerScore)) {
+                if (i === 1 && !isNullOrUndefined(this.newPlayerScore)) {
                   voidRoundScoreList.push(this.newPlayerScore);
-                  newScoreList[newScoreList.length - 1].total = this.newPlayerScore;
                 } else {
                   voidRoundScoreList.push(0);
                 }
               }
             }
-            newScoreList[newScoreList.length - 1].roundScoreList = voidRoundScoreList;
+            newScoreList[newScoreList.length - 1].roundScoreList = Object.assign([], voidRoundScoreList);
+            newScoreList[newScoreList.length - 1].total = this.newPlayerScore;
           }
         }
 

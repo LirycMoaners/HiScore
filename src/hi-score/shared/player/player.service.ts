@@ -28,7 +28,7 @@ export class PlayerService {
   public getPlayerListById(idList: string[]): Observable<Player[]> {
     return this.getPlayerList()
       .pipe(
-        map((playerList: Player[]) => playerList.filter((player: Player) => idList.includes(player.id)))
+        map((playerList: Player[]) => idList.map((id: string) => playerList.find((player: Player) => player.id === id)))
       );
   }
 
