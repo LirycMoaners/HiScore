@@ -11,6 +11,7 @@ import { MainBarService } from '../shared/main-bar/main-bar.service';
 
 export class GameListComponent implements OnInit {
   public gameList: Game[] = [];
+  public today: Date = new Date();
 
   constructor(
     private gameService: GameService,
