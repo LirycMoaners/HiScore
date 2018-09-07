@@ -3,6 +3,7 @@
 </button>
 
 <mat-menu #optionMenu="matMenu">
+  <button *ngIf="currentGameId" mat-menu-item (click)="newGame()">New game</button>
   <button *ngIf="currentGameId" mat-menu-item [routerLink]="'/game-edition/' + currentGameId">Modify game</button>
   <button *ngIf="currentGameId" mat-menu-item (click)="editLastRound()">Edit last round</button>
 </mat-menu>

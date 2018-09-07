@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
 
 import { Game } from './game.model';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { LocalStorage } from '@ngx-pwa/local-storage';
 import { flatMap, map } from 'rxjs/operators';
 
 @Injectable()
 export class GameService {
+  private currentGameIdSubject: ReplaySubject<string> = new ReplaySubject<string>(1);
+  private currentGameId$: Observable<string>;
 
   constructor(
     protected localStorage: LocalStorage
-  ) { }
+  ) {
+    this.currentGameId$ = this.currentGameIdSubject.asObservable();
+  }
 
   public getGameList(): Observable<Game[]> {
     return this.localStorage.getItem<Game[]>('games')
@@ -45,5 +49,13 @@ export class GameService {
           return this.localStorage.setItem('games', gameList);
         })
       );
+  }
+
+  public setCurrentGameId(currentGameId: string): void {
+    this.currentGameIdSubject.next(currentGameId);
+  }
+
+  public getCurrentGameId(): Observable<string> {
+    return this.currentGameId$;
   }
 }

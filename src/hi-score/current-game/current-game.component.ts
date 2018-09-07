@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GameService } from '../shared/game/game.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Game } from '../shared/game/game.model';
@@ -35,7 +35,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       .subscribe((game: Game) => {
         this.game = game;
         this.mainBarService.setTitle(game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')');
-        this.optionMenuService.setCurrentGameId(game.id);
+        this.gameService.setCurrentGameId(game.id);
         if (this.isGameEnd() && !this.game.isGameContinuing) {
           this.openWinDialog();
         }
@@ -53,6 +53,10 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
           });
         }
       }
+    });
+
+    this.optionMenuService.getNewGame().subscribe(() => {
+      this.router.navigate(['/game-creation'], {queryParams: {copy: true}});
     });
   }
 

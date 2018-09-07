@@ -8,8 +8,8 @@ import { Game } from '../shared/game/game.model';
 import { UUID } from 'angular2-uuid';
 import { GameService } from '../shared/game/game.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, forkJoin, of } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { Observable, forkJoin, of, combineLatest } from 'rxjs';
+import { flatMap, first, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
 import { EndingType } from '../shared/game-category/ending-type.enum';
@@ -31,7 +31,6 @@ export class GameEditionComponent implements OnInit {
   public gamePlayerList: Player[] = [];
   public gameCategoryList: GameCategory[] = [];
   public chosenGameCategory: GameCategory;
-  public isShownAddCategoryPopup = false;
   public newPlayerName = '';
   public EndingType: typeof EndingType = EndingType;
   public Goal: typeof Goal = Goal;
@@ -50,52 +49,68 @@ export class GameEditionComponent implements OnInit {
 
   ngOnInit() {
     const gameId: string = this.route.snapshot.params['id'];
-    let game$: Observable<null> = of(null);
+    const isCopy: boolean = this.route.snapshot.queryParams['copy'];
+    let game$: Observable<any>;
 
-    if (gameId) {
-      this.mainBarService.setTitle('Game Edition');
-      this.isCreationMode = false;
+    if (gameId || isCopy) {
+      if (gameId) {
+        this.mainBarService.setTitle('Game Edition');
+        this.isCreationMode = false;
+        game$ = this.gameService.getGameById(gameId);
+      } else {
+        this.mainBarService.setTitle('New Game');
+        game$ = this.gameService.getCurrentGameId()
+          .pipe(
+            first(),
+            flatMap((id: string) => this.gameService.getGameById(id)),
+            map((game: Game) => {
+              game.id = UUID.UUID();
+              game.isGameContinuing = false;
+              game.firstPlayerList = [];
+              return game;
+            })
+          );
+      }
 
-      game$ = this.gameService.getGameById(gameId)
-        .pipe(
+      combineLatest(
+        game$.pipe(
           flatMap((game: Game) => {
             this.game = Object.assign({}, game);
             return forkJoin(
               this.gameCategoryService.getGameCategoryById(this.game.gameCategory.id),
               this.playerService.getPlayerListById(this.game.scoreList.map((score: Score) => score.playerId))
             );
-          }),
-          flatMap(([gameCategory, playerList]: [GameCategory, Player[]]) => {
-            this.chosenGameCategory = gameCategory;
-            playerList.forEach((player: Player) => this.gamePlayerList.push(Object.assign({}, player)));
-            return of(null);
           })
-        );
+        ),
+        this.playerService.getPlayerList(),
+        this.gameCategoryService.getGameCategoryList()
+      ).subscribe(
+        ([[gameCategory, gamePlayerList], playerList, gameCategoryList]: [[GameCategory, Player[]], Player[], GameCategory[]]) => {
+          this.playerList = playerList;
+          this.gameCategoryList = gameCategoryList;
+          this.chosenGameCategory = this.gameCategoryList.find((category: GameCategory) => category.id === gameCategory.id);
+          gamePlayerList.forEach((player: Player) => this.gamePlayerList.push(Object.assign({}, player)));
+          this.filterPlayerList();
+        }
+      );
     } else {
       this.mainBarService.setTitle('New Game');
-
       this.game = new Game();
       this.game.id = UUID.UUID();
       this.game.isGameContinuing = false;
       this.game.firstPlayerList = [];
-    }
+      this.chosenGameCategory = new GameCategory();
 
-    forkJoin(
-      game$,
       this.playerService.getPlayerList()
-      .pipe(
-        flatMap((playerList: Player[]) => {
+        .subscribe((playerList: Player[]) => {
           this.playerList = playerList;
-          this.filteredPlayerList = playerList;
-          return of(null);
-        })
-      )
-    ).subscribe(() => this.filterPlayerList());
+        });
 
-    this.gameCategoryService.getGameCategoryList()
-      .subscribe((gameCategoryList: GameCategory[]) => {
-        this.gameCategoryList = gameCategoryList;
-      });
+      this.gameCategoryService.getGameCategoryList()
+        .subscribe((gameCategoryList: GameCategory[]) => {
+          this.gameCategoryList = gameCategoryList;
+        });
+    }
   }
 
   @HostListener('dragenter', ['$event'])

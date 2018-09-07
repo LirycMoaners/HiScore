@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MainBarService } from '../main-bar/main-bar.service';
 import { OptionMenuService } from './option-menu.service';
+import { GameService } from '../game/game.service';
 
 @Component({
   selector: 'hs-option-menu',
@@ -14,6 +15,7 @@ export class OptionMenuComponent implements OnInit {
 
   constructor(
     private mainBarService: MainBarService,
+    private gameService: GameService,
     private optionMenuService: OptionMenuService
   ) { }
 
@@ -22,12 +24,16 @@ export class OptionMenuComponent implements OnInit {
       (isLeftSide: boolean) => this.isHoriz = isLeftSide
     );
 
-    this.optionMenuService.getCurrentGameId().subscribe(
+    this.gameService.getCurrentGameId().subscribe(
       (currentGameId: string) => this.currentGameId = currentGameId
     );
   }
 
   public editLastRound() {
     this.optionMenuService.setEditLastRound();
+  }
+
+  public newGame() {
+    this.optionMenuService.setNewGame();
   }
 }
