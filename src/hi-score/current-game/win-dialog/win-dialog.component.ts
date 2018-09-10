@@ -4,14 +4,32 @@ import { Game } from '../../shared/game/game.model';
 import { Score } from '../../shared/score/score.model';
 import { Goal } from '../../shared/game-category/goal.enum';
 
+/**
+ * Component made for showing the end of a game in a dialog
+ *
+ * @export
+ * @class WinDialogComponent
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'hs-win-dialog',
   templateUrl: 'win-dialog.component.html',
   styleUrls: ['win-dialog.component.scss']
 })
-
 export class WinDialogComponent implements OnInit {
+  /**
+   * Identify if the user wants to leave the game or to continue the game
+   *
+   * @memberof WinDialogComponent
+   */
   public isLeaving = true;
+
+  /**
+   * The ordered score list of the current game
+   *
+   * @type {Score[]}
+   * @memberof WinDialogComponent
+   */
   public orderedScoreList: Score[];
 
   constructor(

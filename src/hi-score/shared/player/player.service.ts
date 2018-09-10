@@ -5,12 +5,24 @@ import { Observable } from 'rxjs';
 import { LocalStorage } from '@ngx-pwa/local-storage';
 import { flatMap, map } from 'rxjs/operators';
 
+/**
+ * Service for every action about players
+ *
+ * @export
+ * @class PlayerService
+ */
 @Injectable()
 export class PlayerService {
   constructor(
     protected localStorage: LocalStorage
   ) { }
 
+  /**
+   * Return an observable of all the players in a list
+   *
+   * @returns {Observable<Player[]>}
+   * @memberof PlayerService
+   */
   public getPlayerList(): Observable<Player[]> {
     return this.localStorage.getItem<Player[]>('players')
       .pipe(
@@ -18,6 +30,13 @@ export class PlayerService {
       );
   }
 
+  /**
+   * Return an observable of a player find by its id
+   *
+   * @param {string} id
+   * @returns {Observable<Player>}
+   * @memberof PlayerService
+   */
   public getPlayerById(id: string): Observable<Player> {
     return this.getPlayerList()
       .pipe(
@@ -25,6 +44,13 @@ export class PlayerService {
       );
   }
 
+  /**
+   * Return an observable of a player list filtered by a list of ids
+   *
+   * @param {string[]} idList
+   * @returns {Observable<Player[]>}
+   * @memberof PlayerService
+   */
   public getPlayerListById(idList: string[]): Observable<Player[]> {
     return this.getPlayerList()
       .pipe(
@@ -32,6 +58,13 @@ export class PlayerService {
       );
   }
 
+  /**
+   * Create a new player
+   *
+   * @param {Player} player
+   * @returns {Observable<boolean>}
+   * @memberof PlayerService
+   */
   public createPlayer(player: Player): Observable<boolean> {
     return this.getPlayerList()
       .pipe(
@@ -42,6 +75,13 @@ export class PlayerService {
       );
   }
 
+  /**
+   * Create multiple new players
+   *
+   * @param {Player[]} newPlayerList
+   * @returns {Observable<boolean>}
+   * @memberof PlayerService
+   */
   public createPlayerList(newPlayerList: Player[]): Observable<boolean> {
     return this.getPlayerList()
       .pipe(

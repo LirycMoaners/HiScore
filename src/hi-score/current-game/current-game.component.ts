@@ -11,15 +11,27 @@ import { EndingType } from '../shared/game-category/ending-type.enum';
 import { WinDialogComponent } from './win-dialog/win-dialog.component';
 import { OptionMenuService } from '../shared/option-menu/option-menu.service';
 
+/**
+ * Component of the current game session
+ *
+ * @export
+ * @class CurrentGameComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
   selector: 'hs-current-game',
   templateUrl: 'current-game.component.html',
   styleUrls: ['current-game.component.scss']
 })
-
 export class CurrentGameComponent implements OnInit, OnDestroy {
+  /**
+   * The current game
+   *
+   * @type {Game}
+   * @memberof CurrentGameComponent
+   */
   public game: Game;
-  public modifiedScore: Score;
 
   constructor(
     private gameService: GameService,
@@ -65,6 +77,15 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     this.mainBarService.setIsOptionMenuVisible(false);
   }
 
+  /**
+   * Validate a round by :
+   * - Refreshing best scores
+   * - Adding a new round
+   * - Saving the game
+   * - Changing the main bar title
+   *
+   * @memberof CurrentGameComponent
+   */
   public validateRound() {
     this.refreshBestScore();
 
@@ -80,22 +101,35 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Add 1 to the round score of a player
+   *
+   * @param {Score} score
+   * @memberof CurrentGameComponent
+   */
   public onClickPlus(score: Score) {
     score.roundScoreList[0] += 1;
     this.calculateTotal(score);
   }
 
+  /**
+   * Remove 1 to the round score of a player
+   *
+   * @param {Score} score
+   * @memberof CurrentGameComponent
+   */
   public onClickMinus(score: Score) {
     score.roundScoreList[0] -= 1;
     this.calculateTotal(score);
   }
 
-  public onChangeRoundScore(score: Score, inputScore: HTMLInputElement) {
-    inputScore.value = inputScore.value ? inputScore.value : '0';
-    score.roundScoreList[0] = Number(inputScore.value);
-    this.calculateTotal(score);
-  }
-
+  /**
+   * Open the score dialog and update the round score and the total of a player
+   *
+   * @param {Score} score
+   * @param {number} roundIndex
+   * @memberof CurrentGameComponent
+   */
   public openScoreDialog(score: Score, roundIndex: number) {
     const dialogRef = this.dialog.open(ScoreDialogComponent, {
       width: '420px',
@@ -109,6 +143,26 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Update round score and change the input value to 0 if there is no value
+   *
+   * @param {Score} score
+   * @param {HTMLInputElement} inputScore
+   * @memberof CurrentGameComponent
+   */
+  public onChangeRoundScore(score: Score, inputScore: HTMLInputElement) {
+    inputScore.value = inputScore.value ? inputScore.value : '0';
+    score.roundScoreList[0] = Number(inputScore.value);
+    this.calculateTotal(score);
+  }
+
+  /**
+   * Calculate the total score for a player
+   *
+   * @private
+   * @param {Score} score
+   * @memberof CurrentGameComponent
+   */
   private calculateTotal(score: Score) {
     score.total = score.roundScoreList.reduce((total: number, roundScore: number) => total + Number(roundScore));
 
@@ -117,6 +171,12 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Refresh best scores
+   *
+   * @private
+   * @memberof CurrentGameComponent
+   */
   private refreshBestScore() {
     let bestScore: number;
     if (this.game.gameCategory.goal === Goal.highestScore) {
@@ -127,6 +187,13 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.playerId);
   }
 
+  /**
+   * Check if it's the end of the game adter validating a round
+   *
+   * @private
+   * @returns {boolean}
+   * @memberof CurrentGameComponent
+   */
   private isGameEnd(): boolean {
     if (this.game.gameCategory.endingType === EndingType.point) {
       return !!this.game.scoreList.find((score: Score) => score.total >= this.game.gameCategory.endingNumber);
@@ -135,6 +202,13 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Open the win dialog to show the ranking of each player and their score.
+   * Redirect to the game list if the user chose it or add a new round to continue.
+   *
+   * @private
+   * @memberof CurrentGameComponent
+   */
   private openWinDialog() {
     const dialogRef = this.dialog.open(WinDialogComponent, {
       width: '420px',
