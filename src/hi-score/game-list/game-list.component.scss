@@ -23,16 +23,38 @@ section {
     padding-top: 5px;
     padding-bottom: 5px;
 
-    h2 {
-      margin: 0;
-    }
+    /deep/ .mat-button-wrapper {
+      display: flex;
+      flex-direction: row;
 
-    p {
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      margin: 0;
-      font-weight: normal;
+      .game-infos {
+        flex: 1;
+
+        h2 {
+          margin: 0;
+        }
+
+        p {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          margin: 0;
+          font-weight: normal;
+        }
+      }
+
+      .game-status {
+        flex: 0 0 68px;
+        text-align: center;
+
+        mat-icon {
+          height: 50px;
+          width: 50px;
+          font-size: 50px;
+          margin-top: 9px;
+          vertical-align: middle;
+        }
+      }
     }
   }
 }

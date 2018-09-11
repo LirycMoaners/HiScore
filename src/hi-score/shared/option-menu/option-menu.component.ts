@@ -65,4 +65,13 @@ export class OptionMenuComponent implements OnInit {
   public newGame() {
     this.optionMenuService.setNewGame();
   }
+
+  /**
+   * Emit that we want to end the game
+   *
+   * @memberof OptionMenuComponent
+   */
+  public endGame() {
+    this.optionMenuService.setEndGame();
+  }
 }

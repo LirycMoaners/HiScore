@@ -6,7 +6,7 @@ export class Game {
   public gameCategory: GameCategory;
   public date: Date;
   public isFirstPlayerRandom: boolean;
-  public isGameContinuing: boolean;
+  public isGameEnd: boolean;
   public firstPlayerList: string[];
   public scoreList: Score[];
 }

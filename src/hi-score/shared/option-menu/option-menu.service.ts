@@ -45,9 +45,28 @@ export class OptionMenuService {
    */
   private newGame$: Observable<null>;
 
+  /**
+   * Subject which handles each call to end the game
+   *
+   * @private
+   * @type {Subject<null>}
+   * @memberof OptionMenuService
+   */
+  private endGameSubject: Subject<null> = new Subject<null>();
+
+  /**
+   * Observable to subscribe to get each call to end the game
+   *
+   * @private
+   * @type {Observable<null>}
+   * @memberof OptionMenuService
+   */
+  private endGame$: Observable<null>;
+
   constructor() {
     this.editLastRound$ = this.editLastRoundSubject.asObservable();
     this.newGame$ = this.newGameSubject.asObservable();
+    this.endGame$ = this.endGameSubject.asObservable();
   }
 
   /**
@@ -79,12 +98,31 @@ export class OptionMenuService {
   }
 
   /**
-   * Get the observable of nw game creation calling
+   * Get the observable of new game creation calling
    *
    * @returns {Observable<null>}
    * @memberof OptionMenuService
    */
   public getNewGame(): Observable<null> {
     return this.newGame$;
+  }
+
+  /**
+   * Emit a new call to end the game
+   *
+   * @memberof OptionMenuService
+   */
+  public setEndGame(): void {
+    this.endGameSubject.next();
+  }
+
+  /**
+   * Get the observable of end game calling
+   *
+   * @returns {Observable<null>}
+   * @memberof OptionMenuService
+   */
+  public getEndGame(): Observable<null> {
+    return this.endGame$;
   }
 }

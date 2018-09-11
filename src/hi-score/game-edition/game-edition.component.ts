@@ -147,7 +147,7 @@ export class GameEditionComponent implements OnInit {
             flatMap((id: string) => this.gameService.getGameById(id)),
             map((game: Game) => {
               game.id = UUID.UUID();
-              game.isGameContinuing = false;
+              game.isGameEnd = false;
               game.isFirstPlayerRandom = false;
               game.firstPlayerList = [];
               return game;
@@ -180,7 +180,8 @@ export class GameEditionComponent implements OnInit {
       this.mainBarService.setTitle('New Game');
       this.game = new Game();
       this.game.id = UUID.UUID();
-      this.game.isGameContinuing = false;
+      this.game.isGameEnd = false;
+      this.game.isFirstPlayerRandom = false;
       this.game.firstPlayerList = [];
       this.chosenGameCategory = new GameCategory();
 

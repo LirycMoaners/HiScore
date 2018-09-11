@@ -10,6 +10,8 @@ import { Goal } from '../shared/game-category/goal.enum';
 import { EndingType } from '../shared/game-category/ending-type.enum';
 import { WinDialogComponent } from './win-dialog/win-dialog.component';
 import { OptionMenuService } from '../shared/option-menu/option-menu.service';
+import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 /**
  * Component of the current game session
@@ -35,6 +37,10 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
 
   public firstPlayerId: string;
 
+  public newGameSubscription: Subscription;
+  public endGameSubscription: Subscription;
+  public editLastRoundSubscription: Subscription;
+
   constructor(
     private gameService: GameService,
     private route: ActivatedRoute,
@@ -50,7 +56,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
         this.game = game;
         this.mainBarService.setTitle(game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')');
         this.gameService.setCurrentGameId(game.id);
-        if (this.isGameEnd() && !this.game.isGameContinuing) {
+        if (this.game.isGameEnd) {
           this.openWinDialog();
         }
         if (this.game.scoreList[0].roundScoreList.length === 1 && this.game.isFirstPlayerRandom) {
@@ -61,7 +67,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     this.mainBarService.setIsLeftSide(true);
     this.mainBarService.setIsOptionMenuVisible(true);
 
-    this.optionMenuService.getEditLastRound().subscribe(() => {
+    this.editLastRoundSubscription = this.optionMenuService.getEditLastRound().subscribe(() => {
       if (this.game.scoreList[0].roundScoreList.length > 1) {
         for (const score of this.game.scoreList) {
           score.total -= score.roundScoreList.shift();
@@ -73,14 +79,22 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.optionMenuService.getNewGame().subscribe(() => {
+    this.newGameSubscription = this.optionMenuService.getNewGame().subscribe(() => {
       this.router.navigate(['/game-creation'], {queryParams: {copy: true}});
+    });
+
+    this.endGameSubscription = this.optionMenuService.getEndGame().subscribe(() => {
+      this.game.isGameEnd = true;
+      this.openWinDialog();
     });
   }
 
   ngOnDestroy(): void {
     this.mainBarService.setIsLeftSide(false);
     this.mainBarService.setIsOptionMenuVisible(false);
+    this.editLastRoundSubscription.unsubscribe();
+    this.newGameSubscription.unsubscribe();
+    this.endGameSubscription.unsubscribe();
   }
 
   /**
@@ -95,7 +109,8 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   public validateRound() {
     this.refreshBestScore();
 
-    if (this.isGameEnd() && !this.game.isGameContinuing) {
+    this.game.isGameEnd = this.isGameEnd();
+    if (this.game.isGameEnd) {
       this.openWinDialog();
     } else {
       for (const score of this.game.scoreList) {
@@ -223,13 +238,13 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.gameService.updateGame(this.game);
-        this.router.navigate(['']);
+        this.gameService.updateGame(this.game).subscribe(() => this.router.navigate(['']));
       } else {
-        this.game.isGameContinuing = true;
+        this.game.isGameEnd = false;
         for (const score of this.game.scoreList) {
           score.roundScoreList.unshift(0);
         }
+        this.gameService.updateGame(this.game).subscribe();
       }
     });
   }
