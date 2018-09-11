@@ -26,14 +26,15 @@
             <mat-icon>drag_handle</mat-icon>
           </button>
           <mat-form-field>
-            <input type="text"
+            <input #playerInput
+              type="text"
               matInput
-              [(ngModel)]="gamePlayerList[i].name"
+              [ngModel]="gamePlayerList[i].name"
               (ngModelChange)="filterPlayerList($event)"
-              (change)="changePlayer(player, $event.target.value)"
+              (change)="changePlayer(player, $event.target.value, playerInput)"
               [matAutocomplete]="auto"
               aria-label="Player name">
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="changePlayer(player, $event.option.value)">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="changePlayer(player, $event.option.value, playerInput)">
               <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
             </mat-autocomplete>
           </mat-form-field>
@@ -73,6 +74,9 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+      </div>
+      <div class="first-player">
+        <mat-slide-toggle [(ngModel)]="game.isFirstPlayerRandom">Random first player</mat-slide-toggle>
       </div>
     </div>
   </section>

@@ -29,6 +29,7 @@
         <div class="current-score">
           <div class="name">
             <h2>
+              <mat-icon *ngIf="score.roundScoreList.length === 1 && firstPlayerId === score.playerId" color="warn">looks_one</mat-icon>
               <mat-icon *ngIf="game.firstPlayerList.includes(score.playerId)" class="star">star</mat-icon>
               {{score.playerId | playerName | async}}
             </h2>

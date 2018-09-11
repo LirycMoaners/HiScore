@@ -33,6 +33,8 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
    */
   public game: Game;
 
+  public firstPlayerId: string;
+
   constructor(
     private gameService: GameService,
     private route: ActivatedRoute,
@@ -50,6 +52,10 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
         this.gameService.setCurrentGameId(game.id);
         if (this.isGameEnd() && !this.game.isGameContinuing) {
           this.openWinDialog();
+        }
+        if (this.game.scoreList[0].roundScoreList.length === 1 && this.game.isFirstPlayerRandom) {
+          const index: number = Math.floor(Math.random() * this.game.scoreList.length);
+          this.firstPlayerId = this.game.scoreList[index].playerId;
         }
       });
     this.mainBarService.setIsLeftSide(true);

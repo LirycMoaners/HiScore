@@ -148,6 +148,7 @@ export class GameEditionComponent implements OnInit {
             map((game: Game) => {
               game.id = UUID.UUID();
               game.isGameContinuing = false;
+              game.isFirstPlayerRandom = false;
               game.firstPlayerList = [];
               return game;
             })
@@ -217,7 +218,7 @@ export class GameEditionComponent implements OnInit {
     let player: Player;
     let shouldAddPlayer = false;
 
-    if (input.value) {
+    if (input.value && !this.gamePlayerList.find((pl: Player) => input.value === pl.name)) {
       if (event instanceof FocusEvent && (!event.relatedTarget || event.relatedTarget['tagName'] !== 'MAT-OPTION')) {
         shouldAddPlayer = true;
       } else if (event instanceof KeyboardEvent && event.key === 'Enter') {
@@ -268,22 +269,27 @@ export class GameEditionComponent implements OnInit {
    * @param {(Player | string)} player
    * @memberof GameEditionComponent
    */
-  public changePlayer(oldPlayer: Player, player: Player | string) {
+  public changePlayer(oldPlayer: Player, player: Player | string, playerInput: HTMLInputElement) {
     if (player) {
       if (typeof player === 'string') {
-        const newPlayer: Player = this.playerList.find((pl: Player) => pl.name === player);
-
-        if (newPlayer) {
-          oldPlayer.id = newPlayer.id;
-          oldPlayer.name = newPlayer.name;
-        } else {
-          oldPlayer.id = UUID.UUID();
-          oldPlayer.name = player;
+        if (!this.gamePlayerList.find((pl: Player) => player === pl.name)) {
+          const newPlayer: Player = this.playerList.find((pl: Player) => pl.name === player);
+          if (newPlayer) {
+            oldPlayer.id = newPlayer.id;
+            oldPlayer.name = newPlayer.name;
+          } else {
+            oldPlayer.id = UUID.UUID();
+            oldPlayer.name = player;
+          }
         }
       } else {
-        oldPlayer.id = player.id;
-        oldPlayer.name = player.name;
+        if (!this.gamePlayerList.find((pl: Player) => player.name === pl.name)) {
+          oldPlayer.id = player.id;
+          oldPlayer.name = player.name;
+        }
       }
+
+      playerInput.value = oldPlayer.name;
 
       if (!this.isCreationMode
         && !this.game.scoreList.find((score: Score) => score.playerId === oldPlayer.id)

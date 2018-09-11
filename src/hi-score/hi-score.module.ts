@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule, MatButtonModule, MatInputModule,
-  MatSelectModule, MatAutocompleteModule, MatIconModule, MatToolbarModule, MatTableModule, MatMenuModule } from '@angular/material';
+  MatSelectModule, MatAutocompleteModule, MatIconModule,
+  MatToolbarModule, MatTableModule, MatMenuModule, MatSlideToggleModule } from '@angular/material';
 import { DndModule } from 'ng2-dnd';
 
 import { HiScoreComponent } from './hi-score.component';
@@ -58,6 +59,7 @@ import { NewPlayerScoreDialogComponent } from './game-edition/new-player-score-d
     MatToolbarModule,
     MatTableModule,
     MatMenuModule,
+    MatSlideToggleModule,
     HiScoreRoutingModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     DndModule.forRoot()
