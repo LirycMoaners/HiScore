@@ -61,7 +61,7 @@ import { NewPlayerScoreDialogComponent } from './game-edition/new-player-score-d
     MatMenuModule,
     MatSlideToggleModule,
     HiScoreRoutingModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production }),
     DndModule.forRoot()
   ],
   providers: [
