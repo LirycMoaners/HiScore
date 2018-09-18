@@ -65,6 +65,9 @@
 
               h2 {
                 display: inline;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
 
                 .star {
                   color: $star-color;
