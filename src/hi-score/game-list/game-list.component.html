@@ -15,7 +15,7 @@
       <ng-template #month>
         <div *ngIf="gameList[i-1] && (game.date.getMonth() !== gameList[i-1].date.getMonth() || game.date.getFullYear() !== gameList[i-1].date.getFullYear())"
           class="month mat-subheading-1">
-          {{game.date.getMonth() === today.getMonth() + 1 || game.date.getFullYear() === today.getFullYear() ? 'Last month' : game.date | date:'MM/yyyy'}}
+          {{game.date | date:'MM/yyyy'}}
         </div>
       </ng-template>
       <button mat-raised-button
