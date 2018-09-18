@@ -368,7 +368,7 @@ export class GameEditionComponent implements OnInit {
    * @memberof GameEditionComponent
    */
   public startGame() {
-    if (this.gamePlayerList.length && this.chosenGameCategory) {
+    if (this.gamePlayerList.length && this.chosenGameCategory.id) {
       this.game.date = this.isCreationMode ? new Date() : this.game.date;
       this.game.scoreList = this.isCreationMode ? [] : this.game.scoreList;
 
