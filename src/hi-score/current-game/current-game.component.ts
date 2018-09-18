@@ -161,6 +161,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       console.log('The dialog was closed');
       score.roundScoreList[roundIndex] = result || score.roundScoreList[roundIndex];
       this.calculateTotal(score);
+      this.gameService.updateGame(this.game).subscribe();
     });
   }
 
