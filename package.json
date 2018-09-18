@@ -1,7 +1,7 @@
 {
   "name": "hi-score",
   "displayName": "HiScore",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "An app to keep score running with angular, cordova and electron.",
   "author": "Cyril Lefebvre",
   "license": "MIT",
@@ -21,7 +21,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^6.1.3",
+    "@angular/animations": "^6.0.3",
     "@angular/cdk": "^6.4.5",
     "@angular/common": "^6.0.3",
     "@angular/compiler": "^6.0.3",
