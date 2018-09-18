@@ -1,11 +1,11 @@
 {
   "name": "HiScore",
   "short_name": "HiScore",
-  "theme_color": "#1976d2",
+  "theme_color": "#3f51b5",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "/",
-  "start_url": "https://mikoliryc.synology.me/HiScore",
+  "start_url": "https://mikoliryc.synology.me/HiScore/index.html",
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",
