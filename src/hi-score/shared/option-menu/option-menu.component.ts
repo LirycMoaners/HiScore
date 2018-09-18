@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MainBarService } from '../main-bar/main-bar.service';
 import { OptionMenuService } from './option-menu.service';
 import { GameService } from '../game/game.service';
+import { Router } from '@angular/router';
 
 /**
  * Component of the option menu
@@ -15,15 +16,7 @@ import { GameService } from '../game/game.service';
   templateUrl: 'option-menu.component.html',
   styleUrls: ['option-menu.component.scss']
 })
-export class OptionMenuComponent implements OnInit {
-  /**
-   * Specifiy if the icon is horizontal or not
-   *
-   * @type {boolean}
-   * @memberof OptionMenuComponent
-   */
-  public isHoriz: boolean;
-
+export class OptionMenuComponent {
   /**
    * The current game id needded for the game edition navigation
    *
@@ -33,20 +26,11 @@ export class OptionMenuComponent implements OnInit {
   public currentGameId: string;
 
   constructor(
-    private mainBarService: MainBarService,
-    private gameService: GameService,
-    private optionMenuService: OptionMenuService
+    public mainBarService: MainBarService,
+    public gameService: GameService,
+    private optionMenuService: OptionMenuService,
+    private router: Router
   ) { }
-
-  ngOnInit() {
-    this.mainBarService.getIsLeftSide().subscribe(
-      (isLeftSide: boolean) => this.isHoriz = isLeftSide
-    );
-
-    this.gameService.getCurrentGameId().subscribe(
-      (currentGameId: string) => this.currentGameId = currentGameId
-    );
-  }
 
   /**
    * Emit that we want to edit the last round
@@ -54,7 +38,7 @@ export class OptionMenuComponent implements OnInit {
    * @memberof OptionMenuComponent
    */
   public editLastRound() {
-    this.optionMenuService.setEditLastRound();
+    this.optionMenuService.editLastRound$.next();
   }
 
   /**
@@ -62,8 +46,8 @@ export class OptionMenuComponent implements OnInit {
    *
    * @memberof OptionMenuComponent
    */
-  public newGame() {
-    this.optionMenuService.setNewGame();
+  public navigateToGameCreation() {
+    this.router.navigate(['/game-creation'], {queryParams: {copy: true}});
   }
 
   /**
@@ -72,6 +56,6 @@ export class OptionMenuComponent implements OnInit {
    * @memberof OptionMenuComponent
    */
   public endGame() {
-    this.optionMenuService.setEndGame();
+    this.optionMenuService.endGame$.next();
   }
 }

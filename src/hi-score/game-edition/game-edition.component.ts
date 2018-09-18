@@ -8,8 +8,8 @@ import { Game } from '../shared/game/game.model';
 import { UUID } from 'angular2-uuid';
 import { GameService } from '../shared/game/game.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, forkJoin, of, combineLatest } from 'rxjs';
-import { flatMap, first, map } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
 import { EndingType } from '../shared/game-category/ending-type.enum';
@@ -136,26 +136,22 @@ export class GameEditionComponent implements OnInit {
 
     if (gameId || isCopy) {
       if (gameId) {
-        this.mainBarService.setTitle('Game Edition');
+        this.mainBarService.title = 'Game Edition';
         this.isCreationMode = false;
         game$ = this.gameService.getGameById(gameId);
       } else {
-        this.mainBarService.setTitle('New Game');
-        game$ = this.gameService.getCurrentGameId()
-          .pipe(
-            first(),
-            flatMap((id: string) => this.gameService.getGameById(id)),
+        this.mainBarService.title = 'New Game';
+        game$ = this.gameService.getGameById(this.gameService.currentGameId).pipe(
             map((game: Game) => {
               game.id = UUID.UUID();
               game.isGameEnd = false;
-              game.isFirstPlayerRandom = false;
               game.firstPlayerList = [];
               return game;
             })
           );
       }
 
-      combineLatest(
+      forkJoin(
         game$.pipe(
           flatMap((game: Game) => {
             this.game = Object.assign({}, game);
@@ -177,7 +173,7 @@ export class GameEditionComponent implements OnInit {
         }
       );
     } else {
-      this.mainBarService.setTitle('New Game');
+      this.mainBarService.title = 'New Game';
       this.game = new Game();
       this.game.id = UUID.UUID();
       this.game.isGameEnd = false;

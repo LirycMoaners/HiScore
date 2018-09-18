@@ -22,7 +22,7 @@ export class HiScoreComponent implements OnInit {
   public isLeftSide = false;
 
   constructor(
-    private mainBarService: MainBarService
+    public mainBarService: MainBarService
   ) {}
 
   ngOnInit(): void {
@@ -34,10 +34,5 @@ export class HiScoreComponent implements OnInit {
       e.stopPropagation();
       return false;
     };
-
-    this.mainBarService.getIsLeftSide()
-      .subscribe((isLeftSide: boolean) => {
-        this.isLeftSide = isLeftSide;
-      });
   }
 }

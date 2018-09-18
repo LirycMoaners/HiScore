@@ -35,11 +35,22 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
    */
   public game: Game;
 
+  /**
+   * The id of the first player to start the first round
+   *
+   * @type {string}
+   * @memberof CurrentGameComponent
+   */
   public firstPlayerId: string;
 
-  public newGameSubscription: Subscription;
-  public endGameSubscription: Subscription;
-  public editLastRoundSubscription: Subscription;
+  /**
+   * List of all the subscription in the component to unsuscribe on destroy
+   *
+   * @private
+   * @type {Subscription[]}
+   * @memberof CurrentGameComponent
+   */
+  private subscriptionList: Subscription[] = [];
 
   constructor(
     private gameService: GameService,
@@ -54,8 +65,8 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     this.gameService.getGameById(this.route.snapshot.params['id'])
       .subscribe((game: Game) => {
         this.game = game;
-        this.mainBarService.setTitle(game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')');
-        this.gameService.setCurrentGameId(game.id);
+        this.mainBarService.title = game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')';
+        this.gameService.currentGameId = game.id;
         if (this.game.isGameEnd) {
           this.openWinDialog();
         }
@@ -64,37 +75,37 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
           this.firstPlayerId = this.game.scoreList[index].playerId;
         }
       });
-    this.mainBarService.setIsLeftSide(true);
-    this.mainBarService.setIsOptionMenuVisible(true);
+    this.mainBarService.isLeftSide = true;
+    this.mainBarService.isOptionMenuVisible = true;
 
-    this.editLastRoundSubscription = this.optionMenuService.getEditLastRound().subscribe(() => {
-      if (this.game.scoreList[0].roundScoreList.length > 1) {
-        for (const score of this.game.scoreList) {
-          score.total -= score.roundScoreList.shift();
-          this.refreshBestScore();
-          this.gameService.updateGame(this.game).subscribe(() => {
-            this.mainBarService.setTitle(this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')');
-          });
+    this.subscriptionList.push(
+      this.optionMenuService.editLastRound$.subscribe(() => {
+        if (this.game.scoreList[0].roundScoreList.length > 1) {
+          for (const score of this.game.scoreList) {
+            score.total -= score.roundScoreList.shift();
+            this.refreshBestScore();
+            this.gameService.updateGame(this.game).subscribe(() => {
+              this.mainBarService.title = this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')';
+            });
+          }
         }
-      }
-    });
+      })
+    );
 
-    this.newGameSubscription = this.optionMenuService.getNewGame().subscribe(() => {
-      this.router.navigate(['/game-creation'], {queryParams: {copy: true}});
-    });
-
-    this.endGameSubscription = this.optionMenuService.getEndGame().subscribe(() => {
-      this.game.isGameEnd = true;
-      this.openWinDialog();
-    });
+    this.subscriptionList.push(
+      this.optionMenuService.endGame$.subscribe(() => {
+        this.game.isGameEnd = true;
+        this.openWinDialog();
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    this.mainBarService.setIsLeftSide(false);
-    this.mainBarService.setIsOptionMenuVisible(false);
-    this.editLastRoundSubscription.unsubscribe();
-    this.newGameSubscription.unsubscribe();
-    this.endGameSubscription.unsubscribe();
+    this.mainBarService.isLeftSide = false;
+    this.mainBarService.isOptionMenuVisible = false;
+    for (const subscription of this.subscriptionList) {
+      subscription.unsubscribe();
+    }
   }
 
   /**
@@ -118,7 +129,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       }
     }
     this.gameService.updateGame(this.game).subscribe(() => {
-      this.mainBarService.setTitle(this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')');
+      this.mainBarService.title = this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')';
     });
   }
 

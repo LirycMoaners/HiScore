@@ -3,9 +3,9 @@
     <mat-icon>home</mat-icon>
   </button>
   <div class="title">
-    {{title}}
+    {{mainBarService.title}}
   </div>
   <div class="option">
-    <hs-option-menu *ngIf="isOptionMenuVisible"></hs-option-menu>
+    <hs-option-menu *ngIf="mainBarService.isOptionMenuVisible"></hs-option-menu>
   </div>
 </mat-toolbar>

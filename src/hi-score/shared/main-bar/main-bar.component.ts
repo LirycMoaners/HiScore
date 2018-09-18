@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MainBarService } from './main-bar.service';
 
 /**
@@ -13,29 +13,8 @@ import { MainBarService } from './main-bar.service';
   templateUrl: 'main-bar.component.html',
   styleUrls: ['main-bar.component.scss']
 })
-export class MainBarComponent implements OnInit {
-  /**
-   * Title shown in the main bar
-   *
-   * @memberof MainBarComponent
-   */
-  public title = '';
-
-  /**
-   * Specify if the option is visible
-   *
-   * @memberof MainBarComponent
-   */
-  public isOptionMenuVisible = false;
-
+export class MainBarComponent {
   constructor(
-    private mainBarService: MainBarService
+    public mainBarService: MainBarService
   ) { }
-
-  ngOnInit() {
-    this.mainBarService.getTitle()
-      .subscribe((title: string) => this.title = title);
-    this.mainBarService.getIsOptionMenuVisible()
-      .subscribe((isOptionMenuVisible: boolean) => this.isOptionMenuVisible = isOptionMenuVisible);
-  }
 }

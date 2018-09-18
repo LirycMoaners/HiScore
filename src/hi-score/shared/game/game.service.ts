@@ -14,28 +14,17 @@ import { flatMap, map } from 'rxjs/operators';
 @Injectable()
 export class GameService {
   /**
-   * Subject which handles each call to set the current game id
+   * The current game id
    *
-   * @private
-   * @type {ReplaySubject<string>}
+   * @public
+   * @type {string}
    * @memberof GameService
    */
-  private currentGameIdSubject: ReplaySubject<string> = new ReplaySubject<string>(1);
-
-  /**
-   * Observable to subscribe to get each modification to the current game id
-   *
-   * @private
-   * @type {Observable<string>}
-   * @memberof GameService
-   */
-  private currentGameId$: Observable<string>;
+  public currentGameId: string;
 
   constructor(
     protected localStorage: LocalStorage
-  ) {
-    this.currentGameId$ = this.currentGameIdSubject.asObservable();
-  }
+  ) {}
 
   /**
    * Get an observable of all games in a list
@@ -97,25 +86,5 @@ export class GameService {
           return this.localStorage.setItem('games', gameList);
         })
       );
-  }
-
-  /**
-   * Emit a new current game id to the current game id subject
-   *
-   * @param {string} currentGameId
-   * @memberof GameService
-   */
-  public setCurrentGameId(currentGameId: string): void {
-    this.currentGameIdSubject.next(currentGameId);
-  }
-
-  /**
-   * Get the observable of the current game id
-   *
-   * @returns {Observable<string>}
-   * @memberof GameService
-   */
-  public getCurrentGameId(): Observable<string> {
-    return this.currentGameId$;
   }
 }

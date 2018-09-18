@@ -1,10 +1,10 @@
 <button mat-icon-button [matMenuTriggerFor]="optionMenu" aria-label="Open option menu">
-  <mat-icon [class.isHoriz]="isHoriz"></mat-icon>
+  <mat-icon [class.isHoriz]="mainBarService.isLeftSide"></mat-icon>
 </button>
 
 <mat-menu #optionMenu="matMenu">
-  <button mat-menu-item (click)="newGame()">New game</button>
-  <button mat-menu-item [routerLink]="'/game-edition/' + currentGameId">Modify game</button>
+  <button mat-menu-item (click)="navigateToGameCreation()">New game</button>
+  <button mat-menu-item [routerLink]="'/game-edition/' + gameService.currentGameId">Modify game</button>
   <button mat-menu-item (click)="editLastRound()">Edit last round</button>
   <button mat-menu-item (click)="endGame()">End game</button>
 </mat-menu>
