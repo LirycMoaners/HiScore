@@ -18,12 +18,14 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
-        <icon density="ldpi" src="res/icon/android/icon-36-ldpi.png" />
-        <icon density="mdpi" src="res/icon/android/icon-48-mdpi.png" />
-        <icon density="hdpi" src="res/icon/android/icon-72-hdpi.png" />
-        <icon density="xhdpi" src="res/icon/android/icon-96-xhdpi.png" />
-        <icon density="xxhdpi" src="res/icon/android/icon-144-xxhdpi.png" />
-        <icon density="xxxhdpi" src="res/icon/android/icon-192-xxxhdpi.png" />
+        <icon density="ldpi" height="72" src="res/icon/android/icon-72x72.png" width="72" />
+        <icon density="mdpi" height="96" src="res/icon/android/icon-96x96.png" width="96" />
+        <icon density="hdpi" height="128" src="res/icon/android/icon-128x128.png" width="128" />
+        <icon density="xhdpi" height="144" src="res/icon/android/icon-144x144.png" width="144" />
+        <icon density="xhdpi" height="152" src="res/icon/android/icon-152x152.png" width="152" />
+        <icon density="xhdpi" height="192" src="res/icon/android/icon-192x192.png" width="192" />
+        <icon density="xhdpi" height="384" src="res/icon/android/icon-384x384.png" width="384" />
+        <icon density="xhdpi" height="512" src="res/icon/android/icon-512x512.png" width="512" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

@@ -13,7 +13,7 @@
     "build:android": "node prebuild-cordova.js && ng build --base-href ./ && node postbuild-cordova.js && cordova run android",
     "build:desktop": "ng build --base-href ./ && electron .",
     "build:prod": "ng build --prod",
-    "build:prod:android": "node prebuild-cordova.js && ng build --base-href ./ --prod && node postbuild-cordova.js && cordova build android",
+    "build:prod:android": "node prebuild-cordova.js && ng build --base-href ./ --prod && node postbuild-cordova.js && cordova build android --release",
     "build:prod:windows": "ng build --base-href ./ --prod && electron-packager . --platform=win32 --arch=x64 --asar=true --overwrite",
     "test": "ng test",
     "lint": "ng lint",
