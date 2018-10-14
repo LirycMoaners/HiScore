@@ -3,6 +3,8 @@ import { GameListComponent } from './game-list/game-list.component';
 import { NgModule } from '@angular/core';
 import { CurrentGameComponent } from './current-game/current-game.component';
 import { GameEditionComponent } from './game-edition/game-edition.component';
+import { HelpComponent } from './help/help.component';
+import { AboutComponent } from './about/about.component';
 
 const routes: Routes = [
   {
@@ -25,6 +27,14 @@ const routes: Routes = [
   {
     path: 'game-edition/:id',
     component: GameEditionComponent
+  },
+  {
+    path: 'help',
+    component: HelpComponent
+  },
+  {
+    path: 'about',
+    component: AboutComponent
   }
 ];
 
@@ -37,5 +47,7 @@ export class HiScoreRoutingModule {}
 export const routedComponents = [
   GameListComponent,
   CurrentGameComponent,
-  GameEditionComponent
+  GameEditionComponent,
+  HelpComponent,
+  AboutComponent
 ];
