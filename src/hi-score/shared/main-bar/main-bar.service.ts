@@ -25,13 +25,4 @@ export class MainBarService {
    * @memberof MainBarService
    */
   public isLeftSide = false;
-
-  /**
-   * Specify if the option menu is visible in the main bar
-   *
-   * @public
-   * @type {boolean}
-   * @memberof MainBarService
-   */
-  public isOptionMenuVisible = false;
 }

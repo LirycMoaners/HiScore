@@ -10,7 +10,6 @@ import { Goal } from '../shared/game-category/goal.enum';
 import { EndingType } from '../shared/game-category/ending-type.enum';
 import { WinDialogComponent } from './win-dialog/win-dialog.component';
 import { OptionMenuService } from '../shared/option-menu/option-menu.service';
-import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 /**
@@ -76,7 +75,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
         }
       });
     this.mainBarService.isLeftSide = true;
-    this.mainBarService.isOptionMenuVisible = true;
 
     this.subscriptionList.push(
       this.optionMenuService.editLastRound$.subscribe(() => {
@@ -102,7 +100,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.mainBarService.isLeftSide = false;
-    this.mainBarService.isOptionMenuVisible = false;
     for (const subscription of this.subscriptionList) {
       subscription.unsubscribe();
     }
