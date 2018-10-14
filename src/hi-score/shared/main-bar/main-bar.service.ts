@@ -18,7 +18,7 @@ export class MainBarService {
   public title: string;
 
   /**
-   * Specify if the menu is on the left side of the screen
+   * Specify if the main bar is on the left side of the screen
    *
    * @public
    * @type {boolean}

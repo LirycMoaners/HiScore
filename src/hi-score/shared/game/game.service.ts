@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Game } from './game.model';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LocalStorage } from '@ngx-pwa/local-storage';
 import { flatMap, map } from 'rxjs/operators';
 

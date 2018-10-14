@@ -14,13 +14,6 @@ import { MainBarService } from './shared/main-bar/main-bar.service';
   styleUrls: ['./hi-score.component.scss']
 })
 export class HiScoreComponent implements OnInit {
-  /**
-   * Specify that the main bar is on the left side
-   *
-   * @memberof HiScoreComponent
-   */
-  public isLeftSide = false;
-
   constructor(
     public mainBarService: MainBarService
   ) {}
