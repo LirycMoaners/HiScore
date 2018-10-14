@@ -24,6 +24,6 @@ export class ScoreDialogComponent {
    * @memberof ScoreDialogComponent
    */
   public modifyScore(addedScore: number): void {
-    this.score += addedScore;
+    this.score = Number(this.score) + addedScore;
   }
 }
