@@ -169,7 +169,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       console.log('The dialog was closed');
       score.roundScoreList[roundIndex] = result || score.roundScoreList[roundIndex];
       this.calculateTotal(score);
-      this.gameService.updateGame(this.game).subscribe();
     });
   }
 
@@ -199,6 +198,8 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     if (this.game.scoreList[0].roundScoreList.length > 1) {
       this.refreshBestScore();
     }
+
+    this.gameService.updateGame(this.game).subscribe();
   }
 
   /**
