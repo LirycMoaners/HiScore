@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MainBarService } from '../shared/main-bar/main-bar.service';
 
 @Component({
   selector: 'hs-about',
@@ -7,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class AboutComponent implements OnInit {
-  constructor() { }
+  constructor(
+    private mainBarService: MainBarService
+  ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.mainBarService.title = 'About';
+  }
 }
