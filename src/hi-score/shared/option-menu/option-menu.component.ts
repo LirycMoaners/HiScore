@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { OptionMenuService } from './option-menu.service';
 import { GameService } from '../game/game.service';
+import { MainBarService } from '../main-bar/main-bar.service';
 import { Router } from '@angular/router';
 
 /**
@@ -19,6 +20,7 @@ export class OptionMenuComponent {
   constructor(
     public router: Router,
     public gameService: GameService,
+    public mainBarService: MainBarService,
     private optionMenuService: OptionMenuService
   ) { }
 
