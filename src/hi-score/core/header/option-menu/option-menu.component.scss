@@ -1,0 +1,15 @@
+@import '../../../../assets/scss/theme';
+
+mat-icon {
+  &::after {
+    content: 'more_vert';
+  }
+
+  &.isHoriz {
+    @media screen and (min-width: $break-small) {
+      &::after {
+        content: 'more_horiz';
+      }
+    }
+  }
+}

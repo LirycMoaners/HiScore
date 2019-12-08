@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MainBarService } from './shared/main-bar/main-bar.service';
+import { HeaderService } from './core/header/header.service';
 
 /**
  * HiScore app main component
@@ -15,17 +15,9 @@ import { MainBarService } from './shared/main-bar/main-bar.service';
 })
 export class HiScoreComponent implements OnInit {
   constructor(
-    public mainBarService: MainBarService
+    public headerService: HeaderService
   ) {}
 
   ngOnInit(): void {
-    window.oncontextmenu = (e) => {
-      if (e.button === 2) {
-        return;
-      }
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    };
   }
 }
