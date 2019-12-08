@@ -36,7 +36,7 @@ export class LongPressDirective {
    */
   @HostListener('touchstart', ['$event'])
   @HostListener('mousedown', ['$event'])
-  private onMouseDown(event: Event) {
+  public onMouseDown(event: Event) {
     this.pressTimer = window.setTimeout(() => {
       event.preventDefault();
       this.longPressDetected.emit();
@@ -50,9 +50,9 @@ export class LongPressDirective {
    * @private
    * @memberof LongPressDirective
    */
-  @HostListener('touchend', ['$event'])
-  @HostListener('mouseup', ['$event'])
-  private onMouseUp() {
+  @HostListener('touchend')
+  @HostListener('mouseup')
+  public onMouseUp() {
     clearTimeout(this.pressTimer);
   }
 }
