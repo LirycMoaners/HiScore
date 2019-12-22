@@ -17,7 +17,7 @@ const routes: Routes = [
     path: 'help',
     component: HelpComponent
   }
-]
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

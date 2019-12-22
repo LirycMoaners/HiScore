@@ -11,7 +11,7 @@ const routes: Routes = [
     path: ':id',
     component: GameEditionComponent
   }
-]
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
