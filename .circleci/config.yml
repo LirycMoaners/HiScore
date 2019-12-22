@@ -6,38 +6,38 @@ jobs:
     build:
         working_directory: ~/project
         docker:
-            - image: circleci/node:8.9-browsers
+            - image: circleci/node:12.13-browsers
         steps:
             # Checkout the code from the branch into the working_directory
             - checkout
-            
+
             # Log the current branch
             - run:
                 name: Show current branch
                 command: echo ${CIRCLE_BRANCH}
-                
+
             # Restore local dependencies from cache
             - restore_cache:
                 keys:
                 - v1-dependencies-{{ checksum "package.json" }}
                 - v1-dependencies-
-                
+
             # Install project dependencies
             - run:
                 name: Install local dependencies
                 command: npm install
-                
+
             # Cache local dependencies if they don't exist
             - save_cache:
                 key: v1-dependencies-{{ checksum "package.json" }}
                 paths:
                     - node_modules
-                    
+
             # Lint the source code
             - run:
                 name: Linting
                 command: npm run lint
-                
+
             # Build project with different configuration based on
             # the current branch
             - run:
@@ -49,7 +49,7 @@ jobs:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
                 paths:
                     - dist
-            
+
 workflows:
     version: 2
     # The build and deploy workflow
