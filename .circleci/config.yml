@@ -75,7 +75,7 @@ jobs:
             sudo apt-get install lftp;
       - run:
           name: Send Via FTP
-          command: lftp ftp://${username}:${password}@${hostname} -e "mirror -v -R ./dist/ /www/${site_name}; quit"
+          command: lftp ftp://${username}:${password}@${hostname} -e "mirror -v -R ./dist/ /www/; quit"
 
 workflows:
   version: 2
