@@ -2,6 +2,9 @@
 
 The HiScore project is an Angular 8 app based on the concept of the KeepScore app (Nolan Lawson).
 
+[![CircleCI branch](https://img.shields.io/circleci/project/github/LirycMoaners/HiScore/master.svg?label=circleci)](https://circleci.com/gh/LirycMoaners/HiScore) [![Dependency Status](https://david-dm.org/LirycMoaners/HiScore.svg)](https://david-dm.org/LirycMoaners/HiScore) [![devDependency Status](https://david-dm.org/LirycMoaners/HiScore/dev-status.svg)](https://david-dm.org/LirycMoaners/HiScore?type=dev) 
+
+[![GitHub forks](https://img.shields.io/github/forks/LirycMoaners/HiScore.svg?style=social&label=Fork)](https://github.com/LirycMoaners/HiScore/fork) [![GitHub stars](https://img.shields.io/github/stars/LirycMoaners/HiScore.svg?style=social&label=Star)](https://github.com/LirycMoaners/HiScore) 
 
 It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.0.
 
