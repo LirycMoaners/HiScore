@@ -1,19 +1,17 @@
 # HiScore
 
-The HiScore project is an Angular 5 version of the KeepScore app (Nolan Lawson).
+The HiScore project is an Angular 8 app based on the concept of the KeepScore app (Nolan Lawson).
 
 
-It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.0.
+It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.0.
 
-It includes build for Android with [Cordova](https://github.com/apache/cordova-android) version 8.0.0.
+It includes build for Android with [Capacitor](https://github.com/ionic-team/capacitor) version 1.4.0.
 
 It includes build for Desktop with [Electron](https://github.com/electron/electron) version 2.0.7.
 
 ## Dependencies
 
 Run `npm install` to install all the dependencies this project needs.
-
-Run `cordova platform add android` to install the platform to build for android.
 
 ## Development server
 
@@ -43,7 +41,7 @@ Run `npm run lint` to execute the linter from angular-cli on your code.
 
 Run `npm run build:prod` to build the project for production (with aot improvement). The build artifacts will be stored in the `www\` directory.
 
-Run `npm run build:prod:android` to package the project for Android. The apk will be stored in `platforms\android\app\build\outputs\apk\debug\` directory. Dont forget to install the android platform.
+Run `npm run build:prod:android` to package the project for Android. Dont forget to install the android platform.
 
 Run `npm run build:prod:windows` to package the project for Windows. The exe will be stored in `hi-score-win32-x64\` directory.
 
