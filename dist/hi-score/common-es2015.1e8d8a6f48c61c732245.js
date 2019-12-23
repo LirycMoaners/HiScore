@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[1],{"3RWY":function(e,r,n){"use strict";n.d(r,"a",(function(){return s}));var t=n("lJxs");class s{constructor(e){this.playerService=e}transform(e){return this.playerService.getPlayerById(e).pipe(Object(t.a)(e=>e.name))}}}}]);

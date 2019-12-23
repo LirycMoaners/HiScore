@@ -1,0 +1,104 @@
+{
+  "configVersion": 1,
+  "timestamp": 1577126193840,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "urls": [
+        "/2-es2015.c9a5c7cf8d98a17bd361.js",
+        "/2-es5.c9a5c7cf8d98a17bd361.js",
+        "/7-es2015.617857ff91a39f49c2b6.js",
+        "/7-es5.617857ff91a39f49c2b6.js",
+        "/8-es2015.e32ff7216fd21c50055f.js",
+        "/8-es5.e32ff7216fd21c50055f.js",
+        "/9-es2015.60be57a629a598ff4969.js",
+        "/9-es5.60be57a629a598ff4969.js",
+        "/common-es2015.1e8d8a6f48c61c732245.js",
+        "/common-es5.1e8d8a6f48c61c732245.js",
+        "/favicon.ico",
+        "/index.html",
+        "/main-es2015.ab1ee3aa458642d81aed.js",
+        "/main-es5.ab1ee3aa458642d81aed.js",
+        "/manifest.webmanifest",
+        "/polyfills-es2015.b00a8ee45d22faafa706.js",
+        "/polyfills-es5.dd3766814e917b2590f9.js",
+        "/runtime-es2015.eadb0e32daba59de13c8.js",
+        "/runtime-es5.eadb0e32daba59de13c8.js",
+        "/styles.a3a115ceac3407f08261.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "urls": [
+        "/assets/icons/icon-128x128.png",
+        "/assets/icons/icon-144x144.png",
+        "/assets/icons/icon-152x152.png",
+        "/assets/icons/icon-192x192.png",
+        "/assets/icons/icon-384x384.png",
+        "/assets/icons/icon-512x512.png",
+        "/assets/icons/icon-72x72.png",
+        "/assets/icons/icon-96x96.png",
+        "/assets/scss/color.scss",
+        "/assets/scss/theme.scss"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/2-es2015.c9a5c7cf8d98a17bd361.js": "07a43f6d63ee06f2b2d6e4d9a02dd8e072c774f2",
+    "/2-es5.c9a5c7cf8d98a17bd361.js": "07a43f6d63ee06f2b2d6e4d9a02dd8e072c774f2",
+    "/7-es2015.617857ff91a39f49c2b6.js": "eb7e08c05db2c709a929aabf5e43ac4cd3c80e45",
+    "/7-es5.617857ff91a39f49c2b6.js": "8734b8ac5f1affb759ac8b27124d44a96631e5b7",
+    "/8-es2015.e32ff7216fd21c50055f.js": "30419967a5457c292449b644e3157351b9de56fd",
+    "/8-es5.e32ff7216fd21c50055f.js": "d5ab77efbca153342876127bb2a3d738471ffc77",
+    "/9-es2015.60be57a629a598ff4969.js": "eae619ec68dc4e73f393123fbebe2774e4c64c1a",
+    "/9-es5.60be57a629a598ff4969.js": "d25c7afe12500237922ac82ddd624f35e44f3ade",
+    "/assets/icons/icon-128x128.png": "d900c9482a429f1c98a0ee46828eca1061519dc8",
+    "/assets/icons/icon-144x144.png": "e3e7b53b4694451af7f618e2f57984ebb89d901b",
+    "/assets/icons/icon-152x152.png": "1d1d9a8f843d599b7f980ea8f70004944dff2d8a",
+    "/assets/icons/icon-192x192.png": "1d0e1f4fd63a6e26181d7926e4681053c2934734",
+    "/assets/icons/icon-384x384.png": "a27bab3b06a60cbc672f3dec56f6f7d91626b8db",
+    "/assets/icons/icon-512x512.png": "743e2a195982657396a9e3c8f98ef25e49ca17a7",
+    "/assets/icons/icon-72x72.png": "b683d9dc2c0e7c212a04c8032a275cdf54735306",
+    "/assets/icons/icon-96x96.png": "c0a0495f2ae58b886ba176c08209d048271c6af5",
+    "/assets/scss/color.scss": "282db489e9e90e021c36b6b8c9c55d6198a89f5f",
+    "/assets/scss/theme.scss": "a85c8e08158e496f849ea98e8870d07894ae53f6",
+    "/common-es2015.1e8d8a6f48c61c732245.js": "bac89914873ee15bbbbcc8ca4bdb2813692cbe81",
+    "/common-es5.1e8d8a6f48c61c732245.js": "e6367ba0b5f6bd745e53756eefabb6632b6c3a85",
+    "/favicon.ico": "1d82d2b17c8b998a7eb36a29227a30808f5dcc88",
+    "/index.html": "a9ec80f9e88d2ecd3e4e3754fffb240f158e0357",
+    "/main-es2015.ab1ee3aa458642d81aed.js": "202e88ef7b6012d4e1031a69d30e20dcc896b831",
+    "/main-es5.ab1ee3aa458642d81aed.js": "484c3cefd090e935e20d9442decd039dc0959070",
+    "/manifest.webmanifest": "c301365a43f76c41c16a61aa33ad458a14a7f057",
+    "/polyfills-es2015.b00a8ee45d22faafa706.js": "c37a8026023b3688ee0707b4afee9adfc3d4c95e",
+    "/polyfills-es5.dd3766814e917b2590f9.js": "150715c33b16144692d809e7843206541c89683d",
+    "/runtime-es2015.eadb0e32daba59de13c8.js": "46e9c7547f86010209566c082cb1cb538241538e",
+    "/runtime-es5.eadb0e32daba59de13c8.js": "529cf7880db1bfa6f5e3342752a0f5f747d74f28",
+    "/styles.a3a115ceac3407f08261.css": "1743fc4f3a77cee1613a9093d333e8ea67abe5c4"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ]
+}
