@@ -4,5 +4,10 @@
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "dist/hi-score",
-  "cordova": {}
+  "cordova": {},
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true
+    }
+  }
 }
