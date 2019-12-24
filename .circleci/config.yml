@@ -100,6 +100,9 @@ jobs:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
           command: sudo chmod +x ./gradlew
       - run:
+          name: Sync with gradle files
+          command: ./gradlew --recompile-scripts
+      - run:
           name: Build debug apk
           command: ./gradlew assembleDebug
       - save_cache:
