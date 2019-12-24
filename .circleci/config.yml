@@ -85,20 +85,17 @@ jobs:
           command: lftp ftp://${username}:${password}@${hostname} -e "mirror -v -R ./dist/ /www/; quit"
 
   build_android:
-    working_directory: ~/code
+    working_directory: ~/project
     docker:
       - image: circleci/android:api-28
     environment:
       JVM_OPTS: -Xmx3200m
     steps:
-      - checkout
       - restore_cache:
-          key: jars-{{ checksum "android/build.gradle" }}-{{ checksum  "android/app/build.gradle" }}
+          key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
           command: sudo chmod +x ./android/gradlew
-      - restore_cache:
-          key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Download Dependencies
           command: ./android/gradlew androidDependencies
