@@ -48,12 +48,19 @@ jobs:
             else
                 npm run build
             fi
-
       # Cache the dist folder for the deploy job
       - save_cache:
           key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - dist
+      - run:
+          name: Capacitor Copy
+          command: npx cap copy
+      # Cache the dist folder for the deploy job
+      - save_cache:
+          key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - android
 
   deploy:
     working_directory: ~/project
@@ -91,10 +98,7 @@ jobs:
 #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
 #         command: sudo chmod +x ./gradlew
       - restore_cache:
-          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-      - run:
-          name: Capacitor Copy
-          command: npx cap copy
+          key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Download Dependencies
           command: ./android/gradlew androidDependencies
