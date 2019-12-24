@@ -76,21 +76,19 @@ jobs:
           name: Send Via FTP
           command: lftp ftp://${username}:${password}@${hostname} -e "mirror -v -R ./dist/ /www/; quit"
 
-  build_android:
-    working_directory: ~/project/android
+  pre_build_android:
+    working_directory: ~/project
     docker:
-      - image: circleci/android:api-28-alpha
-    environment:
-      JVM_OPTS: -Xmx3200m
+      - image: circleci/node:12.13-browsers
     steps:
-      - checkout:
-          path: ~/project
+      - checkout
       # Restore local dependencies from cache
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "../package.json" }}
+            - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-            - v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Capacitor update android
           working_directory: ~/project
@@ -99,12 +97,28 @@ jobs:
           name: Capacitor copy
           working_directory: ~/project
           command: npx cap copy
+      # Cache the dist folder for the deploy job
+      - save_cache:
+          key: v1-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - .
+
+  build_android:
+    working_directory: ~/project/android
+    docker:
+      - image: circleci/android:api-28-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      # Restore local dependencies from cache
+      - restore_cache:
+          key: v1-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
           command: sudo chmod +x ./gradlew
       - run:
           name: Assemble debug apk
-          command: gradlew assembleDebug
+          command: ./gradlew assembleDebug
       - save_cache:
           paths:
             - ~/.gradle
@@ -124,6 +138,9 @@ workflows:
           filters:
             branches:
               only: master
-      - build_android:
+      - pre_build_android:
           requires:
             - build
+      - build_android:
+          requires:
+            - pre_build_android
