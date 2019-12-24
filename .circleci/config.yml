@@ -54,11 +54,8 @@ jobs:
           paths:
             - dist
       - run:
-          name: Update Android project
-          command: npx cap update android
-      - run:
-          name: Capacitor Copy
-          command: npx cap copy
+          name: Capacitor sync
+          command: npx cap sync
       # Cache the dist folder for the deploy job
       - save_cache:
           key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
@@ -100,7 +97,10 @@ jobs:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
           command: sudo chmod +x ./gradlew
       - run:
-          name: Build debug apk
+          name: Build Android
+          command: ./gradlew tasks
+      - run:
+          name: Assemble debug apk
           command: ./gradlew :app:assembleDebug
       - save_cache:
           paths:
