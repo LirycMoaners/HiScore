@@ -52,6 +52,6 @@ Run `npm run build:prod:windows` to package the project for Windows. The exe wil
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
-To get more help on the Cordova use `cordova help` or go check out the [Cordova README](https://github.com/apache/cordova-cli/blob/master/README.md).
+To get more help on the Capacitor use `capacitor help` or go check out the [Capacitor README](https://github.com/ionic-team/capacitor/blob/master/README.md).
 
 To get more help on the Electron go check out the [Electron README](https://github.com/electron/electron/blob/master/README.md).
