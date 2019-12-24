@@ -85,9 +85,9 @@ jobs:
           command: lftp ftp://${username}:${password}@${hostname} -e "mirror -v -R ./dist/ /www/; quit"
 
   build_android:
-    working_directory: ~/project
+    working_directory: ~/project/android
     docker:
-      - image: circleci/android:api-28
+      - image: circleci/android:api-28-alpha
     environment:
       JVM_OPTS: -Xmx3200m
     steps:
@@ -95,22 +95,22 @@ jobs:
           key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
-          command: sudo chmod +x ./android/gradlew
+          command: sudo chmod +x ./gradlew
       - run:
           name: Download Dependencies
-          command: ./android/gradlew android/androidDependencies
+          command: ./gradlew androidDependencies
       - save_cache:
           paths:
-            - ~/android/.gradle
-          key: jars-{{ checksum "android/build.gradle" }}-{{ checksum  "android/app/build.gradle" }}
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: Run Tests
-          command: ./android/gradlew lint test
+          command: ./gradlew lint test
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: android/app/build/reports
+          path: app/build/reports
           destination: reports
       - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: android/app/build/test-results
+          path: app/build/test-results
 
 workflows:
   version: 2
