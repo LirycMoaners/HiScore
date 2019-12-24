@@ -48,21 +48,11 @@ jobs:
             else
                 npm run build
             fi
-      - run:
-          name: Capacitor update android
-          command: npx cap update android
-      - run:
-          name: Capacitor copy
-          command: npx cap copy
       # Cache the dist folder for the deploy job
       - save_cache:
           key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - dist
-      - save_cache:
-          key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - android
 
   deploy:
     working_directory: ~/project
@@ -93,12 +83,22 @@ jobs:
     environment:
       JVM_OPTS: -Xmx3200m
     steps:
+      - checkout:
+          path: ~/project
       # Restore local dependencies from cache
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "../package.json" }}
             - v1-dependencies-
-            - v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+            - v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Capacitor update android
+          working_directory: ~/project
+          command: npx cap update android
+      - run:
+          name: Capacitor copy
+          working_directory: ~/project
+          command: npx cap copy
       - run:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
           command: sudo chmod +x ./gradlew
