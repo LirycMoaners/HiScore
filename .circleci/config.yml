@@ -54,6 +54,9 @@ jobs:
           paths:
             - dist
       - run:
+          name: Update Android project
+          command: npx cap update android
+      - run:
           name: Capacitor Copy
           command: npx cap copy
       # Cache the dist folder for the deploy job
