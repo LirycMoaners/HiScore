@@ -1,7 +1,7 @@
 {
   "name": "HiScore",
   "short_name": "HiScore",
-  "theme_color": "#3f51b5",
+  "theme_color": "#000000",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "/hi-score/",
