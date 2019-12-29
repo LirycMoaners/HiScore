@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
+
     repositories {
         google()
         jcenter()
@@ -24,4 +24,13 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+signingConfigs {
+    release {
+        storeFile '.signing/keystore.jks'
+        storePassword System.getenv("keystore_password")
+        keyAlias System.getenv("key_alias")
+        keyPassword System.getenv("key_password")
+    }
 }

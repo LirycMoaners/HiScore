@@ -118,11 +118,20 @@ jobs:
           command: sudo chmod +x ./gradlew
       - run:
           name: Assemble debug apk
-          command: ./gradlew assembleDebug
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "feature/android_build_signed" ]; then
+              echo ${keystore} | base64 -d > .signing/keystore.jks
+              ./gradlew assembleRelease
+            else
+              ./gradlew assembleDebug
+            fi
+      - store_artifacts:
+          path: app/build/outputs/apk/
+          destination: apks/
       - save_cache:
           paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+            - ~/app/build/outputs/apk/
+          key: apk-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
 
 workflows:
   version: 2
