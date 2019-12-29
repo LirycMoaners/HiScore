@@ -119,7 +119,7 @@ jobs:
       - run:
           name: Assemble debug apk
           command: |
-            if [ "${CIRCLE_BRANCH}" == "feature/android_build_signed" ]; then
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo ${keystore} | base64 -d > keystore.jks
               ./gradlew assembleRelease
             else
