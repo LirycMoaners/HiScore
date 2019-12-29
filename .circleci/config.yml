@@ -120,7 +120,7 @@ jobs:
           name: Assemble debug apk
           command: |
             if [ "${CIRCLE_BRANCH}" == "feature/android_build_signed" ]; then
-              echo ${keystore} | base64 -d > .signing/keystore.jks
+              echo ${keystore} | base64 -d > keystore.jks
               ./gradlew assembleRelease
             else
               ./gradlew assembleDebug

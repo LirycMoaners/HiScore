@@ -28,7 +28,7 @@ task clean(type: Delete) {
 
 signingConfigs {
     release {
-        storeFile '.signing/keystore.jks'
+        storeFile 'keystore.jks'
         storePassword System.getenv("keystore_password")
         keyAlias System.getenv("key_alias")
         keyPassword System.getenv("key_password")
