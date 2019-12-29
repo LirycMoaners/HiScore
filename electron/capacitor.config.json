@@ -1,0 +1,13 @@
+{
+  "appId": "com.cyrillefebvre.hiscore",
+  "appName": "HiScore",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist/hi-score",
+  "cordova": {},
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true
+    }
+  }
+}
