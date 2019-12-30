@@ -11,6 +11,9 @@
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "ng build --prod",
+    "build:prod:web": "ng build --prod --base_href \"/hi-score/\"",
+    "build:prod:android": "ng build --prod",
+    "build:prod:electron": "ng build --prod --base_href \"./\"",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
