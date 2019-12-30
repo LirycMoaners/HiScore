@@ -5,7 +5,7 @@ RewriteCond %{SERVER_PORT} 80
 RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R,L]
 
 # Routing for Apache server
-RewriteBase /
+RewriteBase /hi-score/
 RewriteRule ^index\.html$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
