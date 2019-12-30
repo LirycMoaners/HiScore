@@ -74,6 +74,10 @@ jobs:
       - run:
           name: Building
           command: npm run build:prod:android
+      # Update dependencies & copy dist folder
+      - run:
+          name: Capacytor sync
+          command: npx cap sync
       # Cache the dist folder for the deploy job
       - save_cache:
           key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
@@ -93,6 +97,10 @@ jobs:
       - run:
           name: Building
           command: npm run build:prod:electron
+      # Update dependencies & copy dist folder
+      - run:
+          name: Capacytor sync
+          command: npx cap sync
       # Cache the dist folder for the deploy job
       - save_cache:
           key: v1-electron-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
