@@ -179,9 +179,13 @@ jobs:
       - run:
           name: Package windows app
           command: npm run electron:package
+      # Zip the all package folder
+      - run:
+          name: Zip exe & libs
+          command: zip -r hi-score-win32.zip release-builds/hi-score-win32-ia32
       # Store the app for download
       - store_artifacts:
-          path: release-builds/hi-score-win32-ia32/
+          path: hi-score-win32.zip
           destination: exes/
 
 workflows:
