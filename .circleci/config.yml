@@ -182,11 +182,12 @@ jobs:
       # Zip the all package folder
       - run:
           name: Zip exe & libs
-          command: zip -r hi-score-win32.zip release-builds/hi-score-win32-ia32
+          working_directory: ~/project/electron/release-builds/hi-score-win32-ia32
+          command: zip -r hi-score-win32.zip .
       # Store the app for download
       - store_artifacts:
-          path: hi-score-win32.zip
-          destination: exes/
+          path: electron/release-builds/hi-score-win32-ia32/hi-score-win32.zip
+          destination: hi-score-win32/
 
 workflows:
   version: 2
