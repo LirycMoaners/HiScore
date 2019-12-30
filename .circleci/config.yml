@@ -38,7 +38,7 @@ jobs:
             - .
 
   # The angular build job for web
-  build_for_web:
+  build_web:
     working_directory: ~/project
     docker:
       - image: circleci/node:12.13-browsers
@@ -62,7 +62,7 @@ jobs:
             - dist
 
   # The angular build job for android
-  build_for_android:
+  build_android:
     working_directory: ~/project
     docker:
       - image: circleci/node:12.13-browsers
@@ -85,7 +85,7 @@ jobs:
             - .
 
   # The angular build job for android
-  build_for_electron:
+  build_electron:
     working_directory: ~/project
     docker:
       - image: circleci/node:12.13-browsers
@@ -129,7 +129,7 @@ jobs:
           name: Send Via FTP
           command: lftp ftp://${username}:${password}@${hostname} -e "mirror -v -R ./dist/ /www/; quit"
 
-  android_build:
+  package_android:
     working_directory: ~/project/android
     docker:
       - image: circleci/android:api-28-alpha
@@ -159,29 +159,62 @@ jobs:
             - ~/app/build/outputs/apk/
           key: apk-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
 
+  package_electron:
+    working_directory: ~/project/electron
+    docker:
+      - image: circleci/node:12.13-browsers
+    steps:
+      # Restore local dependencies from cache
+      - restore_cache:
+          key: v1-electron-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      # Install wine to build for windows
+      - run:
+          name: Install Wine
+          command: sudo apt install wine
+      # Install electron-packager dependencies
+      - run:
+          name: Install dependencies
+          command: npm i
+      # Package the windows exe with electron-packager
+      - run:
+          name: Package windows app
+          command: npm run electron:package
+      # Zip the all package folder
+      - run:
+          name: Zip exe & libs
+          working_directory: ~/project/electron/release-builds/hi-score-win32-ia32
+          command: zip -r hi-score-win32.zip .
+      # Store the app for download
+      - store_artifacts:
+          path: release-builds/hi-score-win32-ia32/hi-score-win32.zip
+          destination: hi-score-win32/
+
 workflows:
   version: 2
   # The build and deploy workflow
   build_and_deploy:
     jobs:
       - pre_build
-      - build_for_web:
+      - build_web:
           requires:
             - pre_build
-      - build_for_android:
+      - build_android:
           requires:
             - pre_build
-      - build_for_electron:
+      - build_electron:
           requires:
             - pre_build
-      - android_build:
+      - package_android:
           requires:
-            - build_for_android
+            - build_android
+      - package_electron:
+          requires:
+            - build_electron
       # The deploy job will only run on the filtered branches and
       # require the build job to be successful before it starts
       - deploy_web:
           requires:
-            - build_for_web
+            - build_web
           filters:
             branches:
               only: master
