@@ -167,6 +167,10 @@ jobs:
       # Restore local dependencies from cache
       - restore_cache:
           key: v1-electron-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      # Install electron-packager dependencies
+      - run:
+          name: Install dependencies
+          command: npm i
       # Package the windows exe with electron-packager
       - run:
           name: Package windows app
