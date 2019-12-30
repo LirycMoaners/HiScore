@@ -186,7 +186,7 @@ jobs:
           command: zip -r hi-score-win32.zip .
       # Store the app for download
       - store_artifacts:
-          path: electron/release-builds/hi-score-win32-ia32/hi-score-win32.zip
+          path: release-builds/hi-score-win32-ia32/hi-score-win32.zip
           destination: hi-score-win32/
 
 workflows:
