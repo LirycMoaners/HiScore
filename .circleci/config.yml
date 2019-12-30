@@ -2,59 +2,112 @@ version: 2
 
 # List of jobs
 jobs:
-  # The build job
-  build:
+  pre_build:
     working_directory: ~/project
     docker:
       - image: circleci/node:12.13-browsers
     steps:
       # Checkout the code from the branch into the working_directory
       - checkout
-
       # Log the current branch
       - run:
           name: Show current branch
           command: echo ${CIRCLE_BRANCH}
-
       # Restore local dependencies from cache
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
-
       # Install project dependencies
       - run:
           name: Install local dependencies
           command: npm install
-
       # Cache local dependencies if they don't exist
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths:
             - node_modules
-
       # Lint the source code
       - run:
           name: Linting
           command: npm run lint
+      # Cache local all project with dependencies
+      - save_cache:
+          key: v1-src-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - .
 
-      # Build project with different configuration based on
-      # the current branch
+  # The angular build job for web
+  build_for_web:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:12.13-browsers
+    steps:
+      # Restore local dependencies from cache
+      - restore_cache:
+          key: v1-src-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      # Build project with different configuration based on the current branch
       - run:
           name: Building
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                npm run build:prod
+                npm run build:prod:web
             else
                 npm run build
             fi
       # Cache the dist folder for the deploy job
       - save_cache:
-          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          key: v1-web-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - dist
 
-  deploy:
+  # The angular build job for android
+  build_for_android:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:12.13-browsers
+    steps:
+      # Restore local dependencies from cache
+      - restore_cache:
+          key: v1-src-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      # Build project with different configuration based on the current branch
+      - run:
+          name: Building
+          command: npm run build:prod:android
+      # Update dependencies & copy dist folder
+      - run:
+          name: Capacytor sync
+          command: npx cap sync
+      # Cache the dist folder for the deploy job
+      - save_cache:
+          key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - .
+
+  # The angular build job for android
+  build_for_electron:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:12.13-browsers
+    steps:
+      # Restore local dependencies from cache
+      - restore_cache:
+          key: v1-src-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      # Build project with different configuration based on the current branch
+      - run:
+          name: Building
+          command: npm run build:prod:electron
+      # Update dependencies & copy dist folder
+      - run:
+          name: Capacytor sync
+          command: npx cap sync
+      # Cache the dist folder for the deploy job
+      - save_cache:
+          key: v1-electron-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - .
+
+  deploy_web:
     working_directory: ~/project
     docker:
       - image: circleci/node:12.13-browsers
@@ -66,7 +119,7 @@ jobs:
       # Restore cache from the build job which contains the
       # dist folder that needs to be deployed
       - restore_cache:
-          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          key: v1-web-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Install LFTP
           command: |
@@ -76,34 +129,7 @@ jobs:
           name: Send Via FTP
           command: lftp ftp://${username}:${password}@${hostname} -e "mirror -v -R ./dist/ /www/; quit"
 
-  pre_build_android:
-    working_directory: ~/project
-    docker:
-      - image: circleci/node:12.13-browsers
-    steps:
-      - checkout
-      # Restore local dependencies from cache
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - restore_cache:
-          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-      - run:
-          name: Capacitor update android
-          working_directory: ~/project
-          command: npx cap update android
-      - run:
-          name: Capacitor copy
-          working_directory: ~/project
-          command: npx cap copy
-      # Cache the dist folder for the deploy job
-      - save_cache:
-          key: v1-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - .
-
-  build_android:
+  android_build:
     working_directory: ~/project/android
     docker:
       - image: circleci/android:api-28-alpha
@@ -112,7 +138,7 @@ jobs:
     steps:
       # Restore local dependencies from cache
       - restore_cache:
-          key: v1-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
           command: sudo chmod +x ./gradlew
@@ -138,18 +164,24 @@ workflows:
   # The build and deploy workflow
   build_and_deploy:
     jobs:
-      - build
+      - pre_build
+      - build_for_web:
+          requires:
+            - pre_build
+      - build_for_android:
+          requires:
+            - pre_build
+      - build_for_electron:
+          requires:
+            - pre_build
+      - android_build:
+          requires:
+            - build_for_android
       # The deploy job will only run on the filtered branches and
       # require the build job to be successful before it starts
       - deploy:
           requires:
-            - build
+            - build_for_web
           filters:
             branches:
               only: master
-      - pre_build_android:
-          requires:
-            - build
-      - build_android:
-          requires:
-            - pre_build_android
