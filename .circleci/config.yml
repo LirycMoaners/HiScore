@@ -167,6 +167,10 @@ jobs:
       # Restore local dependencies from cache
       - restore_cache:
           key: v1-electron-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      # Install wine to build for windows
+      - run:
+          name: Install Wine
+          command: sudo apt install wine
       # Install electron-packager dependencies
       - run:
           name: Install dependencies
