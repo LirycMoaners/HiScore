@@ -8,7 +8,6 @@ import { flatMap, map } from 'rxjs/operators';
  * Service for every action about players
  *
  * @export
- * @class PlayerService
  */
 @Injectable()
 export class PlayerService {
@@ -16,9 +15,6 @@ export class PlayerService {
 
   /**
    * Return an observable of all the players in a list
-   *
-   * @returns {Observable<Player[]>}
-   * @memberof PlayerService
    */
   public getPlayerList(): Observable<Player[]> {
     const players: Player[] = JSON.parse(localStorage.getItem('players'));
@@ -27,10 +23,6 @@ export class PlayerService {
 
   /**
    * Return an observable of a player find by its id
-   *
-   * @param {string} id
-   * @returns {Observable<Player>}
-   * @memberof PlayerService
    */
   public getPlayerById(id: string): Observable<Player> {
     return this.getPlayerList()
@@ -41,10 +33,6 @@ export class PlayerService {
 
   /**
    * Return an observable of a player list filtered by a list of ids
-   *
-   * @param {string[]} idList
-   * @returns {Observable<Player[]>}
-   * @memberof PlayerService
    */
   public getPlayerListById(idList: string[]): Observable<Player[]> {
     return this.getPlayerList()
@@ -55,10 +43,6 @@ export class PlayerService {
 
   /**
    * Create a new player
-   *
-   * @param {Player} player
-   * @returns {Observable<void>}
-   * @memberof PlayerService
    */
   public createPlayer(player: Player): Observable<void> {
     return this.getPlayerList()
@@ -72,10 +56,6 @@ export class PlayerService {
 
   /**
    * Create multiple new players
-   *
-   * @param {Player[]} newPlayerList
-   * @returns {Observable<void>}
-   * @memberof PlayerService
    */
   public createPlayerList(newPlayerList: Player[]): Observable<void> {
     return this.getPlayerList()

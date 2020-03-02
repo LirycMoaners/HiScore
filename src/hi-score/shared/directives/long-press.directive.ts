@@ -4,24 +4,16 @@ import { Directive, HostListener, EventEmitter, Output } from '@angular/core';
  * Directive made to know if an element have been pressed for a 0.5s
  *
  * @export
- * @class LongPressDirective
  */
-@Directive({ selector: '[hsLongPress]' })
+@Directive({ selector: '[appLongPress]' })
 export class LongPressDirective {
   /**
    * The emitter of the long press event
-   *
-   * @type {EventEmitter<any>}
-   * @memberof LongPressDirective
    */
   @Output() longPressDetected: EventEmitter<any> = new EventEmitter<any>();
 
   /**
    * Keep the timer of the press event
-   *
-   * @private
-   * @type {number}
-   * @memberof LongPressDirective
    */
   private pressTimer: number;
 
@@ -29,10 +21,6 @@ export class LongPressDirective {
 
   /**
    * Start a timeout and emit the long press event after 0.5s
-   *
-   * @private
-   * @param {Event} event
-   * @memberof LongPressDirective
    */
   @HostListener('touchstart', ['$event'])
   @HostListener('mousedown', ['$event'])
@@ -46,9 +34,6 @@ export class LongPressDirective {
 
   /**
    * Clear the timeout if the user release the press before the end of the timeout
-   *
-   * @private
-   * @memberof LongPressDirective
    */
   @HostListener('touchend')
   @HostListener('mouseup')

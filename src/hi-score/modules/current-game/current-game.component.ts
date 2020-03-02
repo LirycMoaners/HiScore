@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { WinDialogComponent } from './win-dialog/win-dialog.component';
 import { Subscription } from 'rxjs';
@@ -17,38 +17,25 @@ import { flatMap } from 'rxjs/operators';
  * Component of the current game session
  *
  * @export
- * @class CurrentGameComponent
- * @implements {OnInit}
- * @implements {OnDestroy}
  */
 @Component({
-  selector: 'hs-current-game',
+  selector: 'app-current-game',
   templateUrl: 'current-game.component.html',
   styleUrls: ['current-game.component.scss']
 })
 export class CurrentGameComponent implements OnInit, OnDestroy {
   /**
    * The current game
-   *
-   * @type {Game}
-   * @memberof CurrentGameComponent
    */
   public game: Game;
 
   /**
    * The id of the first player to start the first round
-   *
-   * @type {string}
-   * @memberof CurrentGameComponent
    */
   public firstPlayerId: string;
 
   /**
    * List of all the subscription in the component to unsuscribe on destroy
-   *
-   * @private
-   * @type {Subscription[]}
-   * @memberof CurrentGameComponent
    */
   private subscriptionList: Subscription[] = [];
 
@@ -62,7 +49,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.gameService.getGameById(this.route.snapshot.params['id'])
+    this.gameService.getGameById(this.route.snapshot.params.id)
       .subscribe((game: Game) => {
         this.game = game;
         this.gameService.currentGameId = game.id;
@@ -114,8 +101,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
    * - Adding a new round
    * - Saving the game
    * - Changing the main bar title
-   *
-   * @memberof CurrentGameComponent
    */
   public validateRound() {
     this.refreshBestScore();
@@ -135,9 +120,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
 
   /**
    * Add 1 to the round score of a player
-   *
-   * @param {Score} score
-   * @memberof CurrentGameComponent
    */
   public onClickPlus(score: Score) {
     score.roundScoreList[0] += 1;
@@ -146,9 +128,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
 
   /**
    * Remove 1 to the round score of a player
-   *
-   * @param {Score} score
-   * @memberof CurrentGameComponent
    */
   public onClickMinus(score: Score) {
     score.roundScoreList[0] -= 1;
@@ -157,10 +136,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
 
   /**
    * Open the score dialog and update the round score and the total of a player
-   *
-   * @param {Score} score
-   * @param {number} roundIndex
-   * @memberof CurrentGameComponent
    */
   public openScoreDialog(score: Score, roundIndex: number) {
     const dialogRef = this.dialog.open(ScoreDialogComponent, {
@@ -176,10 +151,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
 
   /**
    * Update round score and change the input value to 0 if there is no value
-   *
-   * @param {Score} score
-   * @param {HTMLInputElement} inputScore
-   * @memberof CurrentGameComponent
    */
   public onChangeRoundScore(score: Score, inputScore: HTMLInputElement) {
     inputScore.value = inputScore.value ? inputScore.value : '0';
@@ -189,10 +160,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
 
   /**
    * Calculate the total score for a player
-   *
-   * @private
-   * @param {Score} score
-   * @memberof CurrentGameComponent
    */
   private calculateTotal(score: Score) {
     score.total = score.roundScoreList.reduce((total: number, roundScore: number) => total + Number(roundScore));
@@ -206,9 +173,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
 
   /**
    * Refresh best scores
-   *
-   * @private
-   * @memberof CurrentGameComponent
    */
   private refreshBestScore() {
     let bestScore: number;
@@ -222,10 +186,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
 
   /**
    * Check if it's the end of the game adter validating a round
-   *
-   * @private
-   * @returns {boolean}
-   * @memberof CurrentGameComponent
    */
   private isGameEnd(): boolean {
     if (this.game.gameCategory.endingType === EndingType.point) {
@@ -238,9 +198,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   /**
    * Open the win dialog to show the ranking of each player and their score.
    * Redirect to the game list if the user chose it or add a new round to continue.
-   *
-   * @private
-   * @memberof CurrentGameComponent
    */
   private openWinDialog() {
     const dialogRef = this.dialog.open(WinDialogComponent, {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HeaderService } from '../../../core/header/header.service';
 
 @Component({
-  selector: 'hs-about',
+  selector: 'app-about',
   templateUrl: 'about.component.html',
   styleUrls: ['about.component.scss']
 })

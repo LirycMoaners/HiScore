@@ -11,11 +11,9 @@ import { SwUpdate } from '@angular/service-worker';
  * HiScore app main component
  *
  * @export
- * @class HiScoreComponent
- * @implements {OnInit}
  */
 @Component({
-  selector: 'hs-root',
+  selector: 'app-root',
   templateUrl: './hi-score.component.html',
   styleUrls: ['./hi-score.component.scss']
 })
