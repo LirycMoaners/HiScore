@@ -59,12 +59,13 @@
       <div class="game-category-details" *ngIf="!!game && !!game.gameCategory">
         <mat-form-field>
           <mat-select [(ngModel)]="game.gameCategory.endingType" placeholder="Ending type">
+            <mat-option [value]="null">None</mat-option>
             <mat-option *ngFor="let endingType of EndingType | keyEnum" [value]="endingType.value">
               {{endingType.value}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field *ngIf="game.gameCategory.endingType">
           <input matInput type="number" [(ngModel)]="game.gameCategory.endingNumber" placeholder="Ending number">
         </mat-form-field>
         <mat-form-field>

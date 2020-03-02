@@ -190,11 +190,19 @@ export class GameEditionComponent implements OnInit {
       this.gameCategoryService.getGameCategoryList()
         .subscribe((gameCategoryList: GameCategory[]) => {
           this.gameCategoryList = gameCategoryList;
+          this.chosenGameCategory = this.gameCategoryList[0];
+          this.onSelectGameCategory(this.gameCategoryList[0]);
         });
     }
   }
 
-  drop(event: CdkDragDrop<Player[]>) {
+  /**
+   * Move the player in list when dropped
+   *
+   * @param {CdkDragDrop<Player[]>} event
+   * @memberof GameEditionComponent
+   */
+  public drop(event: CdkDragDrop<Player[]>) {
     moveItemInArray(this.gamePlayerList, event.previousIndex, event.currentIndex);
   }
 
