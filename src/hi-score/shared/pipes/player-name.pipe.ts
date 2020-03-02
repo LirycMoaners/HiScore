@@ -8,8 +8,6 @@ import { Observable } from 'rxjs';
  * Pipe which return the name of the player if we gave the player id
  *
  * @export
- * @class PlayerNamePipe
- * @implements {PipeTransform}
  */
 @Pipe({
   name: 'playerName'

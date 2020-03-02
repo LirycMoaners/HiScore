@@ -13,7 +13,7 @@ import { UUID } from 'angular2-uuid';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, forkJoin, of } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
 import { isNullOrUndefined } from 'util';
 import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
@@ -23,100 +23,66 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
  * Component for game creation and edition
  *
  * @export
- * @class GameEditionComponent
- * @implements {OnInit}
  */
 @Component({
-  selector: 'hs-game-edition',
+  selector: 'app-game-edition',
   templateUrl: 'game-edition.component.html',
   styleUrls: ['game-edition.component.scss']
 })
 export class GameEditionComponent implements OnInit {
   /**
    * The current game in edition
-   *
-   * @type {Game}
-   * @memberof GameEditionComponent
    */
   public game: Game;
 
   /**
    * The complete player list without those who are already added
    * and those who do not correspond to the input text
-   *
-   * @type {Player[]}
-   * @memberof GameEditionComponent
    */
   public filteredPlayerList: Player[] = [];
 
   /**
    * The complete player list
-   *
-   * @type {Player[]}
-   * @memberof GameEditionComponent
    */
   public playerList: Player[] = [];
 
   /**
    * The player list of the current game
-   *
-   * @type {Player[]}
-   * @memberof GameEditionComponent
    */
   public gamePlayerList: Player[] = [];
 
   /**
    * The complete game category list
-   *
-   * @type {GameCategory[]}
-   * @memberof GameEditionComponent
    */
   public gameCategoryList: GameCategory[] = [];
 
   /**
    * The game category that has been chosen for the current game
-   *
-   * @type {GameCategory}
-   * @memberof GameEditionComponent
    */
   public chosenGameCategory: GameCategory;
 
   /**
    * Name of the new player that need to be added
-   *
-   * @memberof GameEditionComponent
    */
   public newPlayerName = '';
 
   /**
    * Specify if the component is used for game creation or game edition
-   *
-   * @memberof GameEditionComponent
    */
   public isCreationMode = true;
 
   /**
-   * Ending yype enum for HTML
-   *
-   * @type {typeof EndingType}
-   * @memberof GameEditionComponent
+   * Ending type enum for HTML
    */
   public EndingType: typeof EndingType = EndingType;
 
   /**
    * Goal enum for HTML
-   *
-   * @type {typeof Goal}
-   * @memberof GameEditionComponent
    */
   public Goal: typeof Goal = Goal;
 
   /**
    * The score of each player added on game edition
-   *
-   * @private
-   * @type {number}
-   * @memberof GameEditionComponent
    */
   private newPlayerScore: number;
 
@@ -131,8 +97,8 @@ export class GameEditionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const gameId: string = this.route.snapshot.params['id'];
-    const isCopy: boolean = this.route.snapshot.queryParams['copy'];
+    const gameId: string = this.route.snapshot.params.id;
+    const isCopy: boolean = this.route.snapshot.queryParams.copy;
     let game$: Observable<any>;
 
     if (gameId || isCopy) {
@@ -152,19 +118,19 @@ export class GameEditionComponent implements OnInit {
           );
       }
 
-      forkJoin(
+      forkJoin([
         game$.pipe(
           flatMap((game: Game) => {
             this.game = Object.assign({}, game);
-            return forkJoin(
+            return forkJoin([
               this.gameCategoryService.getGameCategoryById(this.game.gameCategory.id),
               this.playerService.getPlayerListById(this.game.scoreList.map((score: Score) => score.playerId))
-            );
+            ]);
           })
         ),
         this.playerService.getPlayerList(),
         this.gameCategoryService.getGameCategoryList()
-      ).subscribe(
+      ]).subscribe(
         ([[gameCategory, gamePlayerList], playerList, gameCategoryList]: [[GameCategory, Player[]], Player[], GameCategory[]]) => {
           this.playerList = playerList;
           this.gameCategoryList = gameCategoryList;
@@ -198,9 +164,6 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Move the player in list when dropped
-   *
-   * @param {CdkDragDrop<Player[]>} event
-   * @memberof GameEditionComponent
    */
   public drop(event: CdkDragDrop<Player[]>) {
     moveItemInArray(this.gamePlayerList, event.previousIndex, event.currentIndex);
@@ -208,17 +171,13 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Create a new player or copy a player to be added when new player output blur or enter key press
-   *
-   * @param {(FocusEvent | KeyboardEvent)} event
-   * @param {HTMLInputElement} input
-   * @memberof GameEditionComponent
    */
   public onNewPlayerOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
     let player: Player;
     let shouldAddPlayer = false;
 
     if (input.value && !this.gamePlayerList.find((pl: Player) => input.value === pl.name)) {
-      if (event instanceof FocusEvent && (!event.relatedTarget || event.relatedTarget['tagName'] !== 'MAT-OPTION')) {
+      if (event instanceof FocusEvent && (!event.relatedTarget || (event.relatedTarget as any).tagName !== 'MAT-OPTION')) {
         shouldAddPlayer = true;
       } else if (event instanceof KeyboardEvent && event.key === 'Enter') {
         shouldAddPlayer = true;
@@ -240,10 +199,6 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Add a player to the game player list
-   *
-   * @param {Player} newPlayer
-   * @param {HTMLInputElement} input
-   * @memberof GameEditionComponent
    */
   public addPlayer(newPlayer: Player, input: HTMLInputElement) {
     const player = Object.assign({}, newPlayer);
@@ -252,7 +207,7 @@ export class GameEditionComponent implements OnInit {
 
     if (!this.isCreationMode
       && !this.game.scoreList.find((score: Score) => score.playerId === player.id)
-      && isNullOrUndefined(this.newPlayerScore)
+      && (this.newPlayerScore === null || this.newPlayerScore === undefined)
     ) {
       this.openNewPlayerScoreDialog();
     }
@@ -263,10 +218,6 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Change an added player by another player or a new player
-   *
-   * @param {Player} oldPlayer
-   * @param {(Player | string)} player
-   * @memberof GameEditionComponent
    */
   public changePlayer(oldPlayer: Player, player: Player | string, playerInput: HTMLInputElement) {
     if (player) {
@@ -292,7 +243,7 @@ export class GameEditionComponent implements OnInit {
 
       if (!this.isCreationMode
         && !this.game.scoreList.find((score: Score) => score.playerId === oldPlayer.id)
-        && isNullOrUndefined(this.newPlayerScore)
+        && (this.newPlayerScore === null || this.newPlayerScore === undefined)
       ) {
         this.openNewPlayerScoreDialog();
       }
@@ -305,9 +256,6 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Remove a player from the game player list
-   *
-   * @param {Player} player
-   * @memberof GameEditionComponent
    */
   public removePlayer(player: Player) {
     this.gamePlayerList.splice(this.gamePlayerList.indexOf(player), 1);
@@ -316,9 +264,6 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Filter the player list with the input text and the already added players
-   *
-   * @param {string} [name]
-   * @memberof GameEditionComponent
    */
   public filterPlayerList(name?: string) {
     const filteredValue = name && typeof name === 'string' ? name.toLowerCase() : '';
@@ -330,9 +275,6 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Assign a game category to the current game
-   *
-   * @param {GameCategory} gameCategory
-   * @memberof GameEditionComponent
    */
   public onSelectGameCategory(gameCategory: GameCategory) {
     this.game.gameCategory = Object.assign({}, gameCategory);
@@ -340,8 +282,6 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Open the dialog to add new category and select this new category at dialog close
-   *
-   * @memberof GameEditionComponent
    */
   public openCategoryDialog() {
     const dialogRef = this.dialog.open(AddCategoryDialogComponent, {
@@ -362,8 +302,6 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Start a new game or resume the current game with the selected players and the selected game category
-   *
-   * @memberof GameEditionComponent
    */
   public startGame() {
     if (this.gamePlayerList.length && this.chosenGameCategory.id) {
@@ -389,7 +327,7 @@ export class GameEditionComponent implements OnInit {
           } else {
             if (!voidRoundScoreList.length) {
               for (let i = 0; i < this.game.scoreList[0].roundScoreList.length; i++) {
-                if (i === 1 && !isNullOrUndefined(this.newPlayerScore)) {
+                if (i === 1 && !(this.newPlayerScore === null || this.newPlayerScore === undefined)) {
                   voidRoundScoreList.push(this.newPlayerScore);
                 } else {
                   voidRoundScoreList.push(0);
@@ -422,9 +360,6 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Refresh best scores after modifying player list
-   *
-   * @private
-   * @memberof GameEditionComponent
    */
   private refreshBestScore() {
     let bestScore: number;
@@ -438,9 +373,6 @@ export class GameEditionComponent implements OnInit {
 
   /**
    * Open the dialog for chosing if the new players scores need to be zero or the average of the others scores
-   *
-   * @private
-   * @memberof GameEditionComponent
    */
   private openNewPlayerScoreDialog() {
     const dialogRef = this.dialog.open(NewPlayerScoreDialogComponent, {

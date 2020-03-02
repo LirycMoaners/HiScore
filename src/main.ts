@@ -13,14 +13,3 @@ if (environment.production) {
 
 platformBrowserDynamic().bootstrapModule(HiScoreModule)
   .catch(err => console.log(err));
-
-/* cordova-version-config-off
-const onDeviceReady = () => {
-  AndroidFullScreen.immersiveMode();
-};
-
-document.addEventListener('deviceready', onDeviceReady, false);
-document.addEventListener('resume', onDeviceReady, false);
-
-document.addEventListener('backbutton', () => {}, false);
-cordova-version-config-off */

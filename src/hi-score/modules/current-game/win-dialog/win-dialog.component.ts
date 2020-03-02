@@ -1,4 +1,4 @@
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
 import { Score } from '../../../shared/models/score.model';
 import { Game } from '../../../shared/models/game.model';
@@ -8,27 +8,20 @@ import { Goal } from '../../../shared/models/goal.enum';
  * Component made for showing the end of a game in a dialog
  *
  * @export
- * @class WinDialogComponent
- * @implements {OnInit}
  */
 @Component({
-  selector: 'hs-win-dialog',
+  selector: 'app-win-dialog',
   templateUrl: 'win-dialog.component.html',
   styleUrls: ['win-dialog.component.scss']
 })
 export class WinDialogComponent implements OnInit {
   /**
    * Identify if the user wants to leave the game or to continue the game
-   *
-   * @memberof WinDialogComponent
    */
   public isLeaving = true;
 
   /**
    * The ordered score list of the current game
-   *
-   * @type {Score[]}
-   * @memberof WinDialogComponent
    */
   public orderedScoreList: Score[];
 
