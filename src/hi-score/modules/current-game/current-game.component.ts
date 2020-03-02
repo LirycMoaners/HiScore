@@ -11,6 +11,7 @@ import { Score } from '../../shared/models/score.model';
 import { Goal } from '../../shared/models/goal.enum';
 import { EndingType } from '../../shared/models/ending-type.enum';
 import { HeaderService } from '../../core/header/header.service';
+import { flatMap } from 'rxjs/operators';
 
 /**
  * Component of the current game session
@@ -64,10 +65,12 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     this.gameService.getGameById(this.route.snapshot.params['id'])
       .subscribe((game: Game) => {
         this.game = game;
-        this.headerService.title = game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')';
         this.gameService.currentGameId = game.id;
         if (this.game.isGameEnd) {
+          this.headerService.title = game.gameCategory.name + ' (round ' + (game.scoreList[0].roundScoreList.length - 1) + ')';
           this.openWinDialog();
+        } else {
+          this.headerService.title = game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')';
         }
         if (this.game.scoreList[0].roundScoreList.length === 1 && this.game.isFirstPlayerRandom) {
           const index: number = Math.floor(Math.random() * this.game.scoreList.length);
@@ -118,16 +121,16 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     this.refreshBestScore();
 
     this.game.isGameEnd = this.isGameEnd();
+    for (const score of this.game.scoreList) {
+      score.roundScoreList.unshift(0);
+    }
     if (this.game.isGameEnd) {
       this.openWinDialog();
     } else {
-      for (const score of this.game.scoreList) {
-        score.roundScoreList.unshift(0);
-      }
+      this.gameService.updateGame(this.game).subscribe(() => {
+        this.headerService.title = this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')';
+      });
     }
-    this.gameService.updateGame(this.game).subscribe(() => {
-      this.headerService.title = this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')';
-    });
   }
 
   /**
@@ -166,7 +169,6 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       score.roundScoreList[roundIndex] = result || score.roundScoreList[roundIndex];
       this.calculateTotal(score);
     });
@@ -246,15 +248,18 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       data: this.game
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.gameService.updateGame(this.game).subscribe(() => this.router.navigate(['']));
-      } else {
-        this.game.isGameEnd = false;
-        for (const score of this.game.scoreList) {
-          score.roundScoreList.unshift(0);
+    dialogRef.afterClosed().pipe(
+      flatMap(result => {
+        if (!result) {
+          this.game.isGameEnd = false;
         }
-        this.gameService.updateGame(this.game).subscribe();
+        return this.gameService.updateGame(this.game);
+      })
+    ).subscribe(_ => {
+      if (this.game.isGameEnd) {
+        this.router.navigate(['']);
+      } else {
+        this.headerService.title = this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')';
       }
     });
   }
