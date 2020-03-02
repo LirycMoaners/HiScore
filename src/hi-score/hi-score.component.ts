@@ -5,6 +5,7 @@ import { Goal } from './shared/models/goal.enum';
 import { GameCategoryService } from './core/services/game-category.service';
 import { flatMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { SwUpdate } from '@angular/service-worker';
 
 /**
  * HiScore app main component
@@ -30,12 +31,21 @@ export class HiScoreComponent implements OnInit {
 
   constructor(
     public headerService: HeaderService,
-    private readonly gameCategoryService: GameCategoryService
+    private readonly gameCategoryService: GameCategoryService,
+    private readonly swUpdate: SwUpdate
   ) {}
 
   ngOnInit(): void {
     this.gameCategoryService.getGameCategoryById(this.noGameCategory.id).pipe(
       flatMap(gameCategory => !gameCategory ? this.gameCategoryService.createGameCategory(this.noGameCategory) : of(null))
     ).subscribe();
+
+    if (this.swUpdate.isEnabled) {
+      this.swUpdate.available.subscribe(() => {
+        if (confirm('A new version is available ! Do you want to refresh the app ?')) {
+          window.location.reload();
+        }
+      });
+    }
   }
 }
