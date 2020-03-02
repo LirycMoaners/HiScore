@@ -23,7 +23,7 @@
         aria-label="Open game">
         <div class="game-infos">
           <h2>
-            {{game.gameCategory.name + ' (round ' + game.scoreList[0].roundScoreList.length + ')'}}
+            {{game.gameCategory.name + ' (round ' + (game.scoreList[0].roundScoreList.length - (game.isGameEnd ? 1 : 0)) + ')'}}
             <span class="mat-caption">
               {{game.date | date:'dd/MM/yyyy HH:mm'}}
             </span>
