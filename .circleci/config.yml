@@ -146,7 +146,7 @@ jobs:
           name: Assemble debug apk
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo ${keystore} | base64 -d > keystore.jks
+              echo ${keystore} | base64 -d > app/keystore.jks
               ./gradlew :app:bundleRelease
             else
               ./gradlew :app:bundleDebug
