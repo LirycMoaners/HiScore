@@ -1,8 +1,8 @@
 {
   "name": "hi-score",
   "displayName": "HiScore",
-  "version": "1.2.0",
-  "description": "An app to keep score running with angular, cordova and electron.",
+  "version": "1.2.1",
+  "description": "An app to keep score running with angular, capcitor and electron.",
   "author": "Cyril Lefebvre",
   "license": "MIT",
   "main": "main.js",
