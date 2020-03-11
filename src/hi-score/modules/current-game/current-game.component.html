@@ -6,7 +6,7 @@
           <button mat-icon-button
             class="score-button"
             (click)="onClickPlus(score)"
-            hsLongPress
+            appLongPress
             (longPressDetected)="openScoreDialog(score, 0)"
             aria-label="Add one point to player round score">
             <mat-icon>add</mat-icon>
@@ -20,7 +20,7 @@
           <button mat-icon-button
             class="score-button"
             (click)="onClickMinus(score)"
-            hsLongPress
+            appLongPress
             (longPressDetected)="openScoreDialog(score, 0)"
             aria-label="Remove one point to player round score">
             <mat-icon>remove</mat-icon>
