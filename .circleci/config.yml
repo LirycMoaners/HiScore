@@ -78,6 +78,19 @@ jobs:
       - run:
           name: Capacytor sync
           command: npx cap sync
+      # Delete unused files
+      - run:
+          name: Delete icons in assets
+          command: |
+            rm -r ./android/app/src/main/assets/public/assets/icons;
+            rm -r ./android/app/src/main/assets/public/assets/.htaccess;
+            rm -r ./android/app/src/main/assets/public/assets/favicon.ico;
+            rm -r ./android/app/src/main/assets/public/assets/manifest.webmanifest;
+            rm -r ./android/app/src/main/assets/public/assets/ngsw-worker.js;
+            rm -r ./android/app/src/main/assets/public/assets/ngsw.json;
+            rm -r ./android/app/src/main/assets/public/assets/worker-basic.min.js;
+            rm -r ./android/app/src/main/assets/public/assets/safety-worker.js;
+            sed '11,13d' -r ./android/app/src/main/assets/public/assets/index.html;
       # Cache the dist folder for the deploy job
       - save_cache:
           key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
