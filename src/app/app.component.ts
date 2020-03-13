@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HeaderService } from './core/header/header.service';
 import { SwUpdate } from '@angular/service-worker';
 import * as firebase from 'firebase/app';
+import { MatSidenav } from '@angular/material/sidenav';
 
 /**
  * HiScore app main component
@@ -14,6 +15,8 @@ import * as firebase from 'firebase/app';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+
+  @ViewChild('sidenav', {static: false}) sidenav: MatSidenav;
 
   constructor(
     public headerService: HeaderService,
@@ -40,6 +43,8 @@ export class AppComponent implements OnInit {
         }
       });
     }
+
+    this.headerService.toggleMenu.subscribe(() => this.sidenav.toggle());
   }
 }
 

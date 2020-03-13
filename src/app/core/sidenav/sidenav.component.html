@@ -1,0 +1,18 @@
+<mat-list>
+  <h1 class="title">
+    <img src="assets/icons/icon-72x72.png" alt="HiScore logo">
+    HiScore
+    <button mat-icon-button color="primary" (click)="headerService.toggleMenu.emit()">
+      <mat-icon>arrow_back_ios</mat-icon>
+    </button>
+  </h1>
+  <mat-divider></mat-divider>
+  <mat-list-item
+    *ngFor="let menuItem of menuItems"
+    [routerLink]="menuItem.link"
+    (click)="headerService.toggleMenu.emit()"
+  >
+    <mat-icon color="accent" mat-list-icon>{{ menuItem.icon }}</mat-icon>
+    <h4 mat-line>{{ menuItem.label }}</h4>
+  </mat-list-item>
+</mat-list>

@@ -1,11 +1,13 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button routerLink="/game-list" class="home" aria-label="Go to home">
-    <mat-icon>home</mat-icon>
+  <button mat-icon-button class="menu" aria-label="Open menu" (click)="openMenu()">
+    <mat-icon>menu</mat-icon>
   </button>
   <div class="title">
     {{headerService.title}}
   </div>
   <div class="option">
-    <app-option-menu></app-option-menu>
+    <ng-container *ngIf="router.url.startsWith('/current-game')">
+      <app-option-menu></app-option-menu>
+    </ng-container>
   </div>
 </mat-toolbar>

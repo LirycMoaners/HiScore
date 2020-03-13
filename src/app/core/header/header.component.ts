@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HeaderService } from './header.service';
+import { Router } from '@angular/router';
 
 /**
  * Component of the application header
@@ -13,6 +14,11 @@ import { HeaderService } from './header.service';
 })
 export class HeaderComponent {
   constructor(
-    public headerService: HeaderService
+    public headerService: HeaderService,
+    public router: Router
   ) { }
+
+  openMenu() {
+    this.headerService.toggleMenu.emit();
+  }
 }
