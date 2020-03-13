@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { map, flatMap } from 'rxjs/operators';
 
 import { GameCategory } from '../../shared/models/game-category.model';
-import { map, flatMap } from 'rxjs/operators';
+import { Goal } from '../../shared/models/goal.enum';
 
 /**
  * Service for every action about game categories
@@ -11,7 +12,20 @@ import { map, flatMap } from 'rxjs/operators';
  */
 @Injectable()
 export class GameCategoryService {
-  constructor() { }
+
+  private noGameCategory: GameCategory = {
+    id: 'no-category',
+    name: 'A Game',
+    goal: Goal.highestScore,
+    endingNumber: null,
+    endingType: null
+  };
+
+  constructor() {
+    this.getGameCategoryById(this.noGameCategory.id).pipe(
+      flatMap(gameCategory => !gameCategory ? this.createGameCategory(this.noGameCategory) : of(null))
+    ).subscribe();
+  }
 
   /**
    * Get an observable of all game categories in a list
