@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { HiScoreComponent } from './hi-score.component';
-import { HiScoreRoutingModule } from './hi-score.routing.module';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app.routing.module';
 import { CoreModule } from './core/core.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
-    HiScoreComponent
+    AppComponent
   ],
   imports: [
     BrowserAnimationsModule,
-    HiScoreRoutingModule,
+    AppRoutingModule,
     CoreModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
-  bootstrap: [HiScoreComponent]
+  bootstrap: [AppComponent]
 })
-export class HiScoreModule { }
+export class AppModule { }
