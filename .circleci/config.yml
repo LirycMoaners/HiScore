@@ -83,7 +83,6 @@ jobs:
           name: Delete icons in assets
           command: |
             rm -r ./android/app/src/main/assets/public/assets/icons;
-            rm -r ./android/app/src/main/assets/public/.htaccess;
             rm -r ./android/app/src/main/assets/public/favicon.ico;
             rm -r ./android/app/src/main/assets/public/manifest.webmanifest;
             rm -r ./android/app/src/main/assets/public/ngsw-worker.js;
