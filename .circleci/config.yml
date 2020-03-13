@@ -51,7 +51,7 @@ jobs:
           name: Building
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                npm run build:prod:web
+                npm run build:prod
             else
                 npm run build
             fi
@@ -59,7 +59,7 @@ jobs:
       - save_cache:
           key: v1-web-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - dist
+            - .
 
   # The angular build job for android
   build_android:
@@ -83,13 +83,13 @@ jobs:
           name: Delete icons in assets
           command: |
             rm -r ./android/app/src/main/assets/public/assets/icons;
-            rm -r ./android/app/src/main/assets/public/.htaccess;
             rm -r ./android/app/src/main/assets/public/favicon.ico;
             rm -r ./android/app/src/main/assets/public/manifest.webmanifest;
             rm -r ./android/app/src/main/assets/public/ngsw-worker.js;
             rm -r ./android/app/src/main/assets/public/ngsw.json;
             rm -r ./android/app/src/main/assets/public/worker-basic.min.js;
             rm -r ./android/app/src/main/assets/public/safety-worker.js;
+            rm -r ./android/app/src/main/assets/public/robots.txt;
             sed '11,13d' -r ./android/app/src/main/assets/public/index.html;
       # Cache the dist folder for the deploy job
       - save_cache:
@@ -134,13 +134,8 @@ jobs:
       - restore_cache:
           key: v1-web-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
-          name: Install LFTP
-          command: |
-            sudo apt-get update;
-            sudo apt-get install lftp;
-      - run:
-          name: Send Via FTP
-          command: lftp ftp://${username}:${password}@${hostname} -e "mirror -v -R ./dist/ /www/; quit"
+          name: Firebase Deploy
+          command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN"
 
   package_android:
     working_directory: ~/project/android
