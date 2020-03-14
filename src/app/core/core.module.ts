@@ -7,13 +7,19 @@ import { HeaderComponent } from './header/header.component';
 import { SharedModule } from '../shared/shared.module';
 import { OptionMenuComponent } from './header/option-menu/option-menu.component';
 import { OptionMenuService } from './header/option-menu/option-menu.service';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
 @NgModule({
   imports: [SharedModule],
-  exports: [HeaderComponent],
+  exports: [
+    SharedModule,
+    HeaderComponent,
+    SidenavComponent
+  ],
   declarations: [
     HeaderComponent,
-    OptionMenuComponent
+    OptionMenuComponent,
+    SidenavComponent
   ],
   providers: [
     HeaderService,

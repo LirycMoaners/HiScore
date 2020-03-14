@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
 /**
  * Service to handle main bar actions
@@ -16,4 +16,9 @@ export class HeaderService {
    * Specify if the main bar is on the left side of the screen
    */
   public isLeftSide = false;
+
+  /**
+   * Specify if the menu is open
+   */
+  public toggleMenu: EventEmitter<void> = new EventEmitter<void>();
 }

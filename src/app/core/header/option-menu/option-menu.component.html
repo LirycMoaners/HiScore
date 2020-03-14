@@ -3,12 +3,8 @@
 </button>
 
 <mat-menu #optionMenu="matMenu">
-  <ng-container *ngIf="router.url.startsWith('/current-game')">
-    <button mat-menu-item routerLink="/game-edition" [queryParams]="{copy: true}">New game</button>
-    <button mat-menu-item [routerLink]="'/game-edition/' + gameService.currentGameId">Modify game</button>
-    <button mat-menu-item (click)="editLastRound()">Edit last round</button>
-    <button mat-menu-item (click)="endGame()">End game</button>
-  </ng-container>
-  <button mat-menu-item routerLink="/help">Help</button>
-  <button mat-menu-item routerLink="/about">About</button>
+  <button mat-menu-item routerLink="/game-edition" [queryParams]="{copy: true}">New game</button>
+  <button mat-menu-item [routerLink]="'/game-edition/' + gameService.currentGameId">Modify game</button>
+  <button mat-menu-item (click)="editLastRound()">Edit last round</button>
+  <button mat-menu-item (click)="endGame()">End game</button>
 </mat-menu>

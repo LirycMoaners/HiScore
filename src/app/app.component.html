@@ -1,4 +1,11 @@
-<app-header [class.isLeftSide]="headerService.isLeftSide"></app-header>
-<div class="component">
-  <router-outlet></router-outlet>
-</div>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav [mode]="'over'">
+    <app-sidenav></app-sidenav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-header [class.isLeftSide]="headerService.isLeftSide"></app-header>
+    <div class="component">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
