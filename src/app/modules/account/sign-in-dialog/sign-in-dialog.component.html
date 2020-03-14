@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Sign in</h1>
+<div mat-dialog-content>
+  <button mat-raised-button (click)="signInWithGoogle()">Sign in with Google</button>
+  <form [formGroup]="signInForm">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password">
+    </mat-form-field>
+    <mat-error>{{ errorMessage }}</mat-error>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button matDialogClose routerLink='/account/sign-up'>Sign up</button>
+  <button
+    mat-raised-button
+    color="accent"
+    cdkFocusInitial
+    [disabled]="!signInForm.valid"
+    (click)="signIn()"
+  >
+    Sign in
+  </button>
+</div>

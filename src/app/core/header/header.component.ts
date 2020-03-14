@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { HeaderService } from './header.service';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../http-services/authentication.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SignInDialogComponent } from '../../modules/account/sign-in-dialog/sign-in-dialog.component';
 
 /**
  * Component of the application header
@@ -15,10 +18,16 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
   constructor(
     public headerService: HeaderService,
-    public router: Router
+    public authenticationService: AuthenticationService,
+    public router: Router,
+    public dialog: MatDialog
   ) { }
 
   openMenu() {
     this.headerService.toggleMenu.emit();
+  }
+
+  openSignInDialog(): void {
+    this.dialog.open(SignInDialogComponent);
   }
 }

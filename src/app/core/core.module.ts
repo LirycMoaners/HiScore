@@ -8,6 +8,8 @@ import { SharedModule } from '../shared/shared.module';
 import { OptionMenuComponent } from './header/option-menu/option-menu.component';
 import { OptionMenuService } from './header/option-menu/option-menu.service';
 import { SidenavComponent } from './sidenav/sidenav.component';
+import { AccountMenuComponent } from './header/account-menu/account-menu.component';
+import { AuthenticationService } from './http-services/authentication.service';
 
 @NgModule({
   imports: [SharedModule],
@@ -19,14 +21,16 @@ import { SidenavComponent } from './sidenav/sidenav.component';
   declarations: [
     HeaderComponent,
     OptionMenuComponent,
-    SidenavComponent
+    SidenavComponent,
+    AccountMenuComponent
   ],
   providers: [
     HeaderService,
     OptionMenuService,
     GameService,
     PlayerService,
-    GameCategoryService
+    GameCategoryService,
+    AuthenticationService
   ],
 })
 export class CoreModule { }

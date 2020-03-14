@@ -15,7 +15,7 @@ import { MatListModule } from '@angular/material/list';
 import { LongPressDirective } from './directives/long-press.directive';
 import { PlayerNamePipe } from './pipes/player-name.pipe';
 import { KeyEnumPipe } from './pipes/key-enum.pipe';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -23,6 +23,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 @NgModule({
   imports: [
     FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     RouterModule,
     DragDropModule,
@@ -42,6 +43,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   ],
   exports: [
     FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     RouterModule,
     DragDropModule,

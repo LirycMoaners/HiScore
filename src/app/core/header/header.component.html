@@ -6,8 +6,14 @@
     {{headerService.title}}
   </div>
   <div class="option">
-    <ng-container *ngIf="router.url.startsWith('/current-game')">
-      <app-option-menu></app-option-menu>
-    </ng-container>
+    <app-option-menu *ngIf="router.url.startsWith('/current-game'); else account"></app-option-menu>
+    <ng-template #account>
+      <app-account-menu *ngIf="authenticationService.user; else signUp"></app-account-menu>
+      <ng-template #signUp>
+        <button mat-icon-button (click)="openSignInDialog()">
+          <mat-icon>person</mat-icon>
+        </button>
+      </ng-template>
+    </ng-template>
   </div>
 </mat-toolbar>

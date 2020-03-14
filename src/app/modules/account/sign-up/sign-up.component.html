@@ -1,0 +1,20 @@
+<h1>Sign up</h1>
+<form [formGroup]="signUpForm" (ngSubmit)="signUp()">
+  <mat-form-field>
+    <mat-label>Avatar</mat-label>
+    <input matInput formControlName="avatar">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Pseudo</mat-label>
+    <input matInput formControlName="pseudo" required>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" type="email" required>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input matInput formControlName="password" type="password" required>
+  </mat-form-field>
+  <button mat-raised-button type="submit">Sign up</button>
+</form>
