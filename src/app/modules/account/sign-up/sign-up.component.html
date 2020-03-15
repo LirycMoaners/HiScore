@@ -1,12 +1,9 @@
 <h1>Sign up</h1>
 <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
+  <input type="file" (change)="onFileChange($event)">
   <mat-form-field>
-    <mat-label>Avatar</mat-label>
-    <input matInput formControlName="avatar">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Pseudo</mat-label>
-    <input matInput formControlName="pseudo" required>
+    <mat-label>Username</mat-label>
+    <input matInput formControlName="username" required>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Email</mat-label>

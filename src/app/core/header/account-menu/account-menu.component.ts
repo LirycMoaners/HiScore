@@ -9,7 +9,7 @@ import { AuthenticationService } from '../../http-services/authentication.servic
 export class AccountMenuComponent implements OnInit {
 
   constructor(
-    private readonly authenticationService: AuthenticationService
+    public authenticationService: AuthenticationService
   ) { }
 
   ngOnInit(): void {

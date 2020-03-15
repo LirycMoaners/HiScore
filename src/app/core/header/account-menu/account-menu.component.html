@@ -3,6 +3,9 @@
 </button>
 
 <mat-menu #accountMenu="matMenu">
-  <button mat-menu-item routerLink="/account">Account</button>
+  <button mat-menu-item routerLink="/account">
+    <img [src]="authenticationService.user.photoURL" alt="Profile picture">
+    <span>{{ authenticationService.user.displayName }}</span>
+  </button>
   <button mat-menu-item (click)="signOut()">Sign out</button>
 </mat-menu>
