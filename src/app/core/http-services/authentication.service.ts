@@ -60,8 +60,12 @@ export class AuthenticationService {
     firebase.auth().signOut();
   }
 
-  delete(user: User) {
-    return user.delete();
+  async delete(user: User) {
+    if (user.photoURL && user.providerId === 'firebase') {
+      const ref = firebase.storage().ref().child('profile').child(user.uid).child('profile_picture.jpg');
+      await ref.delete();
+    }
+    await user.delete();
   }
 
   async updateProfile(user: User, newUsername?: string, newPicture?: File) {
@@ -77,8 +81,7 @@ export class AuthenticationService {
 
   private updateProfilePicture(userId: string, file: File) {
     const storageRef = firebase.storage().ref();
-    const path = `/profile/${userId}.jpg`;
-    const ref = storageRef.child(path);
+    const ref = storageRef.child('profile').child(userId).child('profile_picture.jpg');
 
     return new Promise<any>((resolve, reject) =>
       ref.put(file).then(
