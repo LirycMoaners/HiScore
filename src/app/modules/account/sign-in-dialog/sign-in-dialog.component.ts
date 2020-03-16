@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { AuthenticationService } from '../../../core/http-services/authentication.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { SignUpDialogComponent } from '../sign-up-dialog/sign-up-dialog.component';
 
 @Component({
   selector: 'app-sign-in-dialog',
@@ -12,9 +13,12 @@ export class SignInDialogComponent implements OnInit {
 
   signInForm: FormGroup;
   errorMessage: string;
+  hide = true;
 
   constructor(
     private dialogRef: MatDialogRef<SignInDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { isSignUpButtonPresent: boolean },
+    public dialog: MatDialog,
     private formBuilder: FormBuilder,
     private readonly authenticationService: AuthenticationService
   ) { }
@@ -35,15 +39,24 @@ export class SignInDialogComponent implements OnInit {
     const password = this.signInForm.get('password').value;
 
     this.authenticationService.signIn(email, password).then(
-      () => this.dialogRef.close(),
+      () => this.dialogRef.close(true),
       () => this.errorMessage = 'Email or password incorrect'
     );
   }
 
   signInWithGoogle() {
     this.authenticationService.signInWithGoogle().then(
-      () => this.dialogRef.close(),
+      () => this.dialogRef.close(true),
       (error) => this.errorMessage = error
     );
+  }
+
+  openSignUp() {
+    const dialofRef = this.dialog.open(SignUpDialogComponent);
+    dialofRef.afterClosed().subscribe(isSignedUp => {
+      if (isSignedUp) {
+        this.dialogRef.close();
+      }
+    });
   }
 }

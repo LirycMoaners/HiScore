@@ -64,7 +64,8 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
           this.firstPlayerId = this.game.scoreList[index].playerId;
         }
       });
-    this.headerService.isLeftSide = true;
+
+    setTimeout(() => this.headerService.isLeftSide = true, 0);
 
     this.subscriptionList.push(
       this.optionMenuService.editLastRound$.subscribe(() => {

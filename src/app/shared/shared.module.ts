@@ -12,6 +12,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LongPressDirective } from './directives/long-press.directive';
 import { PlayerNamePipe } from './pipes/player-name.pipe';
 import { KeyEnumPipe } from './pipes/key-enum.pipe';
@@ -39,7 +40,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatSlideToggleModule,
     MatFormFieldModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatSnackBarModule
   ],
   exports: [
     FormsModule,
@@ -60,6 +62,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatFormFieldModule,
     MatSidenavModule,
     MatListModule,
+    MatSnackBarModule,
     LongPressDirective,
     PlayerNamePipe,
     KeyEnumPipe

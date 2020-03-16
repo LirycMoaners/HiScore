@@ -1,29 +1,32 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { HeaderService } from 'src/app/core/header/header.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/core/http-services/authentication.service';
+import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-sign-up',
-  templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.scss']
+  selector: 'app-sign-up-dialog',
+  templateUrl: './sign-up-dialog.component.html',
+  styleUrls: ['./sign-up-dialog.component.scss']
 })
-export class SignUpComponent implements OnInit {
+export class SignUpDialogComponent implements OnInit {
 
   signUpForm: FormGroup;
   errorMessage: string;
+  hide = true;
+  picture: SafeUrl;
 
   constructor(
+    private dialogRef: MatDialogRef<SignUpDialogComponent>,
     private formBuilder: FormBuilder,
     private readonly router: Router,
-    private headerService: HeaderService,
     private readonly authenticationService: AuthenticationService,
-    private readonly cd: ChangeDetectorRef
+    private readonly cd: ChangeDetectorRef,
+    private readonly sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
-    this.headerService.title = 'Sign up';
     this.initForm();
   }
 
@@ -43,17 +46,23 @@ export class SignUpComponent implements OnInit {
     const picture = this.signUpForm.get('picture').value;
 
     this.authenticationService.signUp(email, password, username, picture).then(
-      () => this.router.navigate(['/game-list']),
+      () => {
+        this.router.navigate(['/game-list']);
+        this.dialogRef.close(true);
+      },
       (error) => this.errorMessage = error
     );
   }
 
   onFileChange(event) {
     if (event.target.files && event.target.files.length) {
-      const [file] = event.target.files;
-      this.signUpForm.patchValue({
-        picture: file
-      });
+      const [file]: [File] = event.target.files;
+      if (file.type === 'image/jpeg' || file.type === 'image/png') {
+        this.signUpForm.patchValue({
+          picture: file
+        });
+        this.picture = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(file));
+      }
     }
   }
 }

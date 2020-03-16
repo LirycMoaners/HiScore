@@ -18,14 +18,7 @@ export class AuthenticationService {
     return new Promise<any>((resolve, reject) =>
       firebase.auth().createUserWithEmailAndPassword(email, password).then(
         async res => {
-          let downloadUrl: string;
-          if (picture) {
-            downloadUrl = await this.updateProfilePicture(res.user.uid, picture);
-          }
-          res.user.updateProfile({
-            displayName: username,
-            photoURL: downloadUrl
-          }).then(
+          this.updateProfile(res.user, username, picture).then(
             () => {
               resolve(res);
             }, (error) => {
@@ -55,11 +48,34 @@ export class AuthenticationService {
     return this.signInWithProvider(new auth.GoogleAuthProvider());
   }
 
+  updateEmail(user: User, email: string) {
+    return user.updateEmail(email);
+  }
+
+  updatePassword(user: User, password: string) {
+    return user.updatePassword(password);
+  }
+
   signOut() {
     firebase.auth().signOut();
   }
 
-  updateProfilePicture(userId: string, file: File) {
+  delete(user: User) {
+    return user.delete();
+  }
+
+  async updateProfile(user: User, newUsername?: string, newPicture?: File) {
+    const updatedProfile: any = {};
+    if (newPicture) {
+      updatedProfile.photoURL = await this.updateProfilePicture(user.uid, newPicture);
+    }
+    if (newUsername) {
+      updatedProfile.displayName = newUsername;
+    }
+    return user.updateProfile(updatedProfile);
+  }
+
+  private updateProfilePicture(userId: string, file: File) {
     const storageRef = firebase.storage().ref();
     const path = `/profile/${userId}.jpg`;
     const ref = storageRef.child(path);
