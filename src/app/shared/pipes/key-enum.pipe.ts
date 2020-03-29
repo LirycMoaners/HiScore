@@ -7,9 +7,9 @@ import { Pipe, PipeTransform } from '@angular/core';
  */
 @Pipe({ name: 'keyEnum' })
 export class KeyEnumPipe implements PipeTransform {
-    transform(enumValue: any): { key: string, value: string }[] {
-        const keyEnum: { key: string, value: string }[] = [];
-        Object.keys(enumValue).forEach((key: string) => keyEnum.push({ key, value: enumValue[key] }));
-        return keyEnum;
-    }
+  transform(enumValue: any): { key: string, value: string }[] {
+    const keyEnum: { key: string, value: string }[] = [];
+    Object.keys(enumValue).forEach((key: string) => keyEnum.push({ key, value: enumValue[key] }));
+    return keyEnum;
+  }
 }
