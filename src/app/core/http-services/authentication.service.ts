@@ -4,9 +4,18 @@ import 'firebase/auth';
 import 'firebase/storage';
 import { User, auth, storage } from 'firebase/app';
 
+/**
+ * Service for every action about authentication & account
+ *
+ * @export
+ */
 @Injectable()
 export class AuthenticationService {
-  user: User;
+
+  /**
+   * Current logged in user
+   */
+  public user: User;
 
   constructor() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -14,7 +23,10 @@ export class AuthenticationService {
     });
   }
 
-  signUp(email: string, password: string, username: string, picture?: File) {
+  /**
+   * Create an email & password account
+   */
+  public signUp(email: string, password: string, username: string, picture?: File) {
     return new Promise<any>((resolve, reject) =>
       firebase.auth().createUserWithEmailAndPassword(email, password).then(
         async res => {
@@ -32,7 +44,10 @@ export class AuthenticationService {
     );
   }
 
-  signIn(email: string, password: string) {
+  /**
+   * Log in with email & password
+   */
+  public signIn(email: string, password: string) {
     return new Promise<any>((resolve, reject) =>
       firebase.auth().signInWithEmailAndPassword(email, password).then(
         res => {
@@ -44,23 +59,38 @@ export class AuthenticationService {
     );
   }
 
-  signInWithGoogle() {
+  /**
+   * Log in with Google account
+   */
+  public signInWithGoogle() {
     return this.signInWithProvider(new auth.GoogleAuthProvider());
   }
 
-  updateEmail(user: User, email: string) {
-    return user.updateEmail(email);
-  }
-
-  updatePassword(user: User, password: string) {
-    return user.updatePassword(password);
-  }
-
-  signOut() {
+  /**
+   * Log out
+   */
+  public signOut() {
     firebase.auth().signOut();
   }
 
-  async delete(user: User) {
+  /**
+   * Update account email address
+   */
+  public async updateEmail(user: User, email: string) {
+    await user.updateEmail(email);
+  }
+
+  /**
+   * Update account password
+   */
+  public async updatePassword(user: User, password: string) {
+    await user.updatePassword(password);
+  }
+
+  /**
+   * Delete user account
+   */
+  public async delete(user: User) {
     if (user.photoURL && user.providerId === 'firebase') {
       const ref = firebase.storage().ref().child('profile').child(user.uid).child('profile_picture.jpg');
       await ref.delete();
@@ -68,7 +98,10 @@ export class AuthenticationService {
     await user.delete();
   }
 
-  async updateProfile(user: User, newUsername?: string, newPicture?: File) {
+  /**
+   * Update username and/or user's picture
+   */
+  public async updateProfile(user: User, newUsername?: string, newPicture?: File) {
     const updatedProfile: any = {};
     if (newPicture) {
       updatedProfile.photoURL = await this.updateProfilePicture(user.uid, newPicture);
@@ -79,6 +112,24 @@ export class AuthenticationService {
     return user.updateProfile(updatedProfile);
   }
 
+  /**
+   * Log in with a provider (Google, Facebook, ...)
+   */
+  private signInWithProvider(provider: auth.AuthProvider) {
+    return new Promise<any>((resolve, reject) =>
+      firebase.auth().signInWithPopup(provider).then(
+        res => {
+          resolve(res);
+        }, error => {
+          reject(error);
+        }
+      )
+    );
+  }
+
+  /**
+   * Update user's picture
+   */
   private updateProfilePicture(userId: string, file: File) {
     const storageRef = firebase.storage().ref();
     const ref = storageRef.child('profile').child(userId).child('profile_picture.jpg');
@@ -91,18 +142,6 @@ export class AuthenticationService {
           }
         },
         (error) => reject(error)
-      )
-    );
-  }
-
-  private signInWithProvider(provider: auth.AuthProvider) {
-    return new Promise<any>((resolve, reject) =>
-      firebase.auth().signInWithPopup(provider).then(
-        res => {
-          resolve(res);
-        }, error => {
-          reject(error);
-        }
       )
     );
   }

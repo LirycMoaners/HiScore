@@ -1,4 +1,11 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable, forkJoin, of } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
+import { UUID } from 'angular2-uuid';
+
 import { Game } from '../../shared/models/game.model';
 import { Player } from '../../shared/models/player.model';
 import { GameCategory } from '../../shared/models/game-category.model';
@@ -9,15 +16,8 @@ import { GameCategoryService } from '../../core/services/game-category.service';
 import { GameService } from '../../core/services/game.service';
 import { Score } from '../../shared/models/score.model';
 import { HeaderService } from '../../core/header/header.service';
-import { UUID } from 'angular2-uuid';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, forkJoin, of } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
 import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { AuthenticationService } from 'src/app/core/http-services/authentication.service';
 
 /**
  * Component for game creation and edition
@@ -87,14 +87,13 @@ export class GameEditionComponent implements OnInit {
   private newPlayerScore: number;
 
   constructor(
-    private headerService: HeaderService,
-    private playerService: PlayerService,
-    private gameCategoryService: GameCategoryService,
-    private gameService: GameService,
-    private authenticationService: AuthenticationService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialog: MatDialog
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly dialog: MatDialog,
+    private readonly headerService: HeaderService,
+    private readonly playerService: PlayerService,
+    private readonly gameCategoryService: GameCategoryService,
+    private readonly gameService: GameService
   ) { }
 
   ngOnInit() {

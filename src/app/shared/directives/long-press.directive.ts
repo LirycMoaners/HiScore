@@ -7,6 +7,7 @@ import { Directive, HostListener, EventEmitter, Output } from '@angular/core';
  */
 @Directive({ selector: '[appLongPress]' })
 export class LongPressDirective {
+
   /**
    * The emitter of the long press event
    */

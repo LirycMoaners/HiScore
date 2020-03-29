@@ -36,15 +36,15 @@
     <div class="password">
       <mat-form-field>
         <mat-label>New password</mat-label>
-        <input matInput [type]="hide ? 'password' : 'text'" [formControl]="newPassword">
+        <input matInput [type]="isPasswordHidden ? 'password' : 'text'" [formControl]="newPassword">
         <button
           mat-icon-button
           matSuffix
-          (click)="hide = !hide"
+          (click)="isPasswordHidden = !isPasswordHidden"
           [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hide"
+          [attr.aria-pressed]="isPasswordHidden"
         >
-          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <mat-icon>{{isPasswordHidden ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
       </mat-form-field>
       <button mat-raised-button class="change" (click)="changePassword()">Change password</button>

@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { HeaderService } from './core/header/header.service';
+import { MatSidenav } from '@angular/material/sidenav';
 import { SwUpdate } from '@angular/service-worker';
 import * as firebase from 'firebase/app';
-import { MatSidenav } from '@angular/material/sidenav';
+
+import { HeaderService } from './core/header/header.service';
 
 /**
  * HiScore app main component
@@ -16,6 +17,9 @@ import { MatSidenav } from '@angular/material/sidenav';
 })
 export class AppComponent implements OnInit {
 
+  /**
+   * Sidenav menu
+   */
   @ViewChild('sidenav', {static: false}) sidenav: MatSidenav;
 
   constructor(

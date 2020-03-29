@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { HeaderService } from '../../../core/header/header.service';
 
 @Component({
@@ -6,10 +7,10 @@ import { HeaderService } from '../../../core/header/header.service';
   templateUrl: 'about.component.html',
   styleUrls: ['about.component.scss']
 })
-
 export class AboutComponent implements OnInit {
+
   constructor(
-    private headerService: HeaderService
+    private readonly headerService: HeaderService
   ) { }
 
   ngOnInit() {

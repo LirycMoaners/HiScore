@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { PlayerService } from '../../core/services/player.service';
 import { Player } from '../models/player.model';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 /**
  * Pipe which return the name of the player if we gave the player id
@@ -13,8 +14,9 @@ import { Observable } from 'rxjs';
   name: 'playerName'
 })
 export class PlayerNamePipe implements PipeTransform {
+
   constructor(
-    private playerService: PlayerService
+    private readonly playerService: PlayerService
   ) { }
 
   transform(value: string): Observable<string> {

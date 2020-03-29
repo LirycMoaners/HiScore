@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Player } from '../../shared/models/player.model';
 import { Observable, of } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 /**
  * Service for every action about players
@@ -11,6 +11,7 @@ import { flatMap, map } from 'rxjs/operators';
  */
 @Injectable()
 export class PlayerService {
+
   constructor() { }
 
   /**

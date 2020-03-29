@@ -1,9 +1,11 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
+
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { WinDialogComponent } from './win-dialog/win-dialog.component';
-import { Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Game } from '../../shared/models/game.model';
 import { GameService } from '../../core/services/game.service';
 import { OptionMenuService } from '../../core/header/option-menu/option-menu.service';
@@ -11,7 +13,6 @@ import { Score } from '../../shared/models/score.model';
 import { Goal } from '../../shared/models/goal.enum';
 import { EndingType } from '../../shared/models/ending-type.enum';
 import { HeaderService } from '../../core/header/header.service';
-import { flatMap } from 'rxjs/operators';
 
 /**
  * Component of the current game session
@@ -40,12 +41,12 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   private subscriptionList: Subscription[] = [];
 
   constructor(
-    private gameService: GameService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private headerService: HeaderService,
-    private optionMenuService: OptionMenuService,
-    private dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly gameService: GameService,
+    private readonly headerService: HeaderService,
+    private readonly optionMenuService: OptionMenuService
   ) { }
 
   ngOnInit() {

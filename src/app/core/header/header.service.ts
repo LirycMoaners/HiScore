@@ -7,6 +7,7 @@ import { Injectable, EventEmitter } from '@angular/core';
  */
 @Injectable()
 export class HeaderService {
+
   /**
    * Title showed in the main bar
    */

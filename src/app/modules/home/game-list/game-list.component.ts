@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { Game } from '../../../shared/models/game.model';
 import { GameService } from '../../../core/services/game.service';
 import { HeaderService } from '../../../core/header/header.service';
@@ -14,18 +15,20 @@ import { HeaderService } from '../../../core/header/header.service';
   styleUrls: ['game-list.component.scss']
 })
 export class GameListComponent implements OnInit {
+
   /**
    * Complete game list
    */
   public gameList: {date: Date, games: Game[]}[];
+
   /**
    * Today's date
    */
   public today: Date = new Date();
 
   constructor(
-    private gameService: GameService,
-    private headerService: HeaderService
+    private readonly gameService: GameService,
+    private readonly headerService: HeaderService
   ) { }
 
   ngOnInit() {

@@ -1,19 +1,22 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
-import { HeaderService } from '../header/header.service';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '../http-services/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
-import { SignInDialogComponent } from 'src/app/modules/account/sign-in-dialog/sign-in-dialog.component';
+import { HeaderService } from '../header/header.service';
+import { AuthenticationService } from '../http-services/authentication.service';
+
+import { SignInDialogComponent } from '../../modules/account/sign-in-dialog/sign-in-dialog.component';
 
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss']
 })
-export class SidenavComponent implements OnInit {
+export class SidenavComponent {
 
-  menuItems = [
+  /**
+   * Sidenav menu links with name and icon
+   */
+  public menuItems = [
     { label: 'Home', link: '/game-list', icon: 'home' },
     { label: 'New game', link: '/game-edition', icon: 'add_circle' },
     { label: 'Help', link: '/help', icon: 'help' },
@@ -27,15 +30,10 @@ export class SidenavComponent implements OnInit {
     public authenticationService: AuthenticationService
   ) { }
 
-  ngOnInit(): void {}
-
-  signOut() {
-    this.authenticationService.signOut();
-    this.headerService.toggleMenu.emit();
-    this.router.navigate(['/game-list']);
-  }
-
-  openSignInDialog(): void {
+  /**
+   * Open the log in popup
+   */
+  public openSignInDialog(): void {
     const dialogRef = this.dialog.open(SignInDialogComponent, { data: { isSignUpButtonPresent: true }});
     dialogRef.afterClosed().subscribe(isSignedIn => {
       if (isSignedIn) {
@@ -45,4 +43,12 @@ export class SidenavComponent implements OnInit {
     });
   }
 
+  /**
+   * Log out
+   */
+  public signOut() {
+    this.authenticationService.signOut();
+    this.headerService.toggleMenu.emit();
+    this.router.navigate(['/game-list']);
+  }
 }

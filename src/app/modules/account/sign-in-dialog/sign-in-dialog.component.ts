@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
-import { AuthenticationService } from '../../../core/http-services/authentication.service';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+
+import { AuthenticationService } from '../../../core/http-services/authentication.service';
 import { SignUpDialogComponent } from '../sign-up-dialog/sign-up-dialog.component';
 
 @Component({
@@ -11,15 +12,26 @@ import { SignUpDialogComponent } from '../sign-up-dialog/sign-up-dialog.componen
 })
 export class SignInDialogComponent implements OnInit {
 
-  signInForm: FormGroup;
-  errorMessage: string;
-  hide = true;
+  /**
+   * Sign in form group
+   */
+  public signInForm: FormGroup;
+
+  /**
+   * Error message from log in
+   */
+  public errorMessage: string;
+
+  /**
+   * Used to show the password or not
+   */
+  public isPasswordHidden = true;
 
   constructor(
-    private dialogRef: MatDialogRef<SignInDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { isSignUpButtonPresent: boolean },
-    public dialog: MatDialog,
-    private formBuilder: FormBuilder,
+    private readonly dialogRef: MatDialogRef<SignInDialogComponent>,
+    private readonly dialog: MatDialog,
+    private readonly formBuilder: FormBuilder,
     private readonly authenticationService: AuthenticationService
   ) { }
 
@@ -27,14 +39,10 @@ export class SignInDialogComponent implements OnInit {
     this.initForm();
   }
 
-  initForm() {
-    this.signInForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
-    });
-  }
-
-  signIn() {
+  /**
+   * Log in with username & password
+   */
+  public signIn() {
     const email = this.signInForm.get('email').value;
     const password = this.signInForm.get('password').value;
 
@@ -44,19 +52,35 @@ export class SignInDialogComponent implements OnInit {
     );
   }
 
-  signInWithGoogle() {
+  /**
+   * Log in with google account
+   */
+  public signInWithGoogle() {
     this.authenticationService.signInWithGoogle().then(
       () => this.dialogRef.close(true),
       (error) => this.errorMessage = error
     );
   }
 
-  openSignUp() {
+  /**
+   * Open the register account popup
+   */
+  public openSignUp() {
     const dialofRef = this.dialog.open(SignUpDialogComponent);
     dialofRef.afterClosed().subscribe(isSignedUp => {
       if (isSignedUp) {
         this.dialogRef.close();
       }
+    });
+  }
+
+  /**
+   * Init the form group with form controls
+   */
+  private initForm() {
+    this.signInForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
     });
   }
 }

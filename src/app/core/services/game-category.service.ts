@@ -13,17 +13,17 @@ import { Goal } from '../../shared/models/goal.enum';
 @Injectable()
 export class GameCategoryService {
 
-  private noGameCategory: GameCategory = {
-    id: 'no-category',
-    name: 'A Game',
-    goal: Goal.highestScore,
-    endingNumber: null,
-    endingType: null
-  };
-
   constructor() {
-    this.getGameCategoryById(this.noGameCategory.id).pipe(
-      flatMap(gameCategory => !gameCategory ? this.createGameCategory(this.noGameCategory) : of(null))
+    const noGameCategory: GameCategory = {
+      id: 'no-category',
+      name: 'A Game',
+      goal: Goal.highestScore,
+      endingNumber: null,
+      endingType: null
+    };
+
+    this.getGameCategoryById(noGameCategory.id).pipe(
+      flatMap(gameCategory => !gameCategory ? this.createGameCategory(noGameCategory) : of(null))
     ).subscribe();
   }
 
@@ -39,22 +39,22 @@ export class GameCategoryService {
    * Get an observable of a game category find by its id
    */
   public getGameCategoryById(id: string): Observable<GameCategory> {
-    return this.getGameCategoryList()
-      .pipe(
-        map((gameCategoryList: GameCategory[]) => gameCategoryList.find((gameCategory: GameCategory) => gameCategory.id === id))
-      );
+    return this.getGameCategoryList().pipe(
+      map((gameCategoryList: GameCategory[]) =>
+        gameCategoryList.find((gameCategory: GameCategory) => gameCategory.id === id)
+      )
+    );
   }
 
   /**
    * Create a new game category
    */
   public createGameCategory(gameCategory: GameCategory): Observable<void> {
-    return this.getGameCategoryList()
-      .pipe(
-        map((gameCategoryList: GameCategory[]) => {
-          gameCategoryList.push(gameCategory);
-          localStorage.setItem('gameCategories', JSON.stringify(gameCategoryList));
-        })
-      );
+    return this.getGameCategoryList().pipe(
+      map((gameCategoryList: GameCategory[]) => {
+        gameCategoryList.push(gameCategory);
+        localStorage.setItem('gameCategories', JSON.stringify(gameCategoryList));
+      })
+    );
   }
 }

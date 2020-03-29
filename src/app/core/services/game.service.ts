@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-
-import { Game } from '../../shared/models/game.model';
 import { Observable, of, BehaviorSubject, from } from 'rxjs';
 import { map, first, tap } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
+
 import { AuthenticationService } from '../http-services/authentication.service';
+import { Game } from '../../shared/models/game.model';
 
 /**
  * Service for every action about games
@@ -14,29 +14,31 @@ import { AuthenticationService } from '../http-services/authentication.service';
  */
 @Injectable()
 export class GameService {
+
   /**
-   * The current game id
+   * Current game id
    */
   public currentGameId: string;
+
+  /**
+   * Subject of all the games
+   */
   public gameListSubject: BehaviorSubject<Game[]>;
 
-  private gameListSubscription: () => void;
+  /**
+   * The function to unsubscribe to the game checking from database
+   */
+  private gameListUnsubscribe: () => void;
 
   constructor(
     private readonly authenticationService: AuthenticationService
   ) {
-    const games: Game[] = (JSON.parse(localStorage.getItem('games')) || [])
-      .map((game: Game) => {
-        game.date = new Date(game.date);
-        return game;
-      })
-      .sort((g1: Game, g2: Game) => g1.date < g2.date ? 1 : -1) || [];
-    this.gameListSubject = new BehaviorSubject<Game[]>(games);
+    this.initGameListSubject();
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.syncGames();
-      } else if (this.gameListSubscription) {
+      } else if (this.gameListUnsubscribe) {
         this.stopSyncGames();
       }
     });
@@ -86,14 +88,19 @@ export class GameService {
         })
       );
     } else {
-      return from(firebase.firestore().collection('games').doc(newGame.id).set({...newGame}, { merge: true }));
+      return from(
+        firebase.firestore().collection('games').doc(newGame.id).set({...newGame}, { merge: true })
+      );
     }
   }
 
+  /**
+   * Push all not synced games and begin check updates from database
+   */
   public syncGames() {
-    if (!this.gameListSubscription) {
+    if (!this.gameListUnsubscribe) {
       this.pushNotSyncedGames().subscribe(() => {
-        this.gameListSubscription = firebase.firestore().collection('games')
+        this.gameListUnsubscribe = firebase.firestore().collection('games')
           .where('creatorId', '==', this.authenticationService.user.uid)
           .orderBy('date', 'desc')
           .onSnapshot((querySnapshot) => {
@@ -110,11 +117,30 @@ export class GameService {
     }
   }
 
+  /**
+   * Stop checking database updates
+   */
   public stopSyncGames() {
-    this.gameListSubscription();
-    this.gameListSubscription = null;
+    this.gameListUnsubscribe();
+    this.gameListUnsubscribe = null;
   }
 
+  /**
+   * Initialize the gameListSubject with the local storage
+   */
+  private initGameListSubject() {
+    const games: Game[] = (JSON.parse(localStorage.getItem('games')) || [])
+      .map((game: Game) => {
+        game.date = new Date(game.date);
+        return game;
+      })
+      .sort((g1: Game, g2: Game) => g1.date < g2.date ? 1 : -1) || [];
+    this.gameListSubject = new BehaviorSubject<Game[]>(games);
+  }
+
+  /**
+   * Push all not synced games to the database
+   */
   private pushNotSyncedGames() {
     return this.gameListSubject.pipe(
       first(),
