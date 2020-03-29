@@ -15,9 +15,9 @@ import { Observable, forkJoin, of } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
-import { isNullOrUndefined } from 'util';
 import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { AuthenticationService } from 'src/app/core/http-services/authentication.service';
 
 /**
  * Component for game creation and edition
@@ -91,6 +91,7 @@ export class GameEditionComponent implements OnInit {
     private playerService: PlayerService,
     private gameCategoryService: GameCategoryService,
     private gameService: GameService,
+    private authenticationService: AuthenticationService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog

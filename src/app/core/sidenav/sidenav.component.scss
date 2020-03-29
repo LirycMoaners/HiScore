@@ -6,13 +6,15 @@
   .head {
     display: flex;
     height: 50px;
-    padding: 8px 0;
+    padding: 8px 10px;
 
     button {
       height: 100%;
 
-      &.sign-in {
-        margin-left: 10px;
+      &.account {
+        mat-icon {
+          margin-right: 10px;
+        }
       }
     }
 
@@ -28,6 +30,10 @@
 
     .back {
       margin-left: 20px;
+
+      mat-icon {
+        margin-right: -10px;
+      }
     }
   }
 

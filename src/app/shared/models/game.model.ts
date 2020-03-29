@@ -9,4 +9,6 @@ export class Game {
   public isGameEnd: boolean;
   public firstPlayerList: string[];
   public scoreList: Score[];
+  public creatorId: string;
+  public isSynced: boolean;
 }

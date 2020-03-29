@@ -8,36 +8,44 @@
     </div>
   </header>
   <section>
-    <ng-container *ngFor="let game of gameList; let i = index">
-      <div *ngIf="i === 0 && game.date.getMonth() === today.getMonth() && game.date.getFullYear() === today.getFullYear(); else month" class="month mat-subheading-1">
+    <div *ngFor="let gamesInMonth of gameList; let i = index" class="month-container">
+      <div
+        *ngIf="i === 0 && gamesInMonth.date.getMonth() === today.getMonth() && gamesInMonth.date.getFullYear() === today.getFullYear(); else month"
+        class="month mat-subheading-1"
+      >
         This month
       </div>
       <ng-template #month>
-        <div *ngIf="gameList[i-1] && (game.date.getMonth() !== gameList[i-1].date.getMonth() || game.date.getFullYear() !== gameList[i-1].date.getFullYear())"
-          class="month mat-subheading-1">
-          {{game.date | date:'MM/yyyy'}}
+        <div class="month mat-subheading-1">
+          {{gamesInMonth.date | date:'MM/yyyy'}}
         </div>
       </ng-template>
-      <button mat-raised-button
-        [routerLink]="'/current-game/' + game.id"
-        aria-label="Open game">
-        <div class="game-infos">
-          <h2>
-            {{game.gameCategory.name + ' (round ' + (game.scoreList[0].roundScoreList.length - (game.isGameEnd ? 1 : 0)) + ')'}}
-            <span class="mat-caption">
-              {{game.date | date:'dd/MM/yyyy HH:mm'}}
-            </span>
-          </h2>
-          <p>
-            <span *ngFor="let score of game.scoreList" [class.bold]="game.firstPlayerList.includes(score.playerId)">
-              {{(score.playerId | playerName | async) + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
-            </span>
-          </p>
-        </div>
-        <div class="game-status">
-          <mat-icon color="accent">{{game.isGameEnd ? 'check' : 'hourglass_empty'}}</mat-icon>
-        </div>
-      </button>
-    </ng-container>
+      <div class="games">
+        <button *ngFor="let game of gamesInMonth.games" 
+          mat-raised-button
+          [routerLink]="'/current-game/' + game.id"
+          aria-label="Open game">
+          <div class="game-infos">
+            <h2>
+              {{game.gameCategory.name}}
+              <span>
+                {{'(round ' + (game.scoreList[0].roundScoreList.length - (game.isGameEnd ? 1 : 0)) + ')'}}
+              </span>
+              <span class="mat-caption">
+                {{game.date | date:'dd/MM/yyyy HH:mm'}}
+              </span>
+            </h2>
+            <p>
+              <span *ngFor="let score of game.scoreList" [class.bold]="game.firstPlayerList.includes(score.playerId)">
+                {{(score.playerId | playerName | async) + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
+              </span>
+            </p>
+          </div>
+          <div class="game-status">
+            <mat-icon color="accent">{{game.isGameEnd ? 'check' : 'hourglass_empty'}}</mat-icon>
+          </div>
+        </button>
+      </div>
+    </div>
   </section>
 </div>

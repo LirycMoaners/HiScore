@@ -39,6 +39,7 @@ export class SidenavComponent implements OnInit {
     const dialogRef = this.dialog.open(SignInDialogComponent, { data: { isSignUpButtonPresent: true }});
     dialogRef.afterClosed().subscribe(isSignedIn => {
       if (isSignedIn) {
+        this.headerService.toggleMenu.emit();
         this.router.navigate(['/game-list']);
       }
     });

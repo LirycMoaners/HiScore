@@ -1,6 +1,8 @@
 form {
-  mat-form-field {
-    display: block;
+  .infos {
+    mat-form-field {
+      display: block;
+    }
   }
 
   .file {
@@ -9,6 +11,7 @@ form {
     vertical-align: middle;
     width: 200px;
     height: 200px;
+    margin-bottom: 10px;
 
     img {
       object-fit: cover;
@@ -64,6 +67,19 @@ form {
         color: white;
         position: absolute;
       }
+    }
+  }
+
+  @media (orientation: landscape) {
+    display: flex;
+
+    .file, .infos {
+      flex: 1;
+    }
+
+    .file {
+      margin-bottom: 0;
+      margin-right: 20px;
     }
   }
 }
