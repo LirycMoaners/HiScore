@@ -63,7 +63,7 @@ export class GameService {
       return this.gameListSubject.pipe(
         first(),
         map((gameList: Game[]) => {
-          gameList.push(game);
+          gameList.unshift(game);
           localStorage.setItem('games', JSON.stringify(gameList));
         })
       );
