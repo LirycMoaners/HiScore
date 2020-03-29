@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { GameService } from './services/game.service';
-import { PlayerService } from './services/player.service';
-import { GameCategoryService } from './services/game-category.service';
+import { GameService } from './http-services/game.service';
+import { PlayerService } from './http-services/player.service';
+import { GameCategoryService } from './http-services/game-category.service';
 import { HeaderService } from './header/header.service';
 import { HeaderComponent } from './header/header.component';
 import { SharedModule } from '../shared/shared.module';

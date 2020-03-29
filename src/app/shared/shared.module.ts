@@ -14,7 +14,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LongPressDirective } from './directives/long-press.directive';
-import { PlayerNamePipe } from './pipes/player-name.pipe';
 import { KeyEnumPipe } from './pipes/key-enum.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -64,12 +63,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatListModule,
     MatSnackBarModule,
     LongPressDirective,
-    PlayerNamePipe,
     KeyEnumPipe
   ],
   declarations: [
     LongPressDirective,
-    PlayerNamePipe,
     KeyEnumPipe
   ]
 })

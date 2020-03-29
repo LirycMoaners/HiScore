@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { GameService } from '../../services/game.service';
+import { GameService } from '../../http-services/game.service';
 import { OptionMenuService } from './option-menu.service';
 import { HeaderService } from '../header.service';
 

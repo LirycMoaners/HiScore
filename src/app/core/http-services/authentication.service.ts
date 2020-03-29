@@ -113,6 +113,13 @@ export class AuthenticationService {
   }
 
   /**
+   * Check if user's providers contain the one in parameter
+   */
+  public isProvider(provider: string) {
+    return this.user.providerData.some(p => p.providerId === provider);
+  }
+
+  /**
    * Log in with a provider (Google, Facebook, ...)
    */
   private signInWithProvider(provider: auth.AuthProvider) {

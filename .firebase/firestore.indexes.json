@@ -1,7 +1,7 @@
 {
   "indexes": [
     {
-      "collectionGroup": "game",
+      "collectionGroup": "games",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -10,7 +10,7 @@
         },
         {
           "fieldPath": "date",
-          "order": "ASCENDING"
+          "order": "DESCENDING"
         }
       ]
     }

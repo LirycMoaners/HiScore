@@ -21,7 +21,7 @@
         </div>
       </ng-template>
       <div class="games">
-        <button *ngFor="let game of gamesInMonth.games" 
+        <button *ngFor="let game of gamesInMonth.games"
           mat-raised-button
           [routerLink]="'/current-game/' + game.id"
           aria-label="Open game">
@@ -36,8 +36,8 @@
               </span>
             </h2>
             <p>
-              <span *ngFor="let score of game.scoreList" [class.bold]="game.firstPlayerList.includes(score.playerId)">
-                {{(score.playerId | playerName | async) + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
+              <span *ngFor="let score of game.scoreList" [class.bold]="game.firstPlayerList.includes(score.player.id)">
+                {{score.player.name + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
               </span>
             </p>
           </div>

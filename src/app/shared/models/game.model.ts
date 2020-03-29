@@ -1,8 +1,8 @@
 import { Score } from './score.model';
 import { GameCategory } from './game-category.model';
+import { FirestoreElement } from './firestore-element.model';
 
-export class Game {
-  public id: string;
+export class Game extends FirestoreElement {
   public gameCategory: GameCategory;
   public date: Date;
   public isFirstPlayerRandom: boolean;
@@ -10,5 +10,4 @@ export class Game {
   public firstPlayerList: string[];
   public scoreList: Score[];
   public creatorId: string;
-  public isSynced: boolean;
 }

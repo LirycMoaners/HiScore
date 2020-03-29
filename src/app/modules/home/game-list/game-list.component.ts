@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Game } from '../../../shared/models/game.model';
-import { GameService } from '../../../core/services/game.service';
+import { GameService } from '../../../core/http-services/game.service';
 import { HeaderService } from '../../../core/header/header.service';
 
 /**
@@ -33,7 +33,7 @@ export class GameListComponent implements OnInit {
 
   ngOnInit() {
     this.headerService.title = 'Game List';
-    this.gameService.gameListSubject.subscribe((gameList: Game[]) => {
+    this.gameService.elementListSubject.subscribe((gameList: Game[]) => {
       this.gameList = [];
       for (const game of gameList) {
         const indexSameMonth = this.gameList.findIndex(gamesInMonth =>

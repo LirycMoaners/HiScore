@@ -2,12 +2,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, first } from 'rxjs/operators';
 
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { WinDialogComponent } from './win-dialog/win-dialog.component';
 import { Game } from '../../shared/models/game.model';
-import { GameService } from '../../core/services/game.service';
+import { GameService } from '../../core/http-services/game.service';
 import { OptionMenuService } from '../../core/header/option-menu/option-menu.service';
 import { Score } from '../../shared/models/score.model';
 import { Goal } from '../../shared/models/goal.enum';
@@ -50,7 +50,8 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.gameService.getGameById(this.route.snapshot.params.id)
+    this.gameService.getElementById(this.route.snapshot.params.id)
+      .pipe(first())
       .subscribe((game: Game) => {
         this.game = game;
         this.gameService.currentGameId = game.id;
@@ -62,7 +63,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
         }
         if (this.game.scoreList[0].roundScoreList.length === 1 && this.game.isFirstPlayerRandom) {
           const index: number = Math.floor(Math.random() * this.game.scoreList.length);
-          this.firstPlayerId = this.game.scoreList[index].playerId;
+          this.firstPlayerId = this.game.scoreList[index].player.id;
         }
       });
 
@@ -74,7 +75,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
           for (const score of this.game.scoreList) {
             score.total -= score.roundScoreList.shift();
             this.refreshBestScore();
-            this.gameService.updateGame(this.game).subscribe(() => {
+            this.gameService.updateElement(this.game).subscribe(() => {
               this.headerService.title = this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')';
             });
           }
@@ -114,7 +115,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     if (this.game.isGameEnd) {
       this.openWinDialog();
     } else {
-      this.gameService.updateGame(this.game).subscribe(() => {
+      this.gameService.updateElement(this.game).subscribe(() => {
         this.headerService.title = this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')';
       });
     }
@@ -170,7 +171,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       this.refreshBestScore();
     }
 
-    this.gameService.updateGame(this.game).subscribe();
+    this.gameService.updateElement(this.game).subscribe();
   }
 
   /**
@@ -183,7 +184,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     } else {
       bestScore = Math.min(...this.game.scoreList.map((sc: Score) => sc.total));
     }
-    this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.playerId);
+    this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.player.id);
   }
 
   /**
@@ -212,7 +213,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
         if (!result) {
           this.game.isGameEnd = false;
         }
-        return this.gameService.updateGame(this.game);
+        return this.gameService.updateElement(this.game);
       })
     ).subscribe(_ => {
       if (this.game.isGameEnd) {

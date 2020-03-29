@@ -1,6 +1,6 @@
-export class Player {
-  public id: string;
-  public name: string;
+import { FirestoreElement } from './firestore-element.model';
 
-  constructor() { }
+export class Player extends FirestoreElement {
+  public name: string;
+  public isUser: boolean;
 }

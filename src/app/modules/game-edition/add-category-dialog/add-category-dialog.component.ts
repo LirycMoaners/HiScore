@@ -5,7 +5,7 @@ import { UUID } from 'angular2-uuid';
 import { EndingType } from '../../../shared/models/ending-type.enum';
 import { Goal } from '../../../shared/models/goal.enum';
 import { GameCategory } from '../../../shared/models/game-category.model';
-import { GameCategoryService } from '../../../core/services/game-category.service';
+import { GameCategoryService } from '../../../core/http-services/game-category.service';
 
 /**
  * Component made for adding a new category
@@ -46,7 +46,7 @@ export class AddCategoryDialogComponent {
   public createGameCategory() {
     if (this.newGameCategory.name && this.newGameCategory.endingType && this.newGameCategory.endingNumber && this.newGameCategory.goal) {
       this.newGameCategory.id = UUID.UUID();
-      this.gameCategoryService.createGameCategory(this.newGameCategory)
+      this.gameCategoryService.createElement(this.newGameCategory)
         .subscribe(_ => this.dialogRef.close(this.newGameCategory));
     }
   }
