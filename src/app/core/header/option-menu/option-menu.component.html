@@ -3,7 +3,7 @@
 </button>
 
 <mat-menu #optionMenu="matMenu">
-  <button mat-menu-item routerLink="/game-edition" [queryParams]="{copy: true}">New game</button>
+  <button mat-menu-item [routerLink]="'/game-edition/' + gameService.currentGameId" [queryParams]="{copy: true}">New game</button>
   <button mat-menu-item [routerLink]="'/game-edition/' + gameService.currentGameId">Modify game</button>
   <button mat-menu-item (click)="editLastRound()">Edit last round</button>
   <button mat-menu-item (click)="endGame()">End game</button>
