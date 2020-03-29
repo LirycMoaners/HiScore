@@ -2,22 +2,19 @@
   Game Over
 </h2>
 <mat-dialog-content class="player-list">
-  <table mat-table [dataSource]="orderedScoreList" class="mat-elevation-z8">
+  <table mat-table [dataSource]="orderedScoreList" class="mat-elevation-z8" aria-describedby="Final ranking">
     <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <th mat-header-cell *matHeaderCellDef scope="row"> No. </th>
       <td mat-cell *matCellDef="let score"> {{orderedScoreList.indexOf(score) + 1}} </td>
     </ng-container>
-
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let score"> {{score.playerId | playerName | async}} </td>
+      <th mat-header-cell *matHeaderCellDef scope="row"> Name </th>
+      <td mat-cell *matCellDef="let score"> {{score.player.name}} </td>
     </ng-container>
-
     <ng-container matColumnDef="total">
-      <th mat-header-cell *matHeaderCellDef> Total </th>
+      <th mat-header-cell *matHeaderCellDef scope="row"> Total </th>
       <td mat-cell *matCellDef="let score"> {{score.total}} </td>
     </ng-container>
-
     <tr mat-header-row *matHeaderRowDef="['position', 'name', 'total']; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: ['position', 'name', 'total'];"></tr>
   </table>
