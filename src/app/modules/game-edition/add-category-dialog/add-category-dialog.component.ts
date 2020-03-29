@@ -1,10 +1,11 @@
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UUID } from 'angular2-uuid';
-import { Component, Inject } from '@angular/core';
+
 import { EndingType } from '../../../shared/models/ending-type.enum';
 import { Goal } from '../../../shared/models/goal.enum';
 import { GameCategory } from '../../../shared/models/game-category.model';
-import { GameCategoryService } from '../../../core/services/game-category.service';
+import { GameCategoryService } from '../../../core/http-services/game-category.service';
 
 /**
  * Component made for adding a new category
@@ -17,6 +18,7 @@ import { GameCategoryService } from '../../../core/services/game-category.servic
   styleUrls: ['add-category-dialog.component.scss']
 })
 export class AddCategoryDialogComponent {
+
   /**
    * Ending type enum for HTML
    */
@@ -33,9 +35,9 @@ export class AddCategoryDialogComponent {
   public newGameCategory: GameCategory = new GameCategory();
 
   constructor(
-    private gameCategoryService: GameCategoryService,
-    private dialogRef: MatDialogRef<AddCategoryDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public score: number
+    @Inject(MAT_DIALOG_DATA) public score: number,
+    private readonly gameCategoryService: GameCategoryService,
+    private readonly dialogRef: MatDialogRef<AddCategoryDialogComponent>
   ) { }
 
   /**
@@ -44,7 +46,7 @@ export class AddCategoryDialogComponent {
   public createGameCategory() {
     if (this.newGameCategory.name && this.newGameCategory.endingType && this.newGameCategory.endingNumber && this.newGameCategory.goal) {
       this.newGameCategory.id = UUID.UUID();
-      this.gameCategoryService.createGameCategory(this.newGameCategory)
+      this.gameCategoryService.createElement(this.newGameCategory)
         .subscribe(_ => this.dialogRef.close(this.newGameCategory));
     }
   }

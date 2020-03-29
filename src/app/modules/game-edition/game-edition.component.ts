@@ -1,23 +1,23 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable, forkJoin, of } from 'rxjs';
+import { flatMap, map, first, tap } from 'rxjs/operators';
+import { UUID } from 'angular2-uuid';
+
 import { Game } from '../../shared/models/game.model';
 import { Player } from '../../shared/models/player.model';
 import { GameCategory } from '../../shared/models/game-category.model';
 import { EndingType } from '../../shared/models/ending-type.enum';
 import { Goal } from '../../shared/models/goal.enum';
-import { PlayerService } from '../../core/services/player.service';
-import { GameCategoryService } from '../../core/services/game-category.service';
-import { GameService } from '../../core/services/game.service';
+import { PlayerService } from '../../core/http-services/player.service';
+import { GameCategoryService } from '../../core/http-services/game-category.service';
+import { GameService } from '../../core/http-services/game.service';
 import { Score } from '../../shared/models/score.model';
 import { HeaderService } from '../../core/header/header.service';
-import { UUID } from 'angular2-uuid';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, forkJoin, of } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
 import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
-import { isNullOrUndefined } from 'util';
 import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 /**
  * Component for game creation and edition
@@ -87,58 +87,57 @@ export class GameEditionComponent implements OnInit {
   private newPlayerScore: number;
 
   constructor(
-    private headerService: HeaderService,
-    private playerService: PlayerService,
-    private gameCategoryService: GameCategoryService,
-    private gameService: GameService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private dialog: MatDialog
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly dialog: MatDialog,
+    private readonly headerService: HeaderService,
+    private readonly playerService: PlayerService,
+    private readonly gameCategoryService: GameCategoryService,
+    private readonly gameService: GameService
   ) { }
 
   ngOnInit() {
     const gameId: string = this.route.snapshot.params.id;
     const isCopy: boolean = this.route.snapshot.queryParams.copy;
-    let game$: Observable<any>;
 
-    if (gameId || isCopy) {
-      if (gameId) {
+    let game$: Observable<Game>;
+    const players$: Observable<Player[]> = this.playerService.elementListSubject.pipe(
+      first(),
+      tap((playerList: Player[]) => this.playerList = playerList)
+    );
+    const gameCategories$: Observable<GameCategory[]> = this.gameCategoryService.elementListSubject.pipe(
+      first(),
+      tap((gameCategoryList: GameCategory[]) => this.gameCategoryList = gameCategoryList)
+    );
+
+    if (gameId) {
+      if (!isCopy) {
         this.headerService.title = 'Game Edition';
         this.isCreationMode = false;
-        game$ = this.gameService.getGameById(gameId);
+        game$ = this.gameService.getElementById(gameId);
       } else {
         this.headerService.title = 'New Game';
-        game$ = this.gameService.getGameById(this.gameService.currentGameId).pipe(
-            map((game: Game) => {
-              game.id = UUID.UUID();
-              game.isGameEnd = false;
-              game.firstPlayerList = [];
-              return game;
-            })
-          );
+        game$ = this.gameService.getElementById(gameId).pipe(
+          map((game: Game) => {
+            const newGame = { ...game };
+            newGame.id = UUID.UUID();
+            newGame.isGameEnd = false;
+            newGame.firstPlayerList = [];
+            return newGame;
+          })
+        );
       }
 
-      forkJoin([
-        game$.pipe(
-          flatMap((game: Game) => {
-            this.game = Object.assign({}, game);
-            return forkJoin([
-              this.gameCategoryService.getGameCategoryById(this.game.gameCategory.id),
-              this.playerService.getPlayerListById(this.game.scoreList.map((score: Score) => score.playerId))
-            ]);
-          })
-        ),
-        this.playerService.getPlayerList(),
-        this.gameCategoryService.getGameCategoryList()
-      ]).subscribe(
-        ([[gameCategory, gamePlayerList], playerList, gameCategoryList]: [[GameCategory, Player[]], Player[], GameCategory[]]) => {
-          this.playerList = playerList;
-          this.gameCategoryList = gameCategoryList;
-          this.chosenGameCategory = this.gameCategoryList.find((category: GameCategory) => category.id === gameCategory.id);
-          gamePlayerList.forEach((player: Player) => this.gamePlayerList.push(Object.assign({}, player)));
-          this.filterPlayerList();
-        }
-      );
+      game$.pipe(first())
+        .subscribe((game: Game) => {
+          this.game = game;
+          this.gamePlayerList = this.game.scoreList.map(score => score.player);
+          this.chosenGameCategory = this.game.gameCategory;
+        });
+
+      players$.subscribe(() => this.filterPlayerList());
+
+      gameCategories$.subscribe();
     } else {
       this.headerService.title = 'New Game';
       this.game = new Game();
@@ -148,17 +147,12 @@ export class GameEditionComponent implements OnInit {
       this.game.firstPlayerList = [];
       this.chosenGameCategory = new GameCategory();
 
-      this.playerService.getPlayerList()
-        .subscribe((playerList: Player[]) => {
-          this.playerList = playerList;
-        });
+      players$.subscribe();
 
-      this.gameCategoryService.getGameCategoryList()
-        .subscribe((gameCategoryList: GameCategory[]) => {
-          this.gameCategoryList = gameCategoryList;
-          this.chosenGameCategory = this.gameCategoryList[0];
-          this.onSelectGameCategory(this.gameCategoryList[0]);
-        });
+      gameCategories$.subscribe(() => {
+        this.chosenGameCategory = this.gameCategoryList[0];
+        this.onSelectGameCategory(this.gameCategoryList[0]);
+      });
     }
   }
 
@@ -206,7 +200,7 @@ export class GameEditionComponent implements OnInit {
     this.gamePlayerList.push(player);
 
     if (!this.isCreationMode
-      && !this.game.scoreList.find((score: Score) => score.playerId === player.id)
+      && !this.game.scoreList.find((score: Score) => score.player.id === player.id)
       && (this.newPlayerScore === null || this.newPlayerScore === undefined)
     ) {
       this.openNewPlayerScoreDialog();
@@ -242,7 +236,7 @@ export class GameEditionComponent implements OnInit {
       playerInput.value = oldPlayer.name;
 
       if (!this.isCreationMode
-        && !this.game.scoreList.find((score: Score) => score.playerId === oldPlayer.id)
+        && !this.game.scoreList.find((score: Score) => score.player.id === oldPlayer.id)
         && (this.newPlayerScore === null || this.newPlayerScore === undefined)
       ) {
         this.openNewPlayerScoreDialog();
@@ -290,12 +284,8 @@ export class GameEditionComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.gameCategoryService.getGameCategoryList()
-          .subscribe((gameCategoryList: GameCategory[]) => {
-            this.gameCategoryList = gameCategoryList;
-            this.chosenGameCategory = this.gameCategoryList.find((gameCategory: GameCategory) => gameCategory.id === result.id);
-            this.onSelectGameCategory(this.chosenGameCategory);
-          });
+        this.chosenGameCategory = result;
+        this.onSelectGameCategory(result);
       }
     });
   }
@@ -314,13 +304,13 @@ export class GameEditionComponent implements OnInit {
 
       for (const player of this.gamePlayerList) {
         newScoreList.push({
-          playerId: player.id,
+          player,
           roundScoreList: [0],
           total: 0
         });
 
         if (!this.isCreationMode) {
-          const playerScore: Score = this.game.scoreList.find((score: Score) => score.playerId === player.id);
+          const playerScore: Score = this.game.scoreList.find((score: Score) => score.player.id === player.id);
           if (playerScore) {
             newScoreList[newScoreList.length - 1].roundScoreList = playerScore.roundScoreList;
             newScoreList[newScoreList.length - 1].total = playerScore.total;
@@ -350,9 +340,9 @@ export class GameEditionComponent implements OnInit {
         this.refreshBestScore();
       }
 
-      (newPlayerList.length ? this.playerService.createPlayerList(newPlayerList) : of(null))
+      (newPlayerList.length ? this.playerService.createElementList(newPlayerList) : of(null))
         .pipe(
-          flatMap(() => this.isCreationMode ? this.gameService.createGame(this.game) : this.gameService.updateGame(this.game))
+          flatMap(() => this.isCreationMode ? this.gameService.createElement(this.game) : this.gameService.updateElement(this.game))
         )
         .subscribe(() => this.router.navigate(['/current-game/' + this.game.id]));
     }
@@ -368,7 +358,7 @@ export class GameEditionComponent implements OnInit {
     } else {
       bestScore = Math.min(...this.game.scoreList.map((sc: Score) => sc.total));
     }
-    this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.playerId);
+    this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.player.id);
   }
 
   /**

@@ -62,3 +62,49 @@ section {
     }
   }
 }
+
+@media (orientation: landscape) {
+  section {
+    .month-container {
+      display: flex;
+      height: 200px;
+
+      .month {
+        writing-mode: tb;
+        transform: rotate(180deg);
+        text-align: end;
+        border-left: 2px solid $sub-text-color;
+        margin-left: 5px;
+        border-bottom: none;
+        margin-bottom: 9px;
+      }
+  
+      .games {
+        overflow: auto;
+        display: flex;
+        width: 100%;
+
+        button {
+          flex: 0 0 200px;
+    
+          ::ng-deep .mat-button-wrapper {
+            flex-direction: column;
+    
+            .game-infos {
+              flex: 1;
+              min-width: 0;
+      
+              h2 {
+                line-height: 1.2;
+  
+                span {
+                  display: block;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

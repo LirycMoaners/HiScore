@@ -2,14 +2,16 @@
   <button
     *ngIf="authenticationService.user;else signIn"
     mat-button
+    class="account"
     routerLink="/account"
     (click)="headerService.toggleMenu.emit()"
   >
-    <img [src]="authenticationService.user.photoURL" alt="Profile picture">
+    <img *ngIf="authenticationService.user.photoURL;else default" [src]="authenticationService.user.photoURL" alt="Profile picture">
+    <ng-template #default><mat-icon color="primary">person</mat-icon></ng-template>
     <span>{{ authenticationService.user.displayName }}</span>
   </button>
   <ng-template #signIn>
-    <button mat-button class="sign-in" (click)="openSignInDialog()">
+    <button mat-button class="account" (click)="openSignInDialog()">
       <mat-icon color="primary">person</mat-icon>
       <span>Sign in</span>
     </button>

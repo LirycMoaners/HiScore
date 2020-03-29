@@ -1,5 +1,6 @@
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
+
 import { Score } from '../../../shared/models/score.model';
 import { Game } from '../../../shared/models/game.model';
 import { Goal } from '../../../shared/models/goal.enum';
@@ -15,6 +16,7 @@ import { Goal } from '../../../shared/models/goal.enum';
   styleUrls: ['win-dialog.component.scss']
 })
 export class WinDialogComponent implements OnInit {
+
   /**
    * Identify if the user wants to leave the game or to continue the game
    */

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from 'src/app/core/http-services/authentication.service';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { AuthenticationService } from '../../../core/http-services/authentication.service';
 import { SignInDialogComponent } from '../sign-in-dialog/sign-in-dialog.component';
 
 @Component({
@@ -18,10 +19,12 @@ export class DeleteUserDialogComponent implements OnInit {
     private readonly authenticationService: AuthenticationService
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
-  validate() {
+  /**
+   * Ask for log in before deleting the account
+   */
+  public validate() {
     const dialogRef = this.dialog.open(SignInDialogComponent, {data: {isSignUpButtonPresent: false}});
     dialogRef.afterClosed().subscribe(isSignedIn => {
       if (isSignedIn) {
@@ -35,10 +38,12 @@ export class DeleteUserDialogComponent implements OnInit {
     });
   }
 
+  /**
+   * Open the error snackbar with a message
+   */
   private openSnackBar(message: string) {
     this.snackBar.open(message, 'Dismiss', {
       duration: 2000,
     });
   }
-
 }

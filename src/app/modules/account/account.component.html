@@ -1,7 +1,10 @@
-<div *ngIf="authenticationService.user" class="container">
+<ng-container *ngIf="authenticationService.user">
   <div class="profile">
     <div class="file">
-      <img [src]="authenticationService.user.photoURL" alt="Profile picture">
+      <img *ngIf="authenticationService.user.photoURL; else icon" [src]="authenticationService.user.photoURL" alt="Profile picture">
+      <ng-template #icon>
+        <mat-icon class="avatar" color="primary">person</mat-icon>
+      </ng-template>
       <input
         type="file"
         name="file"
@@ -22,28 +25,30 @@
       >
     </mat-form-field>
   </div>
-  <div class="email">
-    <mat-form-field>
-      <mat-label>New email</mat-label>
-      <input matInput type="email" [formControl]="newEmail">
-    </mat-form-field>
-    <button mat-raised-button class="change" (click)="changeEmail()">Change email</button>
+  <div class="security">
+    <div class="email">
+      <mat-form-field>
+        <mat-label>New email</mat-label>
+        <input matInput type="email" [formControl]="newEmail">
+      </mat-form-field>
+      <button mat-raised-button class="change" (click)="changeEmail()">Change email</button>
+    </div>
+    <div class="password">
+      <mat-form-field>
+        <mat-label>New password</mat-label>
+        <input matInput [type]="isPasswordHidden ? 'password' : 'text'" [formControl]="newPassword">
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="isPasswordHidden = !isPasswordHidden"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="isPasswordHidden"
+        >
+          <mat-icon>{{isPasswordHidden ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <button mat-raised-button class="change" (click)="changePassword()">Change password</button>
+    </div>
+    <button mat-raised-button color="warn" class="delete" (click)="deleteUser()">Delete account</button>
   </div>
-  <div class="password">
-    <mat-form-field>
-      <mat-label>New password</mat-label>
-      <input matInput [type]="hide ? 'password' : 'text'" [formControl]="newPassword">
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="hide = !hide"
-        [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hide"
-      >
-        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-    </mat-form-field>
-    <button mat-raised-button class="change" (click)="changePassword()">Change password</button>
-  </div>
-  <button mat-raised-button color="warn" (click)="deleteUser()">Delete account</button>
-</div>
+</ng-container>

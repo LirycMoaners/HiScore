@@ -12,8 +12,9 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['new-player-score-dialog.component.scss']
 })
 export class NewPlayerScoreDialogComponent {
+
   constructor(
-    private dialogRef: MatDialogRef<NewPlayerScoreDialogComponent>
+    private readonly dialogRef: MatDialogRef<NewPlayerScoreDialogComponent>
   ) { }
 
   /**
