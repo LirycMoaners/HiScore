@@ -12,10 +12,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LongPressDirective } from './directives/long-press.directive';
 import { PlayerNamePipe } from './pipes/player-name.pipe';
 import { KeyEnumPipe } from './pipes/key-enum.pipe';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -23,25 +24,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 @NgModule({
   imports: [
     FormsModule,
-    CommonModule,
-    RouterModule,
-    DragDropModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatInputModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatTableModule,
-    MatMenuModule,
-    MatSlideToggleModule,
-    MatFormFieldModule,
-    MatSidenavModule,
-    MatListModule
-  ],
-  exports: [
-    FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     RouterModule,
     DragDropModule,
@@ -58,6 +41,28 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatFormFieldModule,
     MatSidenavModule,
     MatListModule,
+    MatSnackBarModule
+  ],
+  exports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    RouterModule,
+    DragDropModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatTableModule,
+    MatMenuModule,
+    MatSlideToggleModule,
+    MatFormFieldModule,
+    MatSidenavModule,
+    MatListModule,
+    MatSnackBarModule,
     LongPressDirective,
     PlayerNamePipe,
     KeyEnumPipe

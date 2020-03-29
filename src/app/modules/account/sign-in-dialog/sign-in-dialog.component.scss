@@ -1,0 +1,36 @@
+mat-form-field {
+  display: block;
+}
+
+.google-button {
+  width: 100%;
+
+  img {
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+  }
+}
+
+.or {
+  width: 100%;
+  text-align: center;
+  margin: 20px 0 10px;
+}
+
+.mat-dialog-actions {
+  margin-bottom: -14px;
+
+  button {
+    flex: 1;
+  }
+}
+
+.other-buttons {
+  width: 100%;
+  display: flex;
+
+  button {
+    flex: 1;
+  }
+}

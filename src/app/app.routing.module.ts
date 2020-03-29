@@ -15,6 +15,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/game-edition/game-edition.module').then(m => m.GameEditionModule)
   },
   {
+    path: 'account',
+    loadChildren: () => import('./modules/account/account.module').then(m => m.AccountModule)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

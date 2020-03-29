@@ -1,14 +1,47 @@
-h1 {
-  margin: 5px 0 10px;
-  padding: 0 10px;
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
-  img {
-    vertical-align: middle;
-    max-height: 50px;
+  .head {
+    display: flex;
+    height: 50px;
+    padding: 8px 0;
+
+    button {
+      height: 100%;
+
+      &.sign-in {
+        margin-left: 10px;
+      }
+    }
+
+    img {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      object-fit: cover;
+      vertical-align: middle;
+      margin-right: 15px;
+    }
+
+    .back {
+      margin-left: 20px;
+    }
   }
 
-  button {
-    vertical-align: middle;
-    margin-left: 20px;
+  mat-list {
+    flex: 1;
+
+    mat-list-item {
+      cursor: pointer;
+    }
+  }
+
+  .sign-out {
+    span {
+      margin-left: 10px;
+    }
   }
 }

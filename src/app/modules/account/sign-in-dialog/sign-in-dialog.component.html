@@ -1,0 +1,47 @@
+<h1 mat-dialog-title>Sign in</h1>
+<div mat-dialog-content>
+  <button mat-raised-button class="google-button" (click)="signInWithGoogle()">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/588px-Google_%22G%22_Logo.svg.png" alt="Google logo">
+    <span>Sign in with Google</span>
+  </button>
+  <div class="or">
+    <span>Or</span>
+  </div>
+  <form [formGroup]="signInForm">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+      >
+        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-error>{{ errorMessage }}</mat-error>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button *ngIf="!data.isSignUpButtonPresent" mat-button [mat-dialog-close]="false">Cancel</button>
+  <button
+    mat-raised-button
+    color="accent"
+    class="sign-in-button"
+    cdkFocusInitial
+    [disabled]="!signInForm.valid"
+    (click)="signIn()"
+  >
+    Sign in
+  </button>
+</div>
+<div class="other-buttons">
+  <button *ngIf="data.isSignUpButtonPresent" mat-button (click)="openSignUp()">Register account</button>
+  <button mat-button>Forget password ?</button>
+</div>

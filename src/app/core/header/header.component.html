@@ -6,8 +6,6 @@
     {{headerService.title}}
   </div>
   <div class="option">
-    <ng-container *ngIf="router.url.startsWith('/current-game')">
-      <app-option-menu></app-option-menu>
-    </ng-container>
+    <app-option-menu *ngIf="router.url.startsWith('/current-game')"></app-option-menu>
   </div>
 </mat-toolbar>
