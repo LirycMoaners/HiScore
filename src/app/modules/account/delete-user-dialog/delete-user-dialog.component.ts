@@ -4,6 +4,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AuthenticationService } from '../../../core/http-services/authentication.service';
 import { SignInDialogComponent } from '../sign-in-dialog/sign-in-dialog.component';
+import { flatMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-delete-user-dialog',
@@ -26,16 +28,12 @@ export class DeleteUserDialogComponent implements OnInit {
    */
   public validate() {
     const dialogRef = this.dialog.open(SignInDialogComponent, {data: {isSignUpButtonPresent: false}});
-    dialogRef.afterClosed().subscribe(isSignedIn => {
-      if (isSignedIn) {
-        this.authenticationService.delete(this.authenticationService.user).then(
-          () => this.dialogRef.close(true),
-          (error) => this.openSnackBar(error)
-        );
-      } else {
-        this.dialogRef.close();
-      }
-    });
+    dialogRef.afterClosed().pipe(
+      flatMap(isSignedIn => isSignedIn ? this.authenticationService.delete(this.authenticationService.user) : of(null))
+    ).subscribe(
+      () => this.dialogRef.close(),
+      (error) => this.openSnackBar(error)
+    );
   }
 
   /**

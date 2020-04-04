@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
 
 import { Player } from '../../shared/models/player.model';
 import { AuthenticationService } from './authentication.service';
@@ -21,16 +21,22 @@ export class PlayerService extends FirstoreService<Player> {
   public userPlayerListSubject: BehaviorSubject<Player[]>;
 
   constructor(
-    authenticationService: AuthenticationService
+    authenticationService: AuthenticationService,
+    auth: AngularFireAuth,
+    firestore: AngularFirestore
   ) {
     super(
       authenticationService,
+      auth,
       'nonUserPlayers',
-      () => firebase.firestore()
+      () => firestore
         .collection('userDatas')
         .doc(authenticationService.user.uid)
         .collection('nonUserPlayers'),
-      () => this.firestoreCollection().orderBy('name'),
+      () => firestore
+        .collection('userDatas')
+        .doc(authenticationService.user.uid)
+        .collection('nonUserPlayers', ref => ref.orderBy('name')),
       (player: Player) => player,
       (p1: Player, p2: Player) => p1.name.localeCompare(p2.name)
     );

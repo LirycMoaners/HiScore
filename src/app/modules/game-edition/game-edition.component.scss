@@ -17,7 +17,7 @@
         }
       }
 
-      @media screen and (min-width: $break-small) {
+      @media (orientation: landscape) {
         display: flex;
         flex-direction: row;
         overflow: hidden;

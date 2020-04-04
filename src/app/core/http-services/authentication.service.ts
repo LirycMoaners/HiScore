@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/storage';
-import { User, auth, storage } from 'firebase/app';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { User, auth, storage } from 'firebase';
+import { of, Observable, from } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 
 /**
  * Service for every action about authentication & account
@@ -17,10 +18,11 @@ export class AuthenticationService {
    */
   public user: User;
 
-  constructor() {
-    firebase.auth().onAuthStateChanged((user) => {
-      this.user = user;
-    });
+  constructor(
+    private readonly fireAuth: AngularFireAuth,
+    private readonly fireStorage: AngularFireStorage
+  ) {
+    this.fireAuth.user.subscribe(user => this.user = user);
   }
 
   /**
@@ -28,7 +30,7 @@ export class AuthenticationService {
    */
   public signUp(email: string, password: string, username: string, picture?: File) {
     return new Promise<any>((resolve, reject) =>
-      firebase.auth().createUserWithEmailAndPassword(email, password).then(
+      this.fireAuth.createUserWithEmailAndPassword(email, password).then(
         async res => {
           this.updateProfile(res.user, username, picture).then(
             () => {
@@ -49,7 +51,7 @@ export class AuthenticationService {
    */
   public signIn(email: string, password: string) {
     return new Promise<any>((resolve, reject) =>
-      firebase.auth().signInWithEmailAndPassword(email, password).then(
+      this.fireAuth.signInWithEmailAndPassword(email, password).then(
         res => {
           resolve(res);
         }, error => {
@@ -70,7 +72,7 @@ export class AuthenticationService {
    * Log out
    */
   public signOut() {
-    firebase.auth().signOut();
+    this.fireAuth.signOut();
   }
 
   /**
@@ -90,12 +92,13 @@ export class AuthenticationService {
   /**
    * Delete user account
    */
-  public async delete(user: User) {
+  public delete(user: User): Observable<void> {
+    const obs = of(null);
     if (user.photoURL && user.providerId === 'firebase') {
-      const ref = firebase.storage().ref().child('profile').child(user.uid).child('profile_picture.jpg');
-      await ref.delete();
+      const ref = this.fireStorage.ref(`profile/${user.uid}/profile_picture.jpg`);
+      obs.pipe(flatMap(() => ref.delete()));
     }
-    await user.delete();
+    return obs.pipe(flatMap(() => from(user.delete())));
   }
 
   /**
@@ -124,7 +127,7 @@ export class AuthenticationService {
    */
   private signInWithProvider(provider: auth.AuthProvider) {
     return new Promise<any>((resolve, reject) =>
-      firebase.auth().signInWithPopup(provider).then(
+      this.fireAuth.signInWithPopup(provider).then(
         res => {
           resolve(res);
         }, error => {
@@ -138,8 +141,7 @@ export class AuthenticationService {
    * Update user's picture
    */
   private updateProfilePicture(userId: string, file: File) {
-    const storageRef = firebase.storage().ref();
-    const ref = storageRef.child('profile').child(userId).child('profile_picture.jpg');
+    const ref = this.fireStorage.ref(`profile/${userId}/profile_picture.jpg`);
 
     return new Promise<any>((resolve, reject) =>
       ref.put(file).then(

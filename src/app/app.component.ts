@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SwUpdate } from '@angular/service-worker';
-import * as firebase from 'firebase/app';
+import { flatMap, first } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 import { HeaderService } from './core/header/header.service';
+import { GameCategoryService } from './core/http-services/game-category.service';
 
 /**
  * HiScore app main component
@@ -24,22 +26,21 @@ export class AppComponent implements OnInit {
 
   constructor(
     public headerService: HeaderService,
-    private readonly swUpdate: SwUpdate
+    private readonly swUpdate: SwUpdate,
+    private readonly gameCategoryService: GameCategoryService
   ) {
-    const config = {
-      apiKey: 'AIzaSyA6LvjdDaK_uRVThClMGi-AFJ2nxo_0OFs',
-      authDomain: 'hi-score-app.firebaseapp.com',
-      databaseURL: 'https://hi-score-app.firebaseio.com',
-      projectId: 'hi-score-app',
-      storageBucket: 'hi-score-app.appspot.com',
-      messagingSenderId: '299295266645',
-      appId: '1:299295266645:web:552dc53389e6bd48a201dc',
-      measurementId: 'G-MY486HKPP2'
-    };
-    firebase.initializeApp(config);
   }
 
   ngOnInit(): void {
+    this.initServiceWorker();
+    this.initGameCategories();
+    this.initSidenav();
+  }
+
+  /**
+   * Initialize service worker behavior on new version
+   */
+  private initServiceWorker(): void {
     if (this.swUpdate.isEnabled) {
       this.swUpdate.available.subscribe(() => {
         if (confirm('A new version is available ! Do you want to refresh the app ?')) {
@@ -47,7 +48,23 @@ export class AppComponent implements OnInit {
         }
       });
     }
+  }
 
+  /**
+   * Initialize game categories with commons one if not already presents
+   */
+  private initGameCategories(): void {
+    this.gameCategoryService.getElementById('common-0').pipe(
+      first(),
+      flatMap(gameCategory => !gameCategory ? this.gameCategoryService.getCommonGameCategories() : of(null)),
+      flatMap(gameCategories => gameCategories ? this.gameCategoryService.createElementList(gameCategories) : of(null))
+    ).subscribe();
+  }
+
+  /**
+   * Initialize sidenav behavior when menu button is clicked
+   */
+  private initSidenav(): void {
     this.headerService.toggleMenu.subscribe(() => this.sidenav.toggle());
   }
 }

@@ -1,8 +1,7 @@
-import { BehaviorSubject, Observable, from } from 'rxjs';
-import { first, tap, map } from 'rxjs/operators';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
-import { firestore } from 'firebase';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestoreCollection } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
+import { first, tap, map, flatMap } from 'rxjs/operators';
 
 import { FirestoreElement } from '../../shared/models/firestore-element.model';
 import { AuthenticationService } from './authentication.service';
@@ -14,49 +13,58 @@ import { AuthenticationService } from './authentication.service';
  */
 export class FirstoreService<T extends FirestoreElement> {
 
- /**
-  * Subject of all the elements
-  */
- public elementListSubject: BehaviorSubject<T[]>;
+  /**
+   * Subject of all the elements
+   */
+  public elementListSubject: BehaviorSubject<T[]>;
 
- /**
-  * FirebaseElementhe function to unsubscribe to the element checking from database
-  */
- private elementListUnsubscribe: () => void;
+  /**
+   * FirebaseElementhe function to unsubscribe to the element checking from database
+   */
+  private elementListSubscription: Subscription;
 
- constructor(
-   protected readonly authenticationService: AuthenticationService,
-   protected readonly elementNameInLocalStorage: string,
-   protected readonly firestoreCollection: () => firestore.CollectionReference,
-   firestoreQuery: () => firestore.Query,
-   mapFunctionAfterGetFromLocalStorage = (element: T) => element,
-   sortFunctionAfterGetFromLocalStorage: (element1: T, element2: T) => number = () => 0,
-   mapFunctionAfterGetFromFirebase = (element: T) => element,
-   mapFunctionBeforePushToFirestore = (element: T) => element
- ) {
-   this.initElementListSubject(mapFunctionAfterGetFromLocalStorage, sortFunctionAfterGetFromLocalStorage);
+  constructor(
+    protected readonly authenticationService: AuthenticationService,
+    protected readonly auth: AngularFireAuth,
+    protected readonly elementNameInLocalStorage: string,
+    protected readonly firestoreCollection: () => AngularFirestoreCollection<T>,
+    protected readonly firestoreQuery: () => AngularFirestoreCollection<T>,
+    protected readonly mapFunctionAfterGetFromLocalStorage = (element: T) => element,
+    protected readonly sortFunctionAfterGetFromLocalStorage: (element1: T, element2: T) => number = () => 0,
+    protected readonly mapFunctionAfterGetFromFirebase = (element: T) => element,
+    protected readonly mapFunctionBeforePushToFirestore = (element: T) => element
+  ) {
+    this.initElementListSubject(this.mapFunctionAfterGetFromLocalStorage, this.sortFunctionAfterGetFromLocalStorage);
 
-   firebase.auth().onAuthStateChanged((user) => {
-     if (user) {
-       this.syncElements(
-          firestoreCollection,
-          firestoreQuery,
-          mapFunctionAfterGetFromFirebase,
-          mapFunctionBeforePushToFirestore
+    this.auth.user.subscribe((user) => {
+      if (user) {
+        this.syncElements(
+          this.firestoreCollection,
+          this.firestoreQuery,
+          this.mapFunctionAfterGetFromFirebase,
+          this.mapFunctionBeforePushToFirestore
         );
-     } else if (this.elementListUnsubscribe) {
-       this.stopSyncElements();
-     }
-   });
- }
+      } else if (this.elementListSubscription && !this.elementListSubscription.closed) {
+        this.stopSyncElements();
+      }
+    });
+  }
 
   /**
    * Get an observable of a element find by its id
    */
   public getElementById(id: string): Observable<T> {
-    return this.elementListSubject.pipe(
-      first(),
-      map((elementList: T[]) => elementList.find((element: T) => element.id === id))
+    return this.auth.user.pipe(
+      flatMap(user => {
+        if (user) {
+          return this.firestoreCollection().doc<T>(id).valueChanges();
+        } else {
+          return this.elementListSubject.pipe(
+            first(),
+            map((elementList: T[]) => elementList.find((element: T) => element.id === id))
+          );
+        }
+      })
     );
   }
 
@@ -86,7 +94,10 @@ export class FirstoreService<T extends FirestoreElement> {
         })
       );
     } else {
-      return from(this.firestoreCollection().doc(element.id).set({...element}));
+      element = [element].map(this.mapFunctionBeforePushToFirestore)[0];
+      return from(
+        this.firestoreCollection().doc(element.id).set({...element})
+      );
     }
   }
 
@@ -107,6 +118,7 @@ export class FirstoreService<T extends FirestoreElement> {
         })
       );
     } else {
+      newElementList = [...newElementList].map(this.mapFunctionBeforePushToFirestore);
       return from(
         newElementList.map(element => {
           this.firestoreCollection().doc(element.id).set({...element});
@@ -153,16 +165,16 @@ export class FirstoreService<T extends FirestoreElement> {
    * Push all not synced elements and begin check updates from database
    */
   private syncElements(
-    firestoreCollection: () => firestore.CollectionReference,
-    firestoreQuery: () => firestore.Query,
+    firestoreCollection: () => AngularFirestoreCollection<T>,
+    firestoreQuery: () => AngularFirestoreCollection<T>,
     mapFunction: (element: T) => T,
     mapFunctionBeforePush: (element: T) => T
   ) {
-    if (!this.elementListUnsubscribe) {
+    if (!this.elementListSubscription || this.elementListSubscription.closed) {
       this.pushNotSyncedElements(firestoreCollection, mapFunctionBeforePush).subscribe(() => {
-        this.elementListUnsubscribe = firestoreQuery().onSnapshot((querySnapshot) => {
+        this.elementListSubscription = firestoreQuery().snapshotChanges().subscribe(documentChangeActions => {
             let elements = [];
-            querySnapshot.forEach((doc) => elements.push(doc.data()));
+            documentChangeActions.forEach((documentChangeAction) => elements.push(documentChangeAction.payload.doc.data()));
             elements = elements.map(mapFunction);
             localStorage.setItem(this.elementNameInLocalStorage, JSON.stringify(elements));
             this.elementListSubject.next(elements);
@@ -175,7 +187,7 @@ export class FirstoreService<T extends FirestoreElement> {
    * Push all not synced elements to the database
    */
   private pushNotSyncedElements(
-    firestoreCollection: () => firestore.CollectionReference,
+    firestoreCollection: () => AngularFirestoreCollection<T>,
     mapFunction: (element: T) => T
   ) {
     return this.elementListSubject.pipe(
@@ -199,7 +211,6 @@ export class FirstoreService<T extends FirestoreElement> {
    * Stop checking database updates
    */
   private stopSyncElements() {
-    this.elementListUnsubscribe();
-    this.elementListUnsubscribe = null;
+    this.elementListSubscription.unsubscribe();
   }
 }

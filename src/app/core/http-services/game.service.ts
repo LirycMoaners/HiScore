@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, from } from 'rxjs';
-import { map, first } from 'rxjs/operators';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 import { AuthenticationService } from './authentication.service';
 import { Game } from '../../shared/models/game.model';
@@ -22,15 +20,21 @@ export class GameService extends FirstoreService<Game> {
   public currentGameId: string;
 
   constructor(
-    authenticationService: AuthenticationService
+    authenticationService: AuthenticationService,
+    auth: AngularFireAuth,
+    firestore: AngularFirestore
   ) {
     super(
       authenticationService,
+      auth,
       'games',
-      () => firebase.firestore().collection('games'),
-      () => this.firestoreCollection()
-        .where('creatorId', '==', authenticationService.user.uid)
-        .orderBy('date', 'desc'),
+      () => firestore.collection('games'),
+      () => firestore.collection(
+        'games',
+        ref => ref
+          .where('creatorId', '==', authenticationService.user.uid)
+          .orderBy('date', 'desc')
+      ),
       (game: Game) => {
         game.date = new Date(game.date);
         return game;
