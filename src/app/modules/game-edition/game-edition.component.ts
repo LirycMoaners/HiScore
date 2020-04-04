@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, forkJoin, of } from 'rxjs';
+import { Observable, forkJoin, of, Subscription } from 'rxjs';
 import { flatMap, map, first, tap } from 'rxjs/operators';
 import { UUID } from 'angular2-uuid';
 
@@ -29,7 +29,7 @@ import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-pla
   templateUrl: 'game-edition.component.html',
   styleUrls: ['game-edition.component.scss']
 })
-export class GameEditionComponent implements OnInit {
+export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * The current game in edition
    */
@@ -86,6 +86,11 @@ export class GameEditionComponent implements OnInit {
    */
   private newPlayerScore: number;
 
+  /**
+   * The subscription of the current game during update
+   */
+  private currentUpdatedGameSubscription: Subscription;
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
@@ -118,6 +123,7 @@ export class GameEditionComponent implements OnInit {
       } else {
         this.headerService.title = 'New Game';
         game$ = this.gameService.getElementById(gameId).pipe(
+          first(),
           map((game: Game) => {
             const newGame = { ...game };
             newGame.id = UUID.UUID();
@@ -128,12 +134,11 @@ export class GameEditionComponent implements OnInit {
         );
       }
 
-      game$.pipe(first())
-        .subscribe((game: Game) => {
-          this.game = game;
-          this.gamePlayerList = this.game.scoreList.map(score => score.player);
-          this.chosenGameCategory = this.game.gameCategory;
-        });
+      this.currentUpdatedGameSubscription = game$.subscribe((game: Game) => {
+        this.game = game;
+        this.gamePlayerList = this.game.scoreList.map(score => score.player);
+        this.chosenGameCategory = this.game.gameCategory;
+      });
 
       players$.subscribe(() => this.filterPlayerList());
 
@@ -153,6 +158,12 @@ export class GameEditionComponent implements OnInit {
         this.chosenGameCategory = this.gameCategoryList[0];
         this.onSelectGameCategory(this.gameCategoryList[0]);
       });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.currentUpdatedGameSubscription && !this.currentUpdatedGameSubscription.closed) {
+      this.currentUpdatedGameSubscription.unsubscribe();
     }
   }
 

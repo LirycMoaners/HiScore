@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, from } from 'rxjs';
-import { map, flatMap, first } from 'rxjs/operators';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
+import { HttpClient } from '@angular/common/http';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 import { GameCategory } from '../../shared/models/game-category.model';
-import { Goal } from '../../shared/models/goal.enum';
 import { FirstoreService } from './firestore.service';
 import { AuthenticationService } from './authentication.service';
 
@@ -18,31 +17,29 @@ import { AuthenticationService } from './authentication.service';
 export class GameCategoryService extends FirstoreService<GameCategory> {
 
   constructor(
-    authenticationService: AuthenticationService
+    private http: HttpClient,
+    authenticationService: AuthenticationService,
+    auth: AngularFireAuth,
+    firestore: AngularFirestore
   ) {
     super(
       authenticationService,
+      auth,
       'gameCategories',
-      () => firebase.firestore()
+      () => firestore
         .collection('userDatas')
         .doc(authenticationService.user.uid)
         .collection('gameCategories'),
-      () => this.firestoreCollection().orderBy('name'),
+      () => firestore
+        .collection('userDatas')
+        .doc(authenticationService.user.uid)
+        .collection('gameCategories', ref => ref.orderBy('name')),
       (gameCategory: GameCategory) => gameCategory,
       (g1: GameCategory, g2: GameCategory) => g1.name.localeCompare(g2.name)
     );
+  }
 
-    const noGameCategory: GameCategory = {
-      id: 'no-category',
-      name: 'A Game',
-      goal: Goal.highestScore,
-      endingNumber: null,
-      endingType: null,
-      isSynced: false
-    };
-
-    this.getElementById(noGameCategory.id).pipe(
-      flatMap(gameCategory => !gameCategory ? this.createElement(noGameCategory) : of(null))
-    ).subscribe();
+  public getCommonGameCategories(): Observable<GameCategory[]> {
+    return this.http.get<GameCategory[]>('assets/data/common-game-categories.json');
   }
 }

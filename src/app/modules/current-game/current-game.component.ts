@@ -50,9 +50,8 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.gameService.getElementById(this.route.snapshot.params.id)
-      .pipe(first())
-      .subscribe((game: Game) => {
+    this.subscriptionList.push(
+      this.gameService.getElementById(this.route.snapshot.params.id).subscribe((game: Game) => {
         this.game = game;
         this.gameService.currentGameId = game.id;
         if (this.game.isGameEnd) {
@@ -65,7 +64,8 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
           const index: number = Math.floor(Math.random() * this.game.scoreList.length);
           this.firstPlayerId = this.game.scoreList[index].player.id;
         }
-      });
+      })
+    );
 
     setTimeout(() => this.headerService.isLeftSide = true, 0);
 

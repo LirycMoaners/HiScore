@@ -1,14 +1,14 @@
 @import '../../../assets/scss/theme';
 
 :host {
-  @media screen and (min-width: $break-small) {
+  @media (orientation: landscape) {
     top: 0;
     left: 56px;
   }
 
   div {
     &.page {
-      @media screen and (min-width: $break-small) {
+      @media (orientation: landscape) {
         flex-direction: row;
       }
 
@@ -20,7 +20,7 @@
         box-sizing: border-box;
         grid-gap: 0 5px;
 
-        @media screen and (min-width: $break-small) {
+        @media (orientation: landscape) {
           grid-template-columns: repeat(2, 1fr);
         }
 
