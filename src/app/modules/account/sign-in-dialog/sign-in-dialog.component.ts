@@ -81,8 +81,6 @@ export class SignInDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  }
-
   /**
    * Init the form group with form controls
    */

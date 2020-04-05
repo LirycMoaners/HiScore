@@ -20,7 +20,7 @@ export class SidenavComponent {
     { label: 'Home', link: '/game-list', icon: 'home' },
     { label: 'New game', link: '/game-edition', icon: 'add_circle' },
     { label: 'Help', link: '/help', icon: 'help' },
-    { label: 'About', link: '/about', icon: 'info' },
+    { label: 'About', link: '/about', icon: 'info' }
   ];
 
   constructor(
@@ -34,10 +34,10 @@ export class SidenavComponent {
    * Open the log in popup
    */
   public openSignInDialog(): void {
+    this.headerService.toggleMenu.emit();
     const dialogRef = this.dialog.open(SignInDialogComponent, { data: { isSignUpButtonPresent: true }});
     dialogRef.afterClosed().subscribe(isSignedIn => {
       if (isSignedIn) {
-        this.headerService.toggleMenu.emit();
         this.router.navigate(['/game-list']);
       }
     });
