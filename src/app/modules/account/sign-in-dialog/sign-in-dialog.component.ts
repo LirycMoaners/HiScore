@@ -73,7 +73,12 @@ export class SignInDialogComponent implements OnInit {
       if (isSignedUp) {
         this.dialogRef.close();
       }
+    });
+  }
 
+  /**
+   * Send an email to reset password
+   */
   public forgotPassword() {
     const email = this.signInForm.get('email').value;
 
