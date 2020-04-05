@@ -2,6 +2,10 @@ mat-form-field {
   display: block;
 }
 
+.mat-dialog-content {
+  max-height: calc(100vh - 186px);
+}
+
 .google-button {
   width: 100%;
 

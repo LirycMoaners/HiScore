@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AuthenticationService } from '../../../core/http-services/authentication.service';
 import { SignUpDialogComponent } from '../sign-up-dialog/sign-up-dialog.component';
@@ -31,6 +32,7 @@ export class SignInDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { isSignUpButtonPresent: boolean },
     private readonly dialogRef: MatDialogRef<SignInDialogComponent>,
     private readonly dialog: MatDialog,
+    private readonly snackBar: MatSnackBar,
     private readonly formBuilder: FormBuilder,
     private readonly authenticationService: AuthenticationService
   ) { }
@@ -71,7 +73,17 @@ export class SignInDialogComponent implements OnInit {
       if (isSignedUp) {
         this.dialogRef.close();
       }
-    });
+
+  public forgotPassword() {
+    const email = this.signInForm.get('email').value;
+
+    if (email) {
+      this.authenticationService.forgotPassword(email).then(
+        () => this.snackBar.open('We send you an email to reset your password !', null, { duration: 3000 })
+      );
+    } else {
+      this.snackBar.open('You need to provide an email address to reset you password !', null, { duration: 3000 })
+    }
   }
 
   /**

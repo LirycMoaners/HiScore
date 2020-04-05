@@ -76,6 +76,13 @@ export class AuthenticationService {
   }
 
   /**
+   * Send an email when the user forgot his passowrd
+   */
+  public forgotPassword(email: string) {
+    return this.fireAuth.sendPasswordResetEmail(email)
+  }
+
+  /**
    * Update account email address
    */
   public async updateEmail(user: User, email: string) {
