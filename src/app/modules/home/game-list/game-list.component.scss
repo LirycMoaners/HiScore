@@ -1,104 +1,134 @@
 @import '../../../../assets/scss/theme';
 
-.new-game {
-  text-align: center;
-  margin: 10px 0;
+:host {
+  .new-game {
+    text-align: center;
+    margin: 15px 0 10px;
 
-  button {
-    margin-right: 10px;
-  }
-}
+    button {
+      font-size: 20px;
 
-section {
-  .month {
-    color: $sub-text-color;
-    border-bottom: 2px solid $sub-text-color;
-    margin-bottom: 5px;
-  }
-
-  button {
-    text-align: left;
-    margin: 0 5px 10px;
-    width: calc(100% - 10px);
-    padding-top: 5px;
-    padding-bottom: 5px;
-
-    ::ng-deep .mat-button-wrapper {
-      display: flex;
-      flex-direction: row;
-
-      .game-infos {
-        flex: 1;
-        min-width: 0;
-
-        h2 {
-          margin: 0;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        p {
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-          margin: 0;
-          font-weight: normal;
-        }
-      }
-
-      .game-status {
-        flex: 0 0 68px;
-        text-align: center;
-
-        mat-icon {
-          height: 50px;
-          width: 50px;
-          font-size: 50px;
-          margin-top: 9px;
-          vertical-align: middle;
-        }
+      mat-icon {
+        font-size: 30px;
+        height: 30px;
+        width: 30px;
       }
     }
   }
-}
 
-@media (orientation: landscape) {
   section {
-    .month-container {
+    &.no-game-container {
       display: flex;
-      height: 200px;
+      align-items: center;
+      justify-content: center;
+    }
 
-      .month {
-        writing-mode: tb;
-        transform: rotate(180deg);
-        text-align: end;
-        border-left: 2px solid $sub-text-color;
-        margin-left: 5px;
-        border-bottom: none;
-        margin-bottom: 9px;
-      }
-  
-      .games {
-        overflow: auto;
+    .month {
+      color: $sub-text-color;
+      border-bottom: 2px solid $sub-text-color;
+      margin-bottom: 5px;
+    }
+
+    button {
+      text-align: left;
+      margin: 0 5px 10px;
+      width: calc(100% - 10px);
+      padding-top: 5px;
+      padding-bottom: 5px;
+
+      ::ng-deep .mat-button-wrapper {
         display: flex;
-        width: 100%;
+        flex-direction: row;
 
-        button {
-          flex: 0 0 200px;
-    
-          ::ng-deep .mat-button-wrapper {
-            flex-direction: column;
-    
-            .game-infos {
-              flex: 1;
-              min-width: 0;
-      
-              h2 {
-                line-height: 1.2;
-  
-                span {
-                  display: block;
+        .game-infos {
+          flex: 1;
+          min-width: 0;
+
+          h2 {
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          p {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            margin: 0;
+            font-weight: normal;
+          }
+        }
+
+        .game-status {
+          flex: 0 0 68px;
+          text-align: center;
+
+          mat-icon {
+            height: 50px;
+            width: 50px;
+            font-size: 50px;
+            margin-top: 9px;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+
+    .no-game {
+      text-align: center;
+      font-size: 20px;
+      color: gray;
+
+      mat-icon {
+        font-size: 100px;
+        height: 100px;
+        width: 100px;
+      }
+
+      p {
+        margin: 0 0 25px;
+      }
+    }
+  }
+
+  @media (orientation: landscape) {
+    section {
+      .month-container {
+        display: flex;
+        height: 200px;
+
+        .month {
+          writing-mode: tb;
+          transform: rotate(180deg);
+          text-align: end;
+          border-left: 2px solid $sub-text-color;
+          margin-left: 5px;
+          border-bottom: none;
+          margin-bottom: 9px;
+        }
+
+        .games {
+          overflow: auto;
+          display: flex;
+          width: 100%;
+
+          button {
+            flex: 0 0 200px;
+
+            ::ng-deep .mat-button-wrapper {
+              flex-direction: column;
+
+              .game-infos {
+                flex: 1;
+                min-width: 0;
+
+                h2 {
+                  line-height: 1.2;
+
+                  span {
+                    display: block;
+                  }
                 }
               }
             }
