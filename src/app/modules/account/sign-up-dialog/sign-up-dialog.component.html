@@ -1,46 +1,60 @@
 <h1 mat-dialog-title>Sign up</h1>
 <div mat-dialog-content>
   <form [formGroup]="signUpForm">
-    <div class="file">
-      <img *ngIf="picture; else icon" [src]="picture" alt="Profile picture">
-      <ng-template #icon>
-        <mat-icon class="avatar" color="primary">person</mat-icon>
-      </ng-template>
-      <input
-        type="file"
-        name="file"
-        id="file"
-        accept="image/png, image/jpeg"
-        (change)="onFileChange($event)"
-      >
-      <label for="file"><mat-icon>create</mat-icon></label>
-    </div>
-    <div class="infos">
-      <mat-form-field>
-        <mat-label>Display name</mat-label>
-        <input matInput formControlName="username" required>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" required>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input matInput [type]="isPasswordHidden ? 'password' : 'text'" formControlName="password" required>
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="isPasswordHidden = !isPasswordHidden"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="isPasswordHidden"
+    <div class="account">
+      <div class="file">
+        <img *ngIf="picture; else icon" [src]="picture" alt="Profile picture">
+        <ng-template #icon>
+          <mat-icon class="avatar" color="primary">person</mat-icon>
+        </ng-template>
+        <input
+          type="file"
+          name="file"
+          id="file"
+          accept="image/png, image/jpeg"
+          (change)="onFileChange($event)"
         >
-          <mat-icon>{{isPasswordHidden ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-      </mat-form-field>
+        <label for="file"><mat-icon>create</mat-icon></label>
+      </div>
+      <div class="infos">
+        <mat-form-field>
+          <mat-label>Display name</mat-label>
+          <input matInput formControlName="username" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input matInput [type]="isPasswordHidden ? 'password' : 'text'" formControlName="password" required>
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="isPasswordHidden = !isPasswordHidden"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="isPasswordHidden"
+          >
+            <mat-icon>{{isPasswordHidden ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
     </div>
+    <mat-checkbox formControlName="areTermsAccepted" required>
+      I have read and agree to the <a href (click)="openTerms($event)">terms and conditions</a>
+    </mat-checkbox>
+    <mat-error>{{ errorMessage }}</mat-error>
   </form>
 </div>
 <div mat-dialog-actions>
   <button mat-button matDialogClose>Cancel</button>
-  <button mat-raised-button color="accent" cdkFocusInitial (click)="signUp()">Sign up</button>
+  <button
+    mat-raised-button
+    color="accent"
+    cdkFocusInitial
+    (click)="signUp()"
+    [disabled]="!signUpForm.valid"
+  >
+    Sign up
+  </button>
 </div>

@@ -1,4 +1,8 @@
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -13,12 +17,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 import { LongPressDirective } from './directives/long-press.directive';
 import { KeyEnumPipe } from './pipes/key-enum.pipe';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   imports: [
@@ -40,7 +42,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatFormFieldModule,
     MatSidenavModule,
     MatListModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatCheckboxModule
   ],
   exports: [
     FormsModule,
@@ -62,6 +65,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatSidenavModule,
     MatListModule,
     MatSnackBarModule,
+    MatCheckboxModule,
     LongPressDirective,
     KeyEnumPipe
   ],

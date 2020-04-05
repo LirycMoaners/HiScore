@@ -1,85 +1,97 @@
 form {
-  .infos {
-    mat-form-field {
-      display: block;
-    }
-  }
+  .account {
+    text-align: center;
 
-  .file {
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    width: 200px;
-    height: 200px;
-    margin-bottom: 10px;
-
-    img {
-      object-fit: cover;
-      border-radius: 50%;
-      width: 100%;
-      height: 100%;
-
-      &:hover ~ label {
-        visibility: visible;
+    .infos {
+      mat-form-field {
+        display: block;
       }
-    }
-
-    .avatar {
-      height: 100%;
-      width: 100%;
-      font-size: 200px;
-
-      &:hover ~ label {
-        visibility: visible;
-      }
-    }
-
-    input[type="file"] {
-      width: 0.1px;
-      height: 0.1px;
-      opacity: 0;
-      overflow: hidden;
-      position: absolute;
-      z-index: -1;
-    }
-
-    label {
-      position: absolute;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.5);
-      visibility: hidden;
-
-      &:hover {
-        visibility: visible;
-      }
-
-      mat-icon {
-        height: 50px;
-        width: 50px;
-        font-size: 50px;
-        top: calc(50% - 25px);
-        left: calc(50% - 25px);
-        color: white;
-        position: absolute;
-      }
-    }
-  }
-
-  @media (orientation: landscape) {
-    display: flex;
-
-    .file, .infos {
-      flex: 1;
     }
 
     .file {
-      margin-bottom: 0;
-      margin-right: 20px;
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      width: 200px;
+      height: 200px;
+      margin-bottom: 10px;
+
+      img {
+        object-fit: cover;
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+
+        &:hover ~ label {
+          visibility: visible;
+        }
+      }
+
+      .avatar {
+        height: 100%;
+        width: 100%;
+        font-size: 200px;
+
+        &:hover ~ label {
+          visibility: visible;
+        }
+      }
+
+      input[type="file"] {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+      }
+
+      label {
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.5);
+        visibility: hidden;
+
+        &:hover {
+          visibility: visible;
+        }
+
+        mat-icon {
+          height: 50px;
+          width: 50px;
+          font-size: 50px;
+          top: calc(50% - 25px);
+          left: calc(50% - 25px);
+          color: white;
+          position: absolute;
+        }
+      }
+    }
+  }
+
+  mat-checkbox {
+    height: 32px;
+    text-align: center;
+    display: block;
+  }
+
+  @media (orientation: landscape) {
+    .account {
+      display: flex;
+
+      .file, .infos {
+        flex: 1;
+      }
+
+      .file {
+        margin-bottom: 0;
+        margin-right: 20px;
+      }
     }
   }
 }

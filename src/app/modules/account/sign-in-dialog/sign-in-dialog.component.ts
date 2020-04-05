@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 
 import { AuthenticationService } from '../../../core/http-services/authentication.service';
@@ -32,6 +33,7 @@ export class SignInDialogComponent implements OnInit {
     private readonly dialogRef: MatDialogRef<SignInDialogComponent>,
     private readonly dialog: MatDialog,
     private readonly formBuilder: FormBuilder,
+    private readonly router: Router,
     private readonly authenticationService: AuthenticationService
   ) { }
 
@@ -66,12 +68,17 @@ export class SignInDialogComponent implements OnInit {
    * Open the register account popup
    */
   public openSignUp() {
-    const dialofRef = this.dialog.open(SignUpDialogComponent);
-    dialofRef.afterClosed().subscribe(isSignedUp => {
-      if (isSignedUp) {
-        this.dialogRef.close();
-      }
-    });
+    this.dialog.open(SignUpDialogComponent);
+    this.dialogRef.close();
+  }
+
+  /**
+   * Redirect to terms page
+   */
+  public openTerms(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/terms']);
+    this.dialogRef.close();
   }
 
   /**

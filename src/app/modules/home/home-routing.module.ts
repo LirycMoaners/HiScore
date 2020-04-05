@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { GameListComponent } from './game-list/game-list.component';
 import { AboutComponent } from './about/about.component';
 import { HelpComponent } from './help/help.component';
+import { TermsComponent } from './terms/terms.component';
 
 const routes: Routes = [
   {
@@ -10,12 +11,16 @@ const routes: Routes = [
     component: GameListComponent
   },
   {
+    path: 'help',
+    component: HelpComponent
+  },
+  {
     path: 'about',
     component: AboutComponent
   },
   {
-    path: 'help',
-    component: HelpComponent
+    path: 'terms',
+    component: TermsComponent
   }
 ];
 
@@ -29,5 +34,6 @@ export class HomeRoutingModule { }
 export const routedComponents = [
   GameListComponent,
   HelpComponent,
-  AboutComponent
+  AboutComponent,
+  TermsComponent
 ];

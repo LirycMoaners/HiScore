@@ -53,20 +53,23 @@ export class SignUpDialogComponent implements OnInit {
     const password = this.signUpForm.get('password').value;
     const username = this.signUpForm.get('username').value;
     const picture = this.signUpForm.get('picture').value;
+    const areTermsAccepted = this.signUpForm.get('areTermsAccepted').value;
 
-    this.authenticationService.signUp(email, password, username, picture).then(
-      () => {
-        this.router.navigate(['/game-list']);
-        this.dialogRef.close(true);
-      },
-      (error) => this.errorMessage = error
-    );
+    if (areTermsAccepted) {
+      this.authenticationService.signUp(email, password, username, picture).then(
+        () => {
+          this.router.navigate(['/game-list']);
+          this.dialogRef.close(true);
+        },
+        (error) => this.errorMessage = error
+      );
+    }
   }
 
   /**
    * Update user's picture
    */
-  onFileChange(event) {
+  public onFileChange(event) {
     if (event.target.files && event.target.files.length) {
       const [file]: [File] = event.target.files;
       if (file.type === 'image/jpeg' || file.type === 'image/png') {
@@ -79,6 +82,15 @@ export class SignUpDialogComponent implements OnInit {
   }
 
   /**
+   * Redirect to terms page
+   */
+  public openTerms(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/terms']);
+    this.dialogRef.close();
+  }
+
+  /**
    * Init the form group with form controls
    */
   private initForm() {
@@ -86,7 +98,8 @@ export class SignUpDialogComponent implements OnInit {
       picture: ['', []],
       username: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
+      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
+      areTermsAccepted: ['', Validators.required]
     });
   }
 }
