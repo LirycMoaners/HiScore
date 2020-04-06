@@ -1,6 +1,6 @@
 <mat-dialog-content>
   <mat-form-field>
-    <input matInput pattern="[0-9]" [(ngModel)]="score">
+    <input matInput type="number" pattern="[0-9]" [(ngModel)]="score">
   </mat-form-field>
   <div class="score-buttons">
     <button mat-raised-button (click)="modifyScore(1)">+1</button>

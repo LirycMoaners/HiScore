@@ -13,6 +13,7 @@
           </button>
           <input matInput
             pattern="[0-9]"
+            type="number"
             class="input-score"
             [ngModel]="score.roundScoreList[0]"
             (change)="onChangeRoundScore(score, $event.target)"
