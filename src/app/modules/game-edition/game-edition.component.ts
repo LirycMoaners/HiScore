@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, forkJoin, of, Subscription } from 'rxjs';
+import { Observable, of, Subscription, combineLatest } from 'rxjs';
 import { flatMap, map, first, tap } from 'rxjs/operators';
 import { UUID } from 'angular2-uuid';
 
@@ -16,7 +16,6 @@ import { GameCategoryService } from '../../core/http-services/game-category.serv
 import { GameService } from '../../core/http-services/game.service';
 import { Score } from '../../shared/models/score.model';
 import { HeaderService } from '../../core/header/header.service';
-import { AddCategoryDialogComponent } from './add-category-dialog/add-category-dialog.component';
 import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
 
 /**
@@ -52,19 +51,24 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   public gamePlayerList: Player[] = [];
 
   /**
+   * Name of the new player that need to be added
+   */
+  public newPlayerName = '';
+
+  /**
+   * The filterd game category by input text
+   */
+  public filteredGameCategoryList: GameCategory[] = [];
+
+  /**
    * The complete game category list
    */
   public gameCategoryList: GameCategory[] = [];
 
   /**
-   * The game category that has been chosen for the current game
+   * Input text of the game category
    */
-  public chosenGameCategory: GameCategory;
-
-  /**
-   * Name of the new player that need to be added
-   */
-  public newPlayerName = '';
+  public gameCategoryName = '';
 
   /**
    * Specify if the component is used for game creation or game edition
@@ -110,10 +114,13 @@ export class GameEditionComponent implements OnInit, OnDestroy {
       first(),
       tap((playerList: Player[]) => this.playerList = playerList)
     );
-    const gameCategories$: Observable<GameCategory[]> = this.gameCategoryService.elementListSubject.pipe(
-      first(),
-      tap((gameCategoryList: GameCategory[]) => this.gameCategoryList = gameCategoryList)
-    );
+
+    this.gameCategoryService.elementListSubject
+      .pipe(first())
+      .subscribe((gameCategoryList: GameCategory[]) => {
+        this.gameCategoryList = [...gameCategoryList];
+        this.filteredGameCategoryList = [...this.gameCategoryList];
+      });
 
     if (gameId) {
       if (!isCopy) {
@@ -136,13 +143,11 @@ export class GameEditionComponent implements OnInit, OnDestroy {
 
       this.currentUpdatedGameSubscription = game$.subscribe((game: Game) => {
         this.game = game;
+        this.gameCategoryName = this.game.gameCategory.name;
         this.gamePlayerList = this.game.scoreList.map(score => score.player);
-        this.chosenGameCategory = this.game.gameCategory;
       });
 
       players$.subscribe(() => this.filterPlayerList());
-
-      gameCategories$.subscribe();
     } else {
       this.headerService.title = 'New Game';
       this.game = new Game();
@@ -150,14 +155,9 @@ export class GameEditionComponent implements OnInit, OnDestroy {
       this.game.isGameEnd = false;
       this.game.isFirstPlayerRandom = false;
       this.game.firstPlayerList = [];
-      this.chosenGameCategory = new GameCategory();
+      this.game.gameCategory = new GameCategory();
 
       players$.subscribe();
-
-      gameCategories$.subscribe(() => {
-        this.chosenGameCategory = this.gameCategoryList[0];
-        this.onSelectGameCategory(this.gameCategoryList[0]);
-      });
     }
   }
 
@@ -178,10 +178,10 @@ export class GameEditionComponent implements OnInit, OnDestroy {
    * Create a new player or copy a player to be added when new player output blur or enter key press
    */
   public onNewPlayerOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
-    let player: Player;
+    let player: Player = this.gamePlayerList.find((pl: Player) => input.value === pl.name);
     let shouldAddPlayer = false;
 
-    if (input.value && !this.gamePlayerList.find((pl: Player) => input.value === pl.name)) {
+    if (input.value && !player) {
       if (event instanceof FocusEvent && (!event.relatedTarget || (event.relatedTarget as any).tagName !== 'MAT-OPTION')) {
         shouldAddPlayer = true;
       } else if (event instanceof KeyboardEvent && event.key === 'Enter') {
@@ -190,8 +190,6 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     }
 
     if (shouldAddPlayer) {
-      player = this.playerList.find((pl: Player) => pl.name === input.value);
-
       if (!player) {
         player = new Player();
         player.id = UUID.UUID();
@@ -275,29 +273,62 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     this.filteredPlayerList = this.playerList.filter(
       (player: Player) => !this.gamePlayerList.find((pl: Player) => pl.name === player.name)
         && player.name.toLowerCase().includes(filteredValue)
+    );
+  }
+
+  /**
+   * Filter the game category list with the input text
+   */
+  public filterGameCategoryList(filteredValue: string) {
+    if (filteredValue && filteredValue.length > 0) {
+      this.filteredGameCategoryList = this.gameCategoryList.filter(
+        (gameCategory: GameCategory) => gameCategory.name.toLowerCase().includes(filteredValue.toLowerCase())
       );
+    } else {
+      this.filteredGameCategoryList = [...this.gameCategoryList];
+    }
+  }
+
+  public onGameCategoryOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
+    let gameCategory: GameCategory = this.gameCategoryList.find((gc: GameCategory) => input.value === gc.name);
+    let shouldChooseGameCategory = false;
+
+    if (input.value && !gameCategory) {
+      if (event instanceof FocusEvent && (!event.relatedTarget || (event.relatedTarget as any).tagName !== 'MAT-OPTION')) {
+        shouldChooseGameCategory = true;
+      } else if (event instanceof KeyboardEvent && event.key === 'Enter') {
+        shouldChooseGameCategory = true;
+      }
+    }
+
+    if (shouldChooseGameCategory) {
+      if (!gameCategory) {
+        gameCategory = new GameCategory();
+        gameCategory.id = UUID.UUID();
+        gameCategory.name = input.value;
+      }
+
+      this.onSelectGameCategory(gameCategory);
+    } else {
+      this.game.gameCategory = new GameCategory();
+    }
   }
 
   /**
    * Assign a game category to the current game
    */
   public onSelectGameCategory(gameCategory: GameCategory) {
-    this.game.gameCategory = Object.assign({}, gameCategory);
+    this.gameCategoryName = gameCategory.name;
+    this.game.gameCategory = {...gameCategory};
   }
 
   /**
-   * Open the dialog to add new category and select this new category at dialog close
+   * Delete the game category in parameter
    */
-  public openCategoryDialog() {
-    const dialogRef = this.dialog.open(AddCategoryDialogComponent, {
-      width: '400px'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.chosenGameCategory = result;
-        this.onSelectGameCategory(result);
-      }
+  public deleteGameCategory(gameCategory: GameCategory) {
+    this.gameCategoryService.deleteElement(gameCategory).subscribe(() => {
+      this.gameCategoryList.splice(this.gameCategoryList.findIndex(gc => gc.id === gameCategory.id), 1);
+      this.filteredGameCategoryList.splice(this.filteredGameCategoryList.findIndex(gc => gc.id === gameCategory.id), 1);
     });
   }
 
@@ -305,7 +336,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
    * Start a new game or resume the current game with the selected players and the selected game category
    */
   public startGame() {
-    if (this.gamePlayerList.length && this.chosenGameCategory.id) {
+    if (this.gamePlayerList.length && this.game.gameCategory.id) {
       this.game.date = this.isCreationMode ? new Date() : this.game.date;
       this.game.scoreList = this.isCreationMode ? [] : this.game.scoreList;
 
@@ -351,11 +382,14 @@ export class GameEditionComponent implements OnInit, OnDestroy {
         this.refreshBestScore();
       }
 
-      (newPlayerList.length ? this.playerService.createElementList(newPlayerList) : of(null))
-        .pipe(
-          flatMap(() => this.isCreationMode ? this.gameService.createElement(this.game) : this.gameService.updateElement(this.game))
-        )
-        .subscribe(() => this.router.navigate(['/current-game/' + this.game.id]));
+      const gameCategory = this.gameCategoryList.find(gc => gc.id === this.game.gameCategory.id);
+
+      combineLatest([
+        (newPlayerList.length ? this.playerService.createElementList(newPlayerList) : of(null)),
+        (!gameCategory ? this.gameCategoryService.createElement(this.game.gameCategory) : of(null)),
+      ]).pipe(
+        flatMap(() => this.isCreationMode ? this.gameService.createElement(this.game) : this.gameService.updateElement(this.game))
+      ).subscribe(() => this.router.navigate(['/current-game/' + this.game.id]));
     }
   }
 
