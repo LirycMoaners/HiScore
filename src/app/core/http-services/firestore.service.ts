@@ -128,7 +128,7 @@ export class FirstoreService<T extends FirestoreElement> {
   }
 
   /**
-   * Modify a element
+   * Modify an element
    */
   public updateElement(newElement: T): Observable<void> {
     newElement.isSynced = !!this.authenticationService.user;
@@ -136,14 +136,34 @@ export class FirstoreService<T extends FirestoreElement> {
       return this.elementListSubject.pipe(
         first(),
         map((elementList: T[]) => {
-          const oldElement: T = elementList.find((element: T) => element.id === newElement.id);
-          elementList.splice(elementList.indexOf(oldElement), 1, newElement);
+          const elementIndex: number = elementList.findIndex((element: T) => element.id === newElement.id);
+          elementList.splice(elementIndex, 1, newElement);
           localStorage.setItem(this.elementNameInLocalStorage, JSON.stringify(elementList));
         })
       );
     } else {
       return from(
         this.firestoreCollection().doc(newElement.id).set({...newElement}, { merge: true })
+      );
+    }
+  }
+
+  /**
+   * Delete an element
+   */
+  public deleteElement(element: T): Observable<void> {
+    if (!this.authenticationService.user) {
+      return this.elementListSubject.pipe(
+        first(),
+        map((elementList: T[]) => {
+          const elementIndex: number = elementList.findIndex((el: T) => el.id === element.id);
+          elementList.splice(elementIndex, 1);
+          localStorage.setItem(this.elementNameInLocalStorage, JSON.stringify(elementList));
+        })
+      );
+    } else {
+      return from(
+        this.firestoreCollection().doc(element.id).delete()
       );
     }
   }
