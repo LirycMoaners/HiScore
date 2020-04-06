@@ -4,6 +4,10 @@ mat-form-field {
 
 .mat-dialog-content {
   max-height: calc(100vh - 186px);
+
+  .terms {
+    text-align: justify;
+  }
 }
 
 .google-button {
@@ -36,5 +40,6 @@ mat-form-field {
 
   button {
     flex: 1;
+    padding: 0;
   }
 }

@@ -74,10 +74,18 @@ form {
     }
   }
 
-  mat-checkbox {
-    height: 32px;
+  ::ng-deep mat-checkbox {
     text-align: center;
     display: block;
+
+    .mat-checkbox-layout {
+      white-space: normal;
+      text-align: justify;
+
+      .mat-checkbox-ripple {
+        height: auto;
+      }
+    }
   }
 
   @media (orientation: landscape) {
