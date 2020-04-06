@@ -143,7 +143,7 @@ jobs:
   package_android:
     working_directory: ~/project/android
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-29
     environment:
       JVM_OPTS: -Xmx3200m
     steps:
