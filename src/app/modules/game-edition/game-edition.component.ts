@@ -290,25 +290,26 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   }
 
   public onGameCategoryOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
-    let gameCategory: GameCategory = this.gameCategoryList.find((gc: GameCategory) => input.value === gc.name);
     let shouldChooseGameCategory = false;
 
-    if (input.value && !gameCategory) {
+    if (input.value) {
       if (event instanceof FocusEvent && (!event.relatedTarget || (event.relatedTarget as any).tagName !== 'MAT-OPTION')) {
         shouldChooseGameCategory = true;
+        this.filterGameCategoryList(input.value);
       } else if (event instanceof KeyboardEvent && event.key === 'Enter') {
         shouldChooseGameCategory = true;
       }
     }
 
     if (shouldChooseGameCategory) {
+      let gameCategory: GameCategory = this.gameCategoryList.find((gc: GameCategory) => input.value === gc.name);
       if (!gameCategory) {
         gameCategory = new GameCategory();
         gameCategory.id = UUID.UUID();
         gameCategory.name = input.value;
       }
 
-      this.onSelectGameCategory(gameCategory);
+      this.onSelectGameCategory(gameCategory, input);
     } else {
       this.game.gameCategory = new GameCategory();
     }
@@ -317,7 +318,8 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * Assign a game category to the current game
    */
-  public onSelectGameCategory(gameCategory: GameCategory) {
+  public onSelectGameCategory(gameCategory: GameCategory, gameCategoryInput: HTMLInputElement) {
+    gameCategoryInput.value = gameCategory.name;
     this.gameCategoryName = gameCategory.name;
     this.game.gameCategory = {...gameCategory};
   }
