@@ -2,7 +2,7 @@ version: 2.1
 
 # List of orbs
 orbs:
-  vulnachecka: whitesource/vulnerability-checker@19.5.5
+  snyk: snyk/snyk@0.0.10
 
 # List of jobs
 jobs:
@@ -35,6 +35,7 @@ jobs:
       - run:
           name: Linting
           command: npm run lint
+      - snyk/scan
       # Cache local all project with dependencies
       - save_cache:
           key: v1-src-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
@@ -206,9 +207,6 @@ workflows:
   build_and_deploy:
     jobs:
       - pre_build
-      - vulnachecka/scan:
-          requires:
-            - pre_build
       - build_web_android:
           requires:
             - pre_build
