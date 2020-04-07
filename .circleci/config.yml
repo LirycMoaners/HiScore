@@ -1,4 +1,8 @@
-version: 2
+version: 2.1
+
+# List of orbs
+orbs:
+  vulnachecka: whitesource/vulnerability-checker@19.5.5
 
 # List of jobs
 jobs:
@@ -206,6 +210,9 @@ workflows:
   build_and_deploy:
     jobs:
       - pre_build
+      - vulnachecka/scan:
+          requires:
+            - pre_build
       - build_web:
           requires:
             - pre_build
