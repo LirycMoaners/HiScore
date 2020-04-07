@@ -42,7 +42,7 @@ jobs:
             - .
 
   # The angular build job for web
-  build_web:
+  build_web_android:
     working_directory: ~/project
     docker:
       - image: circleci/node:12.13-browsers
@@ -66,18 +66,14 @@ jobs:
             - .
 
   # The angular build job for android
-  build_android:
+  cap_android:
     working_directory: ~/project
     docker:
       - image: circleci/node:12.13-browsers
     steps:
       # Restore local dependencies from cache
       - restore_cache:
-          key: v1-src-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-      # Build project with different configuration based on the current branch
-      - run:
-          name: Building
-          command: npm run build:prod:android
+          key: v1-web-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       # Update dependencies & copy dist folder
       - run:
           name: Capacytor sync
@@ -105,7 +101,7 @@ jobs:
             - .
 
   # The angular build job for android
-  build_electron:
+  build_cap_electron:
     working_directory: ~/project
     docker:
       - image: circleci/node:12.13-browsers
@@ -213,26 +209,26 @@ workflows:
       - vulnachecka/scan:
           requires:
             - pre_build
-      - build_web:
+      - build_web_android:
           requires:
             - pre_build
-      - build_android:
+      - cap_android:
           requires:
-            - pre_build
-      - build_electron:
+            - build_web_android
+      - build_cap_electron:
           requires:
             - pre_build
       - package_android:
           requires:
-            - build_android
+            - cap_android
       - package_electron:
           requires:
-            - build_electron
+            - build_cap_electron
       # The deploy job will only run on the filtered branches and
       # require the build job to be successful before it starts
       - deploy_web:
           requires:
-            - build_web
+            - build_web_android
           filters:
             branches:
               only: master
