@@ -55,23 +55,22 @@
 
     <div class="game-category">
       <h2>Game Category</h2>
-
       <div>
         <mat-form-field>
-          <input #gameCategory
+          <input #gameCategoryInput
             type="text"
             matInput
-            [(ngModel)]="gameCategoryName"
+            [ngModel]="gameCategoryName"
             (ngModelChange)="filterGameCategoryList($event)"
-            (blur)="onGameCategoryOut($event, gameCategory)"
-            (keypress)="onGameCategoryOut($event, gameCategory)"
+            (blur)="onGameCategoryOut($event, gameCategoryInput)"
+            (keypress)="onGameCategoryOut($event, gameCategoryInput)"
             [matAutocomplete]="auto3"
             placeholder="Game category"
             aria-label="Game category">
           <mat-autocomplete
             #auto3="matAutocomplete"
             autoActiveFirstOption
-            (optionSelected)="onSelectGameCategory($event.option.value)"
+            (optionSelected)="onSelectGameCategory($event.option.value, gameCategoryInput)"
           >
             <mat-option *ngFor="let gc of filteredGameCategoryList" [value]="gc" class="game-category-option">
               <span class="game-category-name">{{gc.name}}</span>
