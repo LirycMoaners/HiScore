@@ -33,7 +33,7 @@
             <input #playerInput
               type="text"
               matInput
-              [ngModel]="gamePlayerList[i].name"
+              [ngModel]="gamePlayerList[i].displayName"
               (ngModelChange)="filterPlayerList($event)"
               (change)="changePlayer(player, $event.target.value, playerInput)"
               [matAutocomplete]="auto"
@@ -43,7 +43,7 @@
               autoActiveFirstOption
               (optionSelected)="changePlayer(player, $event.option.value, playerInput)"
             >
-              <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
+              <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.displayName}}</mat-option>
             </mat-autocomplete>
           </mat-form-field>
           <button mat-icon-button (click)="removePlayer(player)" aria-label="Remove player">

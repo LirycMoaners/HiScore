@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
 import { first, tap, map, flatMap } from 'rxjs/operators';
 
 import { FirestoreElement } from '../../shared/models/firestore-element.model';
-import { AuthenticationService } from './authentication.service';
 
 /**
  * Class to extend for all services link to Firestore
@@ -19,12 +18,16 @@ export class FirstoreService<T extends FirestoreElement> {
   public elementListSubject: BehaviorSubject<T[]>;
 
   /**
-   * FirebaseElementhe function to unsubscribe to the element checking from database
+   * Boolean to know if the user is logged in
+   */
+  private isSignedIn = false;
+
+  /**
+   * Subcription to the element list for sync
    */
   private elementListSubscription: Subscription;
 
   constructor(
-    protected readonly authenticationService: AuthenticationService,
     protected readonly auth: AngularFireAuth,
     protected readonly elementNameInLocalStorage: string,
     protected readonly firestoreCollection: () => AngularFirestoreCollection<T>,
@@ -38,14 +41,18 @@ export class FirstoreService<T extends FirestoreElement> {
 
     this.auth.user.subscribe((user) => {
       if (user) {
+        this.isSignedIn = true;
         this.syncElements(
           this.firestoreCollection,
           this.firestoreQuery,
           this.mapFunctionAfterGetFromFirebase,
           this.mapFunctionBeforePushToFirestore
         );
-      } else if (this.elementListSubscription && !this.elementListSubscription.closed) {
-        this.stopSyncElements();
+      } else {
+        this.isSignedIn = false;
+        if (this.elementListSubscription && !this.elementListSubscription.closed) {
+          this.stopSyncElements();
+        }
       }
     });
   }
@@ -84,7 +91,7 @@ export class FirstoreService<T extends FirestoreElement> {
    * Create a new element
    */
   public createElement(element: T): Observable<void> {
-    element.isSynced = !!this.authenticationService.user;
+    element.isSynced = this.isSignedIn;
     if (!element.isSynced) {
       return this.elementListSubject.pipe(
         first(),
@@ -106,7 +113,7 @@ export class FirstoreService<T extends FirestoreElement> {
    */
   public createElementList(newElementList: T[]): Observable<void> {
     newElementList = newElementList.map(element => {
-      element.isSynced = !!this.authenticationService.user;
+      element.isSynced = this.isSignedIn;
       return element;
     });
     if (!newElementList[0].isSynced) {
@@ -131,7 +138,7 @@ export class FirstoreService<T extends FirestoreElement> {
    * Modify an element
    */
   public updateElement(newElement: T): Observable<void> {
-    newElement.isSynced = !!this.authenticationService.user;
+    newElement.isSynced = this.isSignedIn;
     if (!newElement.isSynced) {
       return this.elementListSubject.pipe(
         first(),
@@ -152,7 +159,7 @@ export class FirstoreService<T extends FirestoreElement> {
    * Delete an element
    */
   public deleteElement(element: T): Observable<void> {
-    if (!this.authenticationService.user) {
+    if (!this.isSignedIn) {
       return this.elementListSubject.pipe(
         first(),
         map((elementList: T[]) => {

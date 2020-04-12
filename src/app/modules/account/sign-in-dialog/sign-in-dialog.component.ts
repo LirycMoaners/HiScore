@@ -50,7 +50,7 @@ export class SignInDialogComponent implements OnInit {
     const email = this.signInForm.get('email').value;
     const password = this.signInForm.get('password').value;
 
-    this.authenticationService.signIn(email, password).then(
+    this.authenticationService.signIn(email, password).subscribe(
       () => this.dialogRef.close(true),
       () => this.errorMessage = 'Email or password incorrect'
     );
@@ -60,7 +60,7 @@ export class SignInDialogComponent implements OnInit {
    * Log in with google account
    */
   public signInWithGoogle() {
-    this.authenticationService.signInWithGoogle().then(
+    this.authenticationService.signInWithGoogle().subscribe(
       () => this.dialogRef.close(true),
       (error) => this.errorMessage = error
     );

@@ -38,7 +38,7 @@
               </h2>
               <p>
                 <span *ngFor="let score of game.scoreList" [class.bold]="game.firstPlayerList.includes(score.player.id)">
-                  {{score.player.name + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
+                  {{score.player.displayName + (score !== game.scoreList[game.scoreList.length - 1] ? ', ' : '')}}
                 </span>
               </p>
             </div>

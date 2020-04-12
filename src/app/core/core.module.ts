@@ -8,7 +8,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 import { GameService } from './http-services/game.service';
-import { PlayerService } from './http-services/player.service';
+import { NonUserPlayerService } from './http-services/non-user-player.service';
 import { GameCategoryService } from './http-services/game-category.service';
 import { HeaderService } from './header/header.service';
 import { HeaderComponent } from './header/header.component';
@@ -19,6 +19,8 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 import { AuthenticationService } from './http-services/authentication.service';
 import { AuthGuard } from './guards/auth.guard';
 import { environment } from '../../environments/environment';
+import { PlayerService } from './http-services/player.service';
+import { UserService } from './http-services/user.service';
 
 @NgModule({
   imports: [
@@ -46,9 +48,11 @@ import { environment } from '../../environments/environment';
     HeaderService,
     OptionMenuService,
     GameService,
+    NonUserPlayerService,
     PlayerService,
     GameCategoryService,
-    AuthenticationService
+    AuthenticationService,
+    UserService
   ],
 })
 export class CoreModule { }

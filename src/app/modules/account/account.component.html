@@ -1,7 +1,7 @@
-<ng-container *ngIf="authenticationService.user">
+<ng-container *ngIf="userService.user">
   <div class="profile">
     <div class="file">
-      <img *ngIf="authenticationService.user.photoURL; else icon" [src]="authenticationService.user.photoURL" alt="Profile picture">
+      <img *ngIf="userService.user.photoURL; else icon" [src]="userService.user.photoURL" alt="Profile picture">
       <ng-template #icon>
         <mat-icon class="avatar" color="primary">person</mat-icon>
       </ng-template>
@@ -18,14 +18,14 @@
       <mat-label>Display name</mat-label>
       <input
         matInput
-        [ngModel]="authenticationService.user.displayName"
+        [ngModel]="userService.user.displayName"
         (keyup.enter)="$event.target.blur()"
         (blur)="onUsernameChange($event)"
         required
       >
     </mat-form-field>
   </div>
-  <div class="security">
+  <div class="security" *ngIf="userService.isProvider('password'); else provider">
     <div class="email">
       <mat-form-field>
         <mat-label>New email</mat-label>
@@ -49,6 +49,9 @@
       </mat-form-field>
       <button mat-raised-button class="change" (click)="changePassword()">Change password</button>
     </div>
-    <button mat-raised-button color="warn" class="delete" (click)="deleteUser()">Delete account</button>
   </div>
+  <ng-template #provider>
+    <div *ngFor="let provider of userService.user.providerData">You are logged in with your {{provider.providerId}} account.</div>
+  </ng-template>
+  <button mat-raised-button color="warn" class="delete" (click)="deleteUser()">Delete account</button>
 </ng-container>

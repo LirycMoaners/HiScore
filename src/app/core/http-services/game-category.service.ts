@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 
 import { GameCategory } from '../../shared/models/game-category.model';
 import { FirstoreService } from './firestore.service';
-import { AuthenticationService } from './authentication.service';
+import { UserService } from './user.service';
 
 /**
  * Service for every action about game categories
@@ -17,22 +17,21 @@ import { AuthenticationService } from './authentication.service';
 export class GameCategoryService extends FirstoreService<GameCategory> {
 
   constructor(
-    private http: HttpClient,
-    authenticationService: AuthenticationService,
-    auth: AngularFireAuth,
-    firestore: AngularFirestore
+    private readonly http: HttpClient,
+    private readonly userService: UserService,
+    private readonly firestore: AngularFirestore,
+    auth: AngularFireAuth
   ) {
     super(
-      authenticationService,
       auth,
       'gameCategories',
-      () => firestore
+      () => this.firestore
         .collection('userDatas')
-        .doc(authenticationService.user.uid)
+        .doc(this.userService.user.uid)
         .collection('gameCategories'),
-      () => firestore
+      () => this.firestore
         .collection('userDatas')
-        .doc(authenticationService.user.uid)
+        .doc(this.userService.user.uid)
         .collection('gameCategories', ref => ref.orderBy('name')),
       (gameCategory: GameCategory) => gameCategory,
       (g1: GameCategory, g2: GameCategory) => g1.name.localeCompare(g2.name)

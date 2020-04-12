@@ -11,12 +11,13 @@ import { Player } from '../../shared/models/player.model';
 import { GameCategory } from '../../shared/models/game-category.model';
 import { EndingType } from '../../shared/models/ending-type.enum';
 import { Goal } from '../../shared/models/goal.enum';
-import { PlayerService } from '../../core/http-services/player.service';
+import { NonUserPlayerService } from '../../core/http-services/non-user-player.service';
 import { GameCategoryService } from '../../core/http-services/game-category.service';
 import { GameService } from '../../core/http-services/game.service';
 import { Score } from '../../shared/models/score.model';
 import { HeaderService } from '../../core/header/header.service';
 import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
+import { PlayerService } from 'src/app/core/http-services/player.service';
 
 /**
  * Component for game creation and edition
@@ -100,6 +101,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly dialog: MatDialog,
     private readonly headerService: HeaderService,
+    private readonly nonUserPlayerService: NonUserPlayerService,
     private readonly playerService: PlayerService,
     private readonly gameCategoryService: GameCategoryService,
     private readonly gameService: GameService
@@ -178,7 +180,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
    * Create a new player or copy a player to be added when new player output blur or enter key press
    */
   public onNewPlayerOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
-    let player: Player = this.gamePlayerList.find((pl: Player) => input.value === pl.name);
+    let player: Player = this.gamePlayerList.find((pl: Player) => input.value === pl.displayName);
     let shouldAddPlayer = false;
 
     if (input.value && !player) {
@@ -192,8 +194,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     if (shouldAddPlayer) {
       if (!player) {
         player = new Player();
-        player.id = UUID.UUID();
-        player.name = input.value;
+        player.displayName = input.value;
       }
 
       this.addPlayer(player, input);
@@ -225,24 +226,24 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   public changePlayer(oldPlayer: Player, player: Player | string, playerInput: HTMLInputElement) {
     if (player) {
       if (typeof player === 'string') {
-        if (!this.gamePlayerList.find((pl: Player) => player === pl.name)) {
-          const newPlayer: Player = this.playerList.find((pl: Player) => pl.name === player);
+        if (!this.gamePlayerList.find((pl: Player) => player === pl.displayName)) {
+          const newPlayer: Player = this.playerList.find((pl: Player) => pl.displayName === player);
           if (newPlayer) {
             oldPlayer.id = newPlayer.id;
-            oldPlayer.name = newPlayer.name;
+            oldPlayer.displayName = newPlayer.displayName;
           } else {
             oldPlayer.id = UUID.UUID();
-            oldPlayer.name = player;
+            oldPlayer.displayName = player;
           }
         }
       } else {
-        if (!this.gamePlayerList.find((pl: Player) => player.name === pl.name)) {
+        if (!this.gamePlayerList.find((pl: Player) => player.displayName === pl.displayName)) {
           oldPlayer.id = player.id;
-          oldPlayer.name = player.name;
+          oldPlayer.displayName = player.displayName;
         }
       }
 
-      playerInput.value = oldPlayer.name;
+      playerInput.value = oldPlayer.displayName;
 
       if (!this.isCreationMode
         && !this.game.scoreList.find((score: Score) => score.player.id === oldPlayer.id)
@@ -271,8 +272,8 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   public filterPlayerList(name?: string) {
     const filteredValue = name && typeof name === 'string' ? name.toLowerCase() : '';
     this.filteredPlayerList = this.playerList.filter(
-      (player: Player) => !this.gamePlayerList.find((pl: Player) => pl.name === player.name)
-        && player.name.toLowerCase().includes(filteredValue)
+      (player: Player) => !this.gamePlayerList.find((pl: Player) => pl.displayName === player.displayName)
+        && player.displayName.toLowerCase().includes(filteredValue)
     );
   }
 
@@ -387,7 +388,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
       const gameCategory = this.gameCategoryList.find(gc => gc.id === this.game.gameCategory.id);
 
       combineLatest([
-        (newPlayerList.length ? this.playerService.createElementList(newPlayerList) : of(null)),
+        (newPlayerList.length ? this.nonUserPlayerService.createElementList(newPlayerList) : of(null)),
         (!gameCategory ? this.gameCategoryService.createElement(this.game.gameCategory) : of(null)),
       ]).pipe(
         flatMap(() => this.isCreationMode ? this.gameService.createElement(this.game) : this.gameService.updateElement(this.game))

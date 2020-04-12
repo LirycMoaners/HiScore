@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { HeaderService } from '../header/header.service';
-import { AuthenticationService } from '../http-services/authentication.service';
 
 import { SignInDialogComponent } from '../../modules/account/sign-in-dialog/sign-in-dialog.component';
+import { UserService } from '../http-services/user.service';
+import { HeaderService } from '../header/header.service';
+import { AuthenticationService } from '../http-services/authentication.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -27,7 +28,8 @@ export class SidenavComponent {
     private readonly router: Router,
     private readonly dialog: MatDialog,
     public headerService: HeaderService,
-    public authenticationService: AuthenticationService
+    private readonly authenticationService: AuthenticationService,
+    public userService: UserService
   ) { }
 
   /**
