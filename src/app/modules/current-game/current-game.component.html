@@ -1,8 +1,11 @@
 <div class="page">
   <section>
+    <div class="offline-info" *ngIf="!canEditGame && isUserAdmin">
+      If you are an admin of this game and you want to edit it, please connect to your account.
+    </div>
     <div *ngIf="game" class="score-grid">
-      <div *ngFor="let score of game.scoreList" class="score-content block" [class.hide-edition]="!isUserAdmin">
-        <div *ngIf="isUserAdmin" class="round-score">
+      <div *ngFor="let score of game.scoreList" class="score-content block" [class.hide-edition]="!canEditGame">
+        <div *ngIf="canEditGame" class="round-score">
           <button mat-icon-button
             class="score-button"
             (click)="onClickPlus(score)"
@@ -44,7 +47,7 @@
         </div>
         <div class="histo-score">
           <ng-container *ngFor="let roundScore of score.roundScoreList; let i = index">
-            <div *ngIf="i !== 0" (click)="isUserAdmin ? openScoreDialog(score, i) : null">
+            <div *ngIf="i !== 0" (click)="openScoreDialog(score, i)">
               {{roundScore}}
             </div>
           </ng-container>
@@ -52,7 +55,7 @@
       </div>
     </div>
   </section>
-  <footer *ngIf="isUserAdmin" >
+  <footer *ngIf="canEditGame" >
     <button mat-flat-button color="accent" (click)="validateRound()" aria-label="Validate round">
       <mat-icon>checked</mat-icon>
     </button>

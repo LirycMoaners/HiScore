@@ -28,7 +28,7 @@ export class WinDialogComponent implements OnInit {
   public orderedScoreList: Score[];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {game: Game, isUserAdmin: boolean}
+    @Inject(MAT_DIALOG_DATA) public data: {game: Game, canEditGame: boolean}
   ) { }
 
   ngOnInit() {

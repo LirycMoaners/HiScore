@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription, ReplaySubject } from 'rxjs';
+import { Subscription, ReplaySubject, of } from 'rxjs';
 import { flatMap, first } from 'rxjs/operators';
 
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
@@ -14,6 +14,7 @@ import { Goal } from '../../shared/models/goal.enum';
 import { EndingType } from '../../shared/models/ending-type.enum';
 import { HeaderService } from '../../core/header/header.service';
 import { UserService } from 'src/app/core/http-services/user.service';
+import { User } from 'firebase';
 
 /**
  * Component of the current game session
@@ -37,9 +38,14 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   public firstPlayerId: string;
 
   /**
-   * Indicates if the user can modify the game
+   * Indicates if the current user can modify the game
    */
-  public isUserAdmin = false;
+  public canEditGame = false;
+
+  /**
+   * Indicate if the current user is an admin of this game
+   */
+  public isUserAdmin = true;
 
   /**
    * List of all the subscription in the component to unsuscribe on destroy
@@ -61,7 +67,8 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       this.gameService.getElementById(this.route.snapshot.params.id).subscribe((game: Game) => {
         this.game = game;
         this.gameService.currentGame.next(game);
-        this.isUserAdmin = this.game.isSynced ? !!this.userService.user && this.game.adminIds.includes(this.userService.user.uid) : true;
+        this.canEditGame = this.getCanEditGame(game, this.userService.user);
+        this.isUserAdmin = this.getIsUserAdmin(game, this.userService.user);
         if (this.game.isGameEnd) {
           this.headerService.title = game.gameCategory.name + ' (round ' + (game.scoreList[0].roundScoreList.length - 1) + ')';
           this.openWinDialog();
@@ -150,15 +157,17 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
    * Open the score dialog and update the round score and the total of a player
    */
   public openScoreDialog(score: Score, roundIndex: number) {
-    const dialogRef = this.dialog.open(ScoreDialogComponent, {
-      width: '420px',
-      data: score.roundScoreList[roundIndex]
-    });
+    if (this.canEditGame) {
+      const dialogRef = this.dialog.open(ScoreDialogComponent, {
+        width: '420px',
+        data: score.roundScoreList[roundIndex]
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      score.roundScoreList[roundIndex] = result || score.roundScoreList[roundIndex];
-      this.calculateTotal(score);
-    });
+      dialogRef.afterClosed().subscribe(result => {
+        score.roundScoreList[roundIndex] = result || score.roundScoreList[roundIndex];
+        this.calculateTotal(score);
+      });
+    }
   }
 
   /**
@@ -168,6 +177,29 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     inputScore.value = inputScore.value ? inputScore.value : '0';
     score.roundScoreList[0] = Number(inputScore.value);
     this.calculateTotal(score);
+  }
+
+  /**
+   * Check if the current user can edit the current game
+   */
+  public getCanEditGame(game: Game, user: User): boolean {
+    if (game.isSynced) {
+      if (!!user) {
+        return this.game.adminIds.includes(this.userService.user.uid);
+      }
+      return !game.scoreList.map(score => score.player).some(player => player.isUser);
+    }
+    return true;
+  }
+
+  /**
+   * Check if the current user is an admin of this game
+   */
+  public getIsUserAdmin(game: Game, user: User): boolean {
+    if (game.isSynced && !!user) {
+      return this.game.adminIds.includes(this.userService.user.uid);
+    }
+    return true;
   }
 
   /**
@@ -214,15 +246,20 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   private openWinDialog() {
     const dialogRef = this.dialog.open(WinDialogComponent, {
       width: '420px',
-      data: {game : this.game, isUserAdmin: this.isUserAdmin}
+      data: {game : this.game, canEditGame: this.canEditGame},
+      disableClose: !this.canEditGame
     });
 
     dialogRef.afterClosed().pipe(
       flatMap(result => {
         if (!result) {
           this.game.isGameEnd = false;
+        } else {
+          for (const subscription of this.subscriptionList) {
+            subscription.unsubscribe();
+          }
         }
-        return this.gameService.updateElement(this.game);
+        return this.canEditGame ? this.gameService.updateElement(this.game) : of(null);
       })
     ).subscribe(_ => {
       if (this.game.isGameEnd) {
