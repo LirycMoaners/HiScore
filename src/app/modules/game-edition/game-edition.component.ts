@@ -11,12 +11,14 @@ import { Player } from '../../shared/models/player.model';
 import { GameCategory } from '../../shared/models/game-category.model';
 import { EndingType } from '../../shared/models/ending-type.enum';
 import { Goal } from '../../shared/models/goal.enum';
-import { PlayerService } from '../../core/http-services/player.service';
+import { NonUserPlayerService } from '../../core/http-services/non-user-player.service';
 import { GameCategoryService } from '../../core/http-services/game-category.service';
 import { GameService } from '../../core/http-services/game.service';
 import { Score } from '../../shared/models/score.model';
 import { HeaderService } from '../../core/header/header.service';
 import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
+import { PlayerService } from 'src/app/core/http-services/player.service';
+import { UserService } from 'src/app/core/http-services/user.service';
 
 /**
  * Component for game creation and edition
@@ -100,9 +102,11 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly dialog: MatDialog,
     private readonly headerService: HeaderService,
+    private readonly nonUserPlayerService: NonUserPlayerService,
     private readonly playerService: PlayerService,
     private readonly gameCategoryService: GameCategoryService,
-    private readonly gameService: GameService
+    private readonly gameService: GameService,
+    private readonly userService: UserService
   ) { }
 
   ngOnInit() {
@@ -110,9 +114,15 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     const isCopy: boolean = this.route.snapshot.queryParams.copy;
 
     let game$: Observable<Game>;
-    const players$: Observable<Player[]> = this.playerService.elementListSubject.pipe(
+    const players$: Observable<[Player[], Player[]]> = combineLatest([
+      this.nonUserPlayerService.elementListSubject,
+      this.playerService.elementListSubject
+    ]).pipe(
       first(),
-      tap((playerList: Player[]) => this.playerList = playerList)
+      tap(([nonUserPlayerList, playerList]: [Player[], Player[]]) =>
+        this.playerList = [...nonUserPlayerList, ...playerList]
+          .sort((p1, p2) => p1.displayName.localeCompare(p2.displayName))
+      )
     );
 
     this.gameCategoryService.elementListSubject
@@ -178,11 +188,20 @@ export class GameEditionComponent implements OnInit, OnDestroy {
    * Create a new player or copy a player to be added when new player output blur or enter key press
    */
   public onNewPlayerOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
-    let player: Player = this.gamePlayerList.find((pl: Player) => input.value === pl.name);
+    let player: Player = this.gamePlayerList.find((pl: Player) => input.value === pl.displayName);
     let shouldAddPlayer = false;
 
     if (input.value && !player) {
-      if (event instanceof FocusEvent && (!event.relatedTarget || (event.relatedTarget as any).tagName !== 'MAT-OPTION')) {
+      if (
+        event instanceof FocusEvent
+        && (
+          !event.relatedTarget
+          || (
+            (event.relatedTarget as any).tagName !== 'MAT-OPTION'
+            && !((event.relatedTarget as any).className as string).includes('delete')
+          )
+        )
+      ) {
         shouldAddPlayer = true;
       } else if (event instanceof KeyboardEvent && event.key === 'Enter') {
         shouldAddPlayer = true;
@@ -192,8 +211,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     if (shouldAddPlayer) {
       if (!player) {
         player = new Player();
-        player.id = UUID.UUID();
-        player.name = input.value;
+        player.displayName = input.value;
       }
 
       this.addPlayer(player, input);
@@ -225,24 +243,24 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   public changePlayer(oldPlayer: Player, player: Player | string, playerInput: HTMLInputElement) {
     if (player) {
       if (typeof player === 'string') {
-        if (!this.gamePlayerList.find((pl: Player) => player === pl.name)) {
-          const newPlayer: Player = this.playerList.find((pl: Player) => pl.name === player);
+        if (!this.gamePlayerList.find((pl: Player) => player === pl.displayName)) {
+          const newPlayer: Player = this.playerList.find((pl: Player) => pl.displayName === player);
           if (newPlayer) {
             oldPlayer.id = newPlayer.id;
-            oldPlayer.name = newPlayer.name;
+            oldPlayer.displayName = newPlayer.displayName;
           } else {
             oldPlayer.id = UUID.UUID();
-            oldPlayer.name = player;
+            oldPlayer.displayName = player;
           }
         }
       } else {
-        if (!this.gamePlayerList.find((pl: Player) => player.name === pl.name)) {
+        if (!this.gamePlayerList.find((pl: Player) => player.displayName === pl.displayName)) {
           oldPlayer.id = player.id;
-          oldPlayer.name = player.name;
+          oldPlayer.displayName = player.displayName;
         }
       }
 
-      playerInput.value = oldPlayer.name;
+      playerInput.value = oldPlayer.displayName;
 
       if (!this.isCreationMode
         && !this.game.scoreList.find((score: Score) => score.player.id === oldPlayer.id)
@@ -266,13 +284,24 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Delete the non user player in parameter
+   */
+  public deleteNonUserPlayer(event: MouseEvent, player: Player) {
+    event.stopPropagation();
+    this.nonUserPlayerService.deleteElement(player).subscribe(() => {
+      this.playerList.splice(this.playerList.findIndex(pl => pl.id === player.id), 1);
+      this.filteredPlayerList.splice(this.filteredPlayerList.findIndex(pl => pl.id === player.id), 1);
+    });
+  }
+
+  /**
    * Filter the player list with the input text and the already added players
    */
   public filterPlayerList(name?: string) {
     const filteredValue = name && typeof name === 'string' ? name.toLowerCase() : '';
     this.filteredPlayerList = this.playerList.filter(
-      (player: Player) => !this.gamePlayerList.find((pl: Player) => pl.name === player.name)
-        && player.name.toLowerCase().includes(filteredValue)
+      (player: Player) => !this.gamePlayerList.find((pl: Player) => pl.displayName === player.displayName)
+        && player.displayName.toLowerCase().includes(filteredValue)
     );
   }
 
@@ -341,6 +370,14 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     if (this.gamePlayerList.length && this.game.gameCategory.id) {
       this.game.date = this.isCreationMode ? new Date() : this.game.date;
       this.game.scoreList = this.isCreationMode ? [] : this.game.scoreList;
+      this.game.userIds = this.gamePlayerList.filter(player => player.isUser).map(player => player.id);
+      if (this.userService.user) {
+        this.game.adminIds = [this.userService.user.uid];
+        const userIdIndex = this.game.userIds.findIndex(uid => uid === this.userService.user.uid);
+        if (userIdIndex === -1) {
+          this.game.userIds.push(this.userService.user.uid);
+        }
+      }
 
       const newPlayerList: Player[] = [];
       const newScoreList: Score[] = [];
@@ -387,7 +424,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
       const gameCategory = this.gameCategoryList.find(gc => gc.id === this.game.gameCategory.id);
 
       combineLatest([
-        (newPlayerList.length ? this.playerService.createElementList(newPlayerList) : of(null)),
+        (newPlayerList.length ? this.nonUserPlayerService.createElementList(newPlayerList) : of(null)),
         (!gameCategory ? this.gameCategoryService.createElement(this.game.gameCategory) : of(null)),
       ]).pipe(
         flatMap(() => this.isCreationMode ? this.gameService.createElement(this.game) : this.gameService.updateElement(this.game))

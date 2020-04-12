@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-import { AuthenticationService } from '../../../core/http-services/authentication.service';
-import { SignInDialogComponent } from '../sign-in-dialog/sign-in-dialog.component';
 import { flatMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+
+import { SignInDialogComponent } from '../sign-in-dialog/sign-in-dialog.component';
+import { UserService } from '../../../core/http-services/user.service';
 
 @Component({
   selector: 'app-delete-user-dialog',
@@ -18,7 +18,7 @@ export class DeleteUserDialogComponent implements OnInit {
     private readonly dialogRef: MatDialogRef<DeleteUserDialogComponent>,
     private readonly snackBar: MatSnackBar,
     private readonly dialog: MatDialog,
-    private readonly authenticationService: AuthenticationService
+    private readonly userService: UserService
   ) { }
 
   ngOnInit(): void { }
@@ -29,9 +29,14 @@ export class DeleteUserDialogComponent implements OnInit {
   public validate() {
     const dialogRef = this.dialog.open(SignInDialogComponent, {data: {isSignUpButtonPresent: false}});
     dialogRef.afterClosed().pipe(
-      flatMap(isSignedIn => isSignedIn ? this.authenticationService.delete(this.authenticationService.user) : of(null))
+      flatMap(isSignedIn => {
+        if (isSignedIn) {
+          return this.userService.delete(this.userService.user);
+        }
+        return of(null)
+      })
     ).subscribe(
-      () => this.dialogRef.close(),
+      () => this.dialogRef.close(true),
       (error) => this.openSnackBar(error)
     );
   }

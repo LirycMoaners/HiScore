@@ -21,7 +21,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <div class="buttons">
-    <button mat-button mat-dialog-close>Continue</button>
+    <button *ngIf="data.isUserAdmin" mat-button mat-dialog-close>Continue</button>
     <button mat-button cdkfocusinitial [mat-dialog-close]="isLeaving">Home</button>
   </div>
 </mat-dialog-actions>

@@ -5,8 +5,5 @@ service firebase.storage {
     	allow read: if request.auth != null;
     	allow write, delete: if request.auth.uid == uid;
     }
-    match /userDatas/{uid}/{allPaths=**} {
-    	allow read, write, delete: if request.auth.uid == uid;
-    }
   }
 }

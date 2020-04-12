@@ -22,11 +22,18 @@ mat-sidenav-container {
   }
 }
 
-::ng-deep .game-category-option {
+::ng-deep .game-category-option, ::ng-deep .player-option {
   .mat-option-text {
     display: contents;
 
-    .game-category-name {
+    .picture {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      object-fit: contain;
+    }
+
+    .name {
       flex: 1
     }
 

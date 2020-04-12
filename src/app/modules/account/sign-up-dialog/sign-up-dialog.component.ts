@@ -3,8 +3,12 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
+import { from } from 'rxjs';
+import { flatMap, catchError } from 'rxjs/operators';
 
 import { AuthenticationService } from '../../../core/http-services/authentication.service';
+import { PlayerService } from '../../../core/http-services/player.service';
+import { Player } from '../../../shared/models/player.model';
 
 @Component({
   selector: 'app-sign-up-dialog',
@@ -38,7 +42,8 @@ export class SignUpDialogComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly router: Router,
     private readonly authenticationService: AuthenticationService,
-    private readonly sanitizer: DomSanitizer
+    private readonly sanitizer: DomSanitizer,
+    private readonly playerService: PlayerService
   ) { }
 
   ngOnInit(): void {
@@ -56,7 +61,7 @@ export class SignUpDialogComponent implements OnInit {
     const areTermsAccepted = this.signUpForm.get('areTermsAccepted').value;
 
     if (areTermsAccepted) {
-      this.authenticationService.signUp(email, password, username, picture).then(
+      this.authenticationService.signUp(email, password, username, picture).subscribe(
         () => {
           this.router.navigate(['/game-list']);
           this.dialogRef.close(true);

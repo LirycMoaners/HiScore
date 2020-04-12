@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { ReplaySubject } from 'rxjs';
 
-import { AuthenticationService } from './authentication.service';
 import { Game } from '../../shared/models/game.model';
 import { FirstoreService } from './firestore.service';
+import { UserService } from './user.service';
 
 /**
  * Service for every action about games
@@ -17,22 +18,21 @@ export class GameService extends FirstoreService<Game> {
   /**
    * Current game id
    */
-  public currentGameId: string;
+  public currentGame: ReplaySubject<Game> = new ReplaySubject(1);
 
   constructor(
-    authenticationService: AuthenticationService,
-    auth: AngularFireAuth,
-    firestore: AngularFirestore
+    private readonly firestore: AngularFirestore,
+    private readonly userService: UserService,
+    auth: AngularFireAuth
   ) {
     super(
-      authenticationService,
       auth,
       'games',
-      () => firestore.collection('games'),
-      () => firestore.collection(
+      () => this.firestore.collection('games'),
+      () => this.firestore.collection(
         'games',
         ref => ref
-          .where('creatorId', '==', authenticationService.user.uid)
+          .where('userIds', 'array-contains', this.userService.user.uid)
           .orderBy('date', 'desc')
       ),
       (game: Game) => {
@@ -45,7 +45,11 @@ export class GameService extends FirstoreService<Game> {
         return game;
       },
       (game: Game) => {
-        game.creatorId = this.authenticationService.user.uid;
+        game.adminIds = [this.userService.user.uid];
+        const userIdIndex = game.userIds.findIndex(uid => uid === this.userService.user.uid);
+        if (userIdIndex === -1) {
+          game.userIds.push(this.userService.user.uid);
+        }
         return game;
       }
     );

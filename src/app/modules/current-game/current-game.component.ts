@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, ReplaySubject } from 'rxjs';
 import { flatMap, first } from 'rxjs/operators';
 
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
@@ -13,6 +13,7 @@ import { Score } from '../../shared/models/score.model';
 import { Goal } from '../../shared/models/goal.enum';
 import { EndingType } from '../../shared/models/ending-type.enum';
 import { HeaderService } from '../../core/header/header.service';
+import { UserService } from 'src/app/core/http-services/user.service';
 
 /**
  * Component of the current game session
@@ -36,6 +37,11 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   public firstPlayerId: string;
 
   /**
+   * Indicates if the user can modify the game
+   */
+  public isUserAdmin = false;
+
+  /**
    * List of all the subscription in the component to unsuscribe on destroy
    */
   private subscriptionList: Subscription[] = [];
@@ -46,14 +52,16 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly gameService: GameService,
     private readonly headerService: HeaderService,
-    private readonly optionMenuService: OptionMenuService
+    private readonly optionMenuService: OptionMenuService,
+    private readonly userService: UserService
   ) { }
 
   ngOnInit() {
     this.subscriptionList.push(
       this.gameService.getElementById(this.route.snapshot.params.id).subscribe((game: Game) => {
         this.game = game;
-        this.gameService.currentGameId = game.id;
+        this.gameService.currentGame.next(game);
+        this.isUserAdmin = this.game.isSynced ? !!this.userService.user && this.game.adminIds.includes(this.userService.user.uid) : true;
         if (this.game.isGameEnd) {
           this.headerService.title = game.gameCategory.name + ' (round ' + (game.scoreList[0].roundScoreList.length - 1) + ')';
           this.openWinDialog();
@@ -96,6 +104,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     for (const subscription of this.subscriptionList) {
       subscription.unsubscribe();
     }
+    this.gameService.currentGame = new ReplaySubject(1);
   }
 
   /**
@@ -205,7 +214,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   private openWinDialog() {
     const dialogRef = this.dialog.open(WinDialogComponent, {
       width: '420px',
-      data: this.game
+      data: {game : this.game, isUserAdmin: this.isUserAdmin}
     });
 
     dialogRef.afterClosed().pipe(

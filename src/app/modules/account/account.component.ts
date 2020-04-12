@@ -3,10 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
-import { AuthenticationService } from '../../core/http-services/authentication.service';
 import { HeaderService } from '../../core/header/header.service';
 import { SignInDialogComponent } from './sign-in-dialog/sign-in-dialog.component';
 import { DeleteUserDialogComponent } from './delete-user-dialog/delete-user-dialog.component';
+import { UserService } from 'src/app/core/http-services/user.service';
 
 @Component({
   selector: 'app-account',
@@ -31,25 +31,25 @@ export class AccountComponent implements OnInit {
   public isPasswordHidden = true;
 
   constructor(
-    public authenticationService: AuthenticationService,
+    public userService: UserService,
     private readonly dialog: MatDialog,
     private readonly router: Router,
-    private readonly headerService: HeaderService,
+    private readonly headerService: HeaderService
   ) { }
 
   ngOnInit(): void {
     this.headerService.title = 'Account';
-    this.newEmail.patchValue(this.authenticationService.user.email);
+    this.newEmail.patchValue(this.userService.user.email);
   }
 
   /**
    * Update user's picture
    */
-  public async onFileChange(event) {
+  public onFileChange(event) {
     if (event.target.files && event.target.files.length) {
       const [file]: [File] = event.target.files;
       if (file.type === 'image/jpeg' || file.type === 'image/png') {
-        await this.authenticationService.updateProfile(this.authenticationService.user, null, file);
+        this.userService.updateProfile(this.userService.user, null, file).subscribe();
       }
     }
   }
@@ -57,9 +57,9 @@ export class AccountComponent implements OnInit {
   /**
    * Update username
    */
-  public async onUsernameChange(event) {
+  public onUsernameChange(event) {
     if (event.target.value) {
-      await this.authenticationService.updateProfile(this.authenticationService.user, event.target.value, null);
+      this.userService.updateProfile(this.userService.user, event.target.value, null).subscribe();
     }
   }
 
@@ -70,7 +70,7 @@ export class AccountComponent implements OnInit {
     if (this.newEmail.valid) {
       this.openSignInDialog().subscribe(async isSignedIn => {
         if (isSignedIn) {
-          await this.authenticationService.updateEmail(this.authenticationService.user, this.newEmail.value);
+          await this.userService.updateEmail(this.userService.user, this.newEmail.value);
         }
       });
     }
@@ -83,7 +83,7 @@ export class AccountComponent implements OnInit {
     if (this.newPassword.valid) {
       this.openSignInDialog().subscribe(async isSignedIn => {
         if (isSignedIn) {
-          await this.authenticationService.updatePassword(this.authenticationService.user, this.newPassword.value);
+          await this.userService.updatePassword(this.userService.user, this.newPassword.value);
         }
       });
     }
