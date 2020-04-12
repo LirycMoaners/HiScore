@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HeaderService } from 'src/app/core/header/header.service';
+import { HeaderService } from '../../../core/header/header.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-terms',
@@ -8,12 +9,18 @@ import { HeaderService } from 'src/app/core/header/header.service';
 })
 export class TermsComponent implements OnInit {
 
+  /**
+   * The HiScore web app URL
+   */
+  public websiteURL: string;
+
   constructor(
     private readonly headerService: HeaderService
   ) { }
 
   ngOnInit(): void {
     this.headerService.title = 'Terms and conditions of use, privacy policy and personal data protection';
+    this.websiteURL = environment.links.hiScoreWeb;
   }
 
 }

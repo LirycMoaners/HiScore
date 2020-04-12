@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { GameService } from '../../http-services/game.service';
 import { OptionMenuService } from './option-menu.service';
 import { HeaderService } from '../header.service';
 import { UserService } from '../../http-services/user.service';
-import { first } from 'rxjs/operators';
-import { Game } from 'src/app/shared/models/game.model';
+import { Game } from '../../../shared/models/game.model';
 
 /**
  * Component of the option menu
@@ -27,7 +27,7 @@ export class OptionMenuComponent implements OnInit {
   /**
    * Indicates if the user can modify the game
    */
-  public isUserAdmin = false;
+  public canEditGame = false;
 
   constructor(
     public gameService: GameService,
@@ -39,9 +39,7 @@ export class OptionMenuComponent implements OnInit {
   ngOnInit() {
     this.gameService.currentGame.pipe(first()).subscribe(game => {
       this.currentGame = game;
-      this.isUserAdmin = this.currentGame.isSynced
-        ? !!this.userService.user && this.currentGame.adminIds.includes(this.userService.user.uid)
-        : true;
+      this.canEditGame = this.gameService.getCanEditGame(game, this.userService.user);
     });
   }
 

@@ -2,7 +2,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, ReplaySubject, of } from 'rxjs';
-import { flatMap, first } from 'rxjs/operators';
+import { flatMap } from 'rxjs/operators';
+import { User } from 'firebase';
 
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { WinDialogComponent } from './win-dialog/win-dialog.component';
@@ -13,8 +14,7 @@ import { Score } from '../../shared/models/score.model';
 import { Goal } from '../../shared/models/goal.enum';
 import { EndingType } from '../../shared/models/ending-type.enum';
 import { HeaderService } from '../../core/header/header.service';
-import { UserService } from 'src/app/core/http-services/user.service';
-import { User } from 'firebase';
+import { UserService } from '../../core/http-services/user.service';
 
 /**
  * Component of the current game session
@@ -67,7 +67,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       this.gameService.getElementById(this.route.snapshot.params.id).subscribe((game: Game) => {
         this.game = game;
         this.gameService.currentGame.next(game);
-        this.canEditGame = this.getCanEditGame(game, this.userService.user);
+        this.canEditGame = this.gameService.getCanEditGame(game, this.userService.user);
         this.isUserAdmin = this.getIsUserAdmin(game, this.userService.user);
         if (this.game.isGameEnd) {
           this.headerService.title = game.gameCategory.name + ' (round ' + (game.scoreList[0].roundScoreList.length - 1) + ')';
@@ -180,22 +180,9 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Check if the current user can edit the current game
-   */
-  public getCanEditGame(game: Game, user: User): boolean {
-    if (game.isSynced) {
-      if (!!user) {
-        return this.game.adminIds.includes(this.userService.user.uid);
-      }
-      return !game.scoreList.map(score => score.player).some(player => player.isUser);
-    }
-    return true;
-  }
-
-  /**
    * Check if the current user is an admin of this game
    */
-  public getIsUserAdmin(game: Game, user: User): boolean {
+  private getIsUserAdmin(game: Game, user: User): boolean {
     if (game.isSynced && !!user) {
       return this.game.adminIds.includes(this.userService.user.uid);
     }

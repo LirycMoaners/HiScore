@@ -6,6 +6,7 @@ import { ReplaySubject } from 'rxjs';
 import { Game } from '../../shared/models/game.model';
 import { FirstoreService } from './firestore.service';
 import { UserService } from './user.service';
+import { User } from 'firebase';
 
 /**
  * Service for every action about games
@@ -53,5 +54,18 @@ export class GameService extends FirstoreService<Game> {
         return game;
       }
     );
+  }
+
+  /**
+   * Check if the current user can edit the current game
+   */
+  public getCanEditGame(game: Game, user: User): boolean {
+    if (game.isSynced) {
+      if (!!user) {
+        return game.adminIds.includes(this.userService.user.uid);
+      }
+      return !game.scoreList.map(score => score.player).some(player => player.isUser);
+    }
+    return true;
   }
 }
