@@ -32,7 +32,12 @@
             <h2>
               <mat-icon *ngIf="score.roundScoreList.length === 1 && firstPlayerId === score.player.id" color="warn">looks_one</mat-icon>
               <mat-icon *ngIf="game.firstPlayerList.includes(score.player.id)" class="star">star</mat-icon>
-              {{score.player.name}}
+              <img *ngIf="score.player.isUser"
+                class="player-picture"
+                [src]="score.player.photoURL"
+                [alt]="score.player.displayName + 'player picture'"
+              >
+              {{score.player.displayName}}
             </h2>
           </div>
           <h1 class="mat-display-1">{{score.total}}</h1>

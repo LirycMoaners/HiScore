@@ -72,6 +72,13 @@
                 .star {
                   color: $star-color;
                 }
+
+                .player-picture {
+                  width: 30px;
+                  height: 30px;
+                  vertical-align: bottom;
+                  object-fit: contain;
+                }
               }
             }
           }
