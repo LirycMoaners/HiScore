@@ -9,5 +9,6 @@ export class Game extends FirestoreElement {
   public isGameEnd: boolean;
   public firstPlayerList: string[];
   public scoreList: Score[];
-  public creatorId: string;
+  public userIds: string[];
+  public adminIds: string[];
 }

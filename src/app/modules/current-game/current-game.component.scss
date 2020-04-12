@@ -33,6 +33,10 @@
           min-height: 100px;
           margin-bottom: 5px;
 
+          &.hide-edition {
+            grid-template-columns: 80% 20%;
+          }
+
           .round-score {
             justify-content: center;
             display: flex;

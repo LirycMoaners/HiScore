@@ -18,6 +18,7 @@ import { Score } from '../../shared/models/score.model';
 import { HeaderService } from '../../core/header/header.service';
 import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
 import { PlayerService } from 'src/app/core/http-services/player.service';
+import { UserService } from 'src/app/core/http-services/user.service';
 
 /**
  * Component for game creation and edition
@@ -104,7 +105,8 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     private readonly nonUserPlayerService: NonUserPlayerService,
     private readonly playerService: PlayerService,
     private readonly gameCategoryService: GameCategoryService,
-    private readonly gameService: GameService
+    private readonly gameService: GameService,
+    private readonly userService: UserService
   ) { }
 
   ngOnInit() {
@@ -368,6 +370,14 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     if (this.gamePlayerList.length && this.game.gameCategory.id) {
       this.game.date = this.isCreationMode ? new Date() : this.game.date;
       this.game.scoreList = this.isCreationMode ? [] : this.game.scoreList;
+      this.game.userIds = this.gamePlayerList.filter(player => player.isUser).map(player => player.id);
+      if (this.userService.user) {
+        this.game.adminIds = [this.userService.user.uid];
+        const userIdIndex = this.game.userIds.findIndex(uid => uid === this.userService.user.uid);
+        if (userIdIndex === -1) {
+          this.game.userIds.push(this.userService.user.uid);
+        }
+      }
 
       const newPlayerList: Player[] = [];
       const newScoreList: Score[] = [];

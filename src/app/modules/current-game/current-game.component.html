@@ -1,8 +1,8 @@
 <div class="page">
   <section>
     <div *ngIf="game" class="score-grid">
-      <div *ngFor="let score of game.scoreList" class="score-content block">
-        <div class="round-score">
+      <div *ngFor="let score of game.scoreList" class="score-content block" [class.hide-edition]="!isUserAdmin">
+        <div *ngIf="isUserAdmin" class="round-score">
           <button mat-icon-button
             class="score-button"
             (click)="onClickPlus(score)"
@@ -32,7 +32,7 @@
             <h2>
               <mat-icon *ngIf="score.roundScoreList.length === 1 && firstPlayerId === score.player.id" color="warn">looks_one</mat-icon>
               <mat-icon *ngIf="game.firstPlayerList.includes(score.player.id)" class="star">star</mat-icon>
-              <img *ngIf="score.player.isUser"
+              <img *ngIf="score.player.isUser && score.player.photoURL"
                 class="player-picture"
                 [src]="score.player.photoURL"
                 [alt]="score.player.displayName + 'player picture'"
@@ -44,7 +44,7 @@
         </div>
         <div class="histo-score">
           <ng-container *ngFor="let roundScore of score.roundScoreList; let i = index">
-            <div *ngIf="i !== 0" (click)="openScoreDialog(score, i)">
+            <div *ngIf="i !== 0" (click)="isUserAdmin ? openScoreDialog(score, i) : null">
               {{roundScore}}
             </div>
           </ng-container>
@@ -52,7 +52,7 @@
       </div>
     </div>
   </section>
-  <footer>
+  <footer *ngIf="isUserAdmin" >
     <button mat-flat-button color="accent" (click)="validateRound()" aria-label="Validate round">
       <mat-icon>checked</mat-icon>
     </button>

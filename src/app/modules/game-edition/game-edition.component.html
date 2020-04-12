@@ -20,7 +20,7 @@
             (optionSelected)="addPlayer($event.option.value, newPlayer)"
           >
             <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl" class="player-option">
-              <img *ngIf="pl.isUser" class="picture" [src]="pl.photoURL" [alt]="pl.displayName + 'player picture'">
+              <img *ngIf="pl.isUser && pl.photoURL" class="picture" [src]="pl.photoURL" [alt]="pl.displayName + 'player picture'">
               <span class="name">{{pl.displayName}}</span>
               <button *ngIf="!pl.isUser" class="delete" mat-icon-button color="warn" (click)="deleteNonUserPlayer($event, pl)">
                 <mat-icon>delete</mat-icon>
@@ -49,7 +49,10 @@
               autoActiveFirstOption
               (optionSelected)="changePlayer(player, $event.option.value, playerInput)"
             >
-              <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.displayName}}</mat-option>
+              <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl" class="player-option">
+                <img *ngIf="pl.isUser && pl.photoURL" class="picture" [src]="pl.photoURL" [alt]="pl.displayName + 'player picture'">
+                <span class="name">{{pl.displayName}}</span>
+              </mat-option>
             </mat-autocomplete>
           </mat-form-field>
           <button mat-icon-button (click)="removePlayer(player)" aria-label="Remove player">

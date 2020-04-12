@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { ReplaySubject } from 'rxjs';
 
 import { Game } from '../../shared/models/game.model';
 import { FirstoreService } from './firestore.service';
@@ -17,7 +18,7 @@ export class GameService extends FirstoreService<Game> {
   /**
    * Current game id
    */
-  public currentGameId: string;
+  public currentGame: ReplaySubject<Game> = new ReplaySubject(1);
 
   constructor(
     private readonly firestore: AngularFirestore,
@@ -31,7 +32,7 @@ export class GameService extends FirstoreService<Game> {
       () => this.firestore.collection(
         'games',
         ref => ref
-          .where('creatorId', '==', this.userService.user.uid)
+          .where('userIds', 'array-contains', this.userService.user.uid)
           .orderBy('date', 'desc')
       ),
       (game: Game) => {
@@ -44,7 +45,11 @@ export class GameService extends FirstoreService<Game> {
         return game;
       },
       (game: Game) => {
-        game.creatorId = this.userService.user.uid;
+        game.adminIds = [this.userService.user.uid];
+        const userIdIndex = game.userIds.findIndex(uid => uid === this.userService.user.uid);
+        if (userIdIndex === -1) {
+          game.userIds.push(this.userService.user.uid);
+        }
         return game;
       }
     );
