@@ -1,4 +1,5 @@
 @import '../../../assets/scss/theme';
+@import '../../../assets/scss/color';
 
 :host {
   @media (orientation: landscape) {
@@ -12,83 +13,95 @@
         flex-direction: row;
       }
 
-      .score-grid {
-        display: grid;
-        grid-template-rows: auto;
-        grid-template-columns: 1fr;
-        height: 100%;
-        box-sizing: border-box;
-        grid-gap: 0 5px;
+      section {
+        display: flex;
+        flex-direction: column;
 
-        @media (orientation: landscape) {
-          grid-template-columns: repeat(2, 1fr);
+        .offline-info {
+          text-align: center;
+          color: $warn;
         }
 
-        .score-content {
+        .score-grid {
           display: grid;
           grid-template-rows: auto;
-          grid-template-columns: 20% 60% 20%;
-          text-align: center;
-          overflow: hidden;
-          min-height: 100px;
-          margin-bottom: 5px;
+          grid-template-columns: 1fr;
+          height: 100%;
+          box-sizing: border-box;
+          grid-gap: 0 5px;
+          overflow: auto;
 
-          &.hide-edition {
-            grid-template-columns: 80% 20%;
+          @media (orientation: landscape) {
+            grid-template-columns: repeat(2, 1fr);
           }
 
-          .round-score {
-            justify-content: center;
-            display: flex;
-            flex-direction: column;
+          .score-content {
+            display: grid;
+            grid-template-rows: auto;
+            grid-template-columns: 20% 60% 20%;
+            text-align: center;
+            overflow: hidden;
+            min-height: 100px;
+            margin-bottom: 5px;
 
-            .input-score {
-              text-align: center;
-              flex: 0 0 30px;
-              margin: 0 auto;
-              width: 100%;
-              box-sizing: border-box;
+            &.hide-edition {
+              grid-template-columns: 80% 20%;
             }
 
-            .score-button {
-              flex: 1;
-              width: auto;
-              height: auto;
-              line-height: 1;
-              margin: 5px;
-            }
-          }
-
-          .current-score {
-            .name, h1 {
-              margin: 0;
-              height: 50%;
+            .round-score {
               justify-content: center;
               display: flex;
               flex-direction: column;
 
-              h2 {
-                display: inline;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+              .input-score {
+                text-align: center;
+                flex: 0 0 30px;
+                margin: 0 auto;
+                width: 100%;
+                box-sizing: border-box;
+                border: none;
+              }
 
-                .star {
-                  color: $star-color;
-                }
+              .score-button {
+                flex: 1;
+                width: auto;
+                height: auto;
+                line-height: 1;
+                margin: 5px;
+              }
+            }
 
-                .player-picture {
-                  width: 30px;
-                  height: 30px;
-                  vertical-align: bottom;
-                  object-fit: contain;
+            .current-score {
+              .name, h1 {
+                margin: 0;
+                height: 50%;
+                justify-content: center;
+                display: flex;
+                flex-direction: column;
+
+                h2 {
+                  display: inline;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+
+                  .star {
+                    color: $star-color;
+                  }
+
+                  .player-picture {
+                    width: 30px;
+                    height: 30px;
+                    vertical-align: bottom;
+                    object-fit: contain;
+                  }
                 }
               }
             }
-          }
 
-          .histo-score {
-            overflow: auto;
+            .histo-score {
+              overflow: auto;
+            }
           }
         }
       }

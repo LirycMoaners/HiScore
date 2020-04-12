@@ -9,7 +9,7 @@
     </ng-container>
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef scope="row"> Name </th>
-      <td mat-cell *matCellDef="let score"> {{score.player.name}} </td>
+      <td mat-cell *matCellDef="let score"> {{score.player.displayName}} </td>
     </ng-container>
     <ng-container matColumnDef="total">
       <th mat-header-cell *matHeaderCellDef scope="row"> Total </th>
@@ -21,7 +21,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <div class="buttons">
-    <button *ngIf="data.isUserAdmin" mat-button mat-dialog-close>Continue</button>
+    <button *ngIf="data.canEditGame" mat-button mat-dialog-close>Continue</button>
     <button mat-button cdkfocusinitial [mat-dialog-close]="isLeaving">Home</button>
   </div>
 </mat-dialog-actions>
