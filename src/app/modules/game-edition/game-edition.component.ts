@@ -112,9 +112,15 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     const isCopy: boolean = this.route.snapshot.queryParams.copy;
 
     let game$: Observable<Game>;
-    const players$: Observable<Player[]> = this.playerService.elementListSubject.pipe(
+    const players$: Observable<[Player[], Player[]]> = combineLatest([
+      this.nonUserPlayerService.elementListSubject,
+      this.playerService.elementListSubject
+    ]).pipe(
       first(),
-      tap((playerList: Player[]) => this.playerList = playerList)
+      tap(([nonUserPlayerList, playerList]: [Player[], Player[]]) =>
+        this.playerList = [...nonUserPlayerList, ...playerList]
+          .sort((p1, p2) => p1.displayName.localeCompare(p2.displayName))
+      )
     );
 
     this.gameCategoryService.elementListSubject
@@ -184,7 +190,16 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     let shouldAddPlayer = false;
 
     if (input.value && !player) {
-      if (event instanceof FocusEvent && (!event.relatedTarget || (event.relatedTarget as any).tagName !== 'MAT-OPTION')) {
+      if (
+        event instanceof FocusEvent
+        && (
+          !event.relatedTarget
+          || (
+            (event.relatedTarget as any).tagName !== 'MAT-OPTION'
+            && !((event.relatedTarget as any).className as string).includes('delete')
+          )
+        )
+      ) {
         shouldAddPlayer = true;
       } else if (event instanceof KeyboardEvent && event.key === 'Enter') {
         shouldAddPlayer = true;
@@ -264,6 +279,17 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   public removePlayer(player: Player) {
     this.gamePlayerList.splice(this.gamePlayerList.indexOf(player), 1);
     this.filterPlayerList();
+  }
+
+  /**
+   * Delete the non user player in parameter
+   */
+  public deleteNonUserPlayer(event: MouseEvent, player: Player) {
+    event.stopPropagation();
+    this.nonUserPlayerService.deleteElement(player).subscribe(() => {
+      this.playerList.splice(this.playerList.findIndex(pl => pl.id === player.id), 1);
+      this.filteredPlayerList.splice(this.filteredPlayerList.findIndex(pl => pl.id === player.id), 1);
+    });
   }
 
   /**

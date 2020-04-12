@@ -19,7 +19,13 @@
             autoActiveFirstOption
             (optionSelected)="addPlayer($event.option.value, newPlayer)"
           >
-            <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
+            <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl" class="player-option">
+              <img *ngIf="pl.isUser" class="picture" [src]="pl.photoURL" [alt]="pl.displayName + 'player picture'">
+              <span class="name">{{pl.displayName}}</span>
+              <button *ngIf="!pl.isUser" class="delete" mat-icon-button color="warn" (click)="deleteNonUserPlayer($event, pl)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-option>
           </mat-autocomplete>
         </mat-form-field>
       </div>
@@ -73,7 +79,7 @@
             (optionSelected)="onSelectGameCategory($event.option.value, gameCategoryInput)"
           >
             <mat-option *ngFor="let gc of filteredGameCategoryList" [value]="gc" class="game-category-option">
-              <span class="game-category-name">{{gc.name}}</span>
+              <span class="name">{{gc.name}}</span>
               <button *ngIf="gc.id !== 'common-0'" mat-icon-button color="warn" (click)="deleteGameCategory(gc)">
                 <mat-icon>delete</mat-icon>
               </button>
