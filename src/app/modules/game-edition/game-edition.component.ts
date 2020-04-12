@@ -17,8 +17,8 @@ import { GameService } from '../../core/http-services/game.service';
 import { Score } from '../../shared/models/score.model';
 import { HeaderService } from '../../core/header/header.service';
 import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
-import { PlayerService } from 'src/app/core/http-services/player.service';
-import { UserService } from 'src/app/core/http-services/user.service';
+import { PlayerService } from '../../core/http-services/player.service';
+import { UserService } from '../../core/http-services/user.service';
 
 /**
  * Component for game creation and edition

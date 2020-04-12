@@ -6,7 +6,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { HeaderService } from '../../core/header/header.service';
 import { SignInDialogComponent } from './sign-in-dialog/sign-in-dialog.component';
 import { DeleteUserDialogComponent } from './delete-user-dialog/delete-user-dialog.component';
-import { UserService } from 'src/app/core/http-services/user.service';
+import { UserService } from '../../core/http-services/user.service';
 
 @Component({
   selector: 'app-account',
