@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AuthenticationService } from '../../../core/http-services/authentication.service';
 import { SignUpDialogComponent } from '../sign-up-dialog/sign-up-dialog.component';
+import { auth } from 'firebase';
 
 @Component({
   selector: 'app-sign-in-dialog',
@@ -28,6 +29,16 @@ export class SignInDialogComponent implements OnInit {
    * Used to show the password or not
    */
   public isPasswordHidden = true;
+
+  /**
+   * Provider for Google authentication
+   */
+  public googleProvider = new auth.GoogleAuthProvider();
+
+  /**
+   * Provider for Facebook authentication
+   */
+  public facebookProvider = new auth.FacebookAuthProvider();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { isSignUpButtonPresent: boolean },
@@ -59,8 +70,8 @@ export class SignInDialogComponent implements OnInit {
   /**
    * Log in with google account
    */
-  public signInWithGoogle() {
-    this.authenticationService.signInWithGoogle().subscribe(
+  public signInWithProvider(provider: auth.AuthProvider) {
+    this.authenticationService.signInWithProvider(provider).subscribe(
       () => this.dialogRef.close(true),
       (error) => this.errorMessage = error
     );

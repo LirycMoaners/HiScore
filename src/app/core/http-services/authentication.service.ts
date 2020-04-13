@@ -36,13 +36,6 @@ export class AuthenticationService {
   }
 
   /**
-   * Log in with Google account
-   */
-  public signInWithGoogle(): Observable<void> {
-    return this.signInWithProvider(new auth.GoogleAuthProvider());
-  }
-
-  /**
    * Log out
    */
   public signOut() {
@@ -59,7 +52,7 @@ export class AuthenticationService {
   /**
    * Log in with a provider (Google, Facebook, ...)
    */
-  private signInWithProvider(provider: auth.AuthProvider): Observable<void> {
+  public signInWithProvider(provider: auth.AuthProvider): Observable<void> {
     return from(this.fireAuth.signInWithPopup(provider)).pipe(
       flatMap(res => res.additionalUserInfo.isNewUser ? this.userService.updateProfile(res.user, null, null, true) : of(null))
     );
