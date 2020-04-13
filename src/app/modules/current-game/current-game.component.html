@@ -1,8 +1,8 @@
 <div class="page">
   <section>
-    <div class="offline-info" *ngIf="!canEditGame && isUserAdmin">
+    <mat-error *ngIf="!canEditGame && isUserAdmin" class="offline-info">
       If you are an admin of this game and you want to edit it, please connect to your account.
-    </div>
+    </mat-error>
     <div *ngIf="game" class="score-grid">
       <div *ngFor="let score of game.scoreList" class="score-content block" [class.hide-edition]="!canEditGame">
         <div *ngIf="canEditGame" class="round-score">
