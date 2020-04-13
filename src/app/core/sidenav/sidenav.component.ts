@@ -25,11 +25,11 @@ export class SidenavComponent {
   ];
 
   constructor(
+    public headerService: HeaderService,
+    public userService: UserService,
     private readonly router: Router,
     private readonly dialog: MatDialog,
-    public headerService: HeaderService,
-    private readonly authenticationService: AuthenticationService,
-    public userService: UserService
+    private readonly authenticationService: AuthenticationService
   ) { }
 
   /**

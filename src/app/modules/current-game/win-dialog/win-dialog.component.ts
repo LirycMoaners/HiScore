@@ -1,5 +1,5 @@
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Score } from '../../../shared/models/score.model';
 import { Game } from '../../../shared/models/game.model';

@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription, ReplaySubject, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { User } from 'firebase';

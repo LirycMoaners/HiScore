@@ -3,12 +3,9 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
-import { from } from 'rxjs';
-import { flatMap, catchError } from 'rxjs/operators';
 
 import { AuthenticationService } from '../../../core/http-services/authentication.service';
 import { PlayerService } from '../../../core/http-services/player.service';
-import { Player } from '../../../shared/models/player.model';
 
 @Component({
   selector: 'app-sign-up-dialog',

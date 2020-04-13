@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 
 import { HeaderService } from '../../core/header/header.service';
 import { SignInDialogComponent } from './sign-in-dialog/sign-in-dialog.component';
