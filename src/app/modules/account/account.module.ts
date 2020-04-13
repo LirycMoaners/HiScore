@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+
 import { routedComponents, AccountRoutingModule } from './account-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { SignInDialogComponent } from './sign-in-dialog/sign-in-dialog.component';

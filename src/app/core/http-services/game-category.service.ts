@@ -38,6 +38,9 @@ export class GameCategoryService extends FirstoreService<GameCategory> {
     );
   }
 
+  /**
+   * Get game category preset
+   */
   public getCommonGameCategories(): Observable<GameCategory[]> {
     return this.http.get<GameCategory[]>('assets/data/common-game-categories.json');
   }

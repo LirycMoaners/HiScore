@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { User } from 'firebase';
 import { ReplaySubject } from 'rxjs';
 
 import { Game } from '../../shared/models/game.model';
 import { FirstoreService } from './firestore.service';
 import { UserService } from './user.service';
-import { User } from 'firebase';
 
 /**
  * Service for every action about games

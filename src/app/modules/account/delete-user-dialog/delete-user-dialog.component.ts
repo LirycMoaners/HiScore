@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { flatMap } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { UserService } from '../../../core/http-services/user.service';
   templateUrl: './delete-user-dialog.component.html',
   styleUrls: ['./delete-user-dialog.component.scss']
 })
-export class DeleteUserDialogComponent implements OnInit {
+export class DeleteUserDialogComponent {
 
   constructor(
     private readonly dialogRef: MatDialogRef<DeleteUserDialogComponent>,
@@ -20,8 +20,6 @@ export class DeleteUserDialogComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly userService: UserService
   ) { }
-
-  ngOnInit(): void { }
 
   /**
    * Ask for log in before deleting the account
@@ -45,8 +43,6 @@ export class DeleteUserDialogComponent implements OnInit {
    * Open the error snackbar with a message
    */
   private openSnackBar(message: string) {
-    this.snackBar.open(message, 'Dismiss', {
-      duration: 2000,
-    });
+    this.snackBar.open(message, 'Dismiss', { duration: 2000 });
   }
 }

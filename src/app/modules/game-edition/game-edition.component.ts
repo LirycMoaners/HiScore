@@ -318,6 +318,9 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Choose or create the game category when out of the field
+   */
   public onGameCategoryOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
     let shouldChooseGameCategory = false;
 
