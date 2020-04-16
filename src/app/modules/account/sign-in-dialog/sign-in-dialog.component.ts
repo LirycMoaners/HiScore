@@ -3,10 +3,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { auth } from 'firebase/app';
 
 import { AuthenticationService } from '../../../core/http-services/authentication.service';
 import { SignUpDialogComponent } from '../sign-up-dialog/sign-up-dialog.component';
-import { auth } from 'firebase';
 
 @Component({
   selector: 'app-sign-in-dialog',
@@ -68,9 +68,9 @@ export class SignInDialogComponent implements OnInit {
   }
 
   /**
-   * Log in with google account
+   * Log in with a third party provider
    */
-  public signInWithProvider(provider: auth.AuthProvider) {
+  public signInWithProvider(provider: 'facebook' | 'google') {
     this.authenticationService.signInWithProvider(provider).subscribe(
       () => this.dialogRef.close(true),
       (error) => this.errorMessage = error

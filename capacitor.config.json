@@ -8,6 +8,10 @@
   "plugins": {
     "SplashScreen": {
       "launchAutoHide": true
+    },
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "299295266645-otcsvrd2ltne63c42g0sglbfa0lbjqkp.apps.googleusercontent.com"
     }
   }
 }

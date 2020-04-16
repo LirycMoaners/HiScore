@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { User } from 'firebase';
+import { User } from 'firebase/app';
 import { ReplaySubject } from 'rxjs';
 
 import { Game } from '../../shared/models/game.model';

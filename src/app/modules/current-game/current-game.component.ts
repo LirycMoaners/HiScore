@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription, ReplaySubject, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { User } from 'firebase';
+import { User } from 'firebase/app';
 
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { WinDialogComponent } from './win-dialog/win-dialog.component';
