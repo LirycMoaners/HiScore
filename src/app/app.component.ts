@@ -3,6 +3,8 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { SwUpdate } from '@angular/service-worker';
 import { flatMap, first } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { Plugins } from '@capacitor/core';
+const { SplashScreen } = Plugins;
 
 import { HeaderService } from './core/header/header.service';
 import { GameCategoryService } from './core/http-services/game-category.service';
@@ -35,6 +37,7 @@ export class AppComponent implements OnInit {
     this.initServiceWorker();
     this.initGameCategories();
     this.initSidenav();
+    SplashScreen.hide();
   }
 
   /**

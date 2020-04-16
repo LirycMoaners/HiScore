@@ -1,10 +1,10 @@
 <h1 mat-dialog-title>Sign in</h1>
 <div mat-dialog-content>
-  <button mat-raised-button class="provider-button" (click)="signInWithProvider(googleProvider)">
+  <button mat-raised-button class="provider-button" (click)="signInWithProvider('google')">
     <img src="assets/images/google_logo.svg" alt="Google logo">
     <span>Sign in with Google</span>
   </button>
-  <button mat-raised-button class="provider-button facebook" (click)="signInWithProvider(facebookProvider)">
+  <button mat-raised-button class="provider-button facebook" (click)="signInWithProvider('facebook')">
     <img src="assets/images/facebook_logo.svg" alt="Facebook logo">
     <span>Sign in with Facebook</span>
   </button>

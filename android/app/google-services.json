@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "299295266645",
+    "firebase_url": "https://hi-score-app.firebaseio.com",
+    "project_id": "hi-score-app",
+    "storage_bucket": "hi-score-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299295266645:android:d121eb0db3d90592a201dc",
+        "android_client_info": {
+          "package_name": "com.cyrillefebvre.hiscore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299295266645-otcsvrd2ltne63c42g0sglbfa0lbjqkp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7-v2MH3cYQSxOlmUOpZ36i5jgN_WJ-MA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299295266645-otcsvrd2ltne63c42g0sglbfa0lbjqkp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
