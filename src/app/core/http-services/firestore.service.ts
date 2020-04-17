@@ -2,6 +2,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestoreCollection } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
 import { first, tap, map, flatMap } from 'rxjs/operators';
+import { UUID } from 'angular2-uuid';
 
 import { FirestoreElement } from '../../shared/models/firestore-element.model';
 
@@ -156,6 +157,23 @@ export class FirstoreService<T extends FirestoreElement> {
   }
 
   /**
+   * Update all the elements isSynced to false
+   */
+  public unsyncAllElements(): Observable<void> {
+    return this.elementListSubject.pipe(
+      first(),
+      map((elementList: T[]) => {
+        elementList = elementList.map(element => {
+          element.id = UUID.UUID();
+          element.isSynced = false;
+          return element;
+        });
+        localStorage.setItem(this.elementNameInLocalStorage, JSON.stringify(elementList));
+      })
+    );
+  }
+
+  /**
    * Delete an element
    */
   public deleteElement(element: T): Observable<void> {
@@ -200,12 +218,12 @@ export class FirstoreService<T extends FirestoreElement> {
     if (!this.elementListSubscription || this.elementListSubscription.closed) {
       this.pushNotSyncedElements(firestoreCollection, mapFunctionBeforePush).subscribe(() => {
         this.elementListSubscription = firestoreQuery().snapshotChanges().subscribe(documentChangeActions => {
-            let elements = [];
-            documentChangeActions.forEach((documentChangeAction) => elements.push(documentChangeAction.payload.doc.data()));
-            elements = elements.map(mapFunction);
-            localStorage.setItem(this.elementNameInLocalStorage, JSON.stringify(elements));
-            this.elementListSubject.next(elements);
-          });
+          let elements = [];
+          documentChangeActions.forEach((documentChangeAction) => elements.push(documentChangeAction.payload.doc.data()));
+          elements = elements.map(mapFunction);
+          localStorage.setItem(this.elementNameInLocalStorage, JSON.stringify(elements));
+          this.elementListSubject.next(elements);
+        });
       });
     }
   }
