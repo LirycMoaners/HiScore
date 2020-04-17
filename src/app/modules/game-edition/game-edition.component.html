@@ -115,13 +115,7 @@
       </div>
     </div>
   </section>
-  <footer>
-    <button mat-flat-button
-      cdkfocusinitial
-      color="accent"
-      (click)="startGame()"
-      aria-label="Start game">
-      {{isCreationMode ? 'Start !' : 'Resume'}}
-    </button>
-  </footer>
+  <button mat-fab color="accent" class="create-game" (click)="startGame()" aria-label="Start game">
+    <mat-icon>check</mat-icon>
+  </button>
 </div>

@@ -1,22 +1,6 @@
 @import '../../../../assets/scss/theme';
 
 :host {
-  .new-game {
-    text-align: center;
-    margin: 15px 0 10px;
-
-    button {
-      font-size: 20px;
-      padding: 0 16px 0 10px;
-
-      mat-icon {
-        font-size: 30px;
-        height: 30px;
-        width: 30px;
-      }
-    }
-  }
-
   section {
     &.no-game-container {
       display: flex;
@@ -141,5 +125,11 @@
         }
       }
     }
+  }
+
+  .add-game {
+    position: absolute;
+    bottom: 30px;
+    left: calc(50% - 28px);
   }
 }
