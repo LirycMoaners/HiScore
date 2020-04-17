@@ -27,9 +27,9 @@ export class AuthenticationService {
   /**
    * Create an email & password account
    */
-  public signUp(email: string, password: string, username: string, picture?: File): Observable<void> {
+  public signUp(email: string, password: string, username: string, img?: HTMLImageElement): Observable<void> {
     return from(this.fireAuth.createUserWithEmailAndPassword(email, password)).pipe(
-      flatMap(res => this.userService.updateProfile(res.user, username, picture, true))
+      flatMap(res => this.userService.updateProfile(res.user, username, img, true))
     );
   }
 

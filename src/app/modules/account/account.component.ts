@@ -2,11 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { flatMap, tap } from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
 
 import { HeaderService } from '../../core/header/header.service';
 import { SignInDialogComponent } from './sign-in-dialog/sign-in-dialog.component';
 import { DeleteUserDialogComponent } from './delete-user-dialog/delete-user-dialog.component';
 import { UserService } from '../../core/http-services/user.service';
+import { GameCategoryService } from '../../core/http-services/game-category.service';
+import { NonUserPlayerService } from '../../core/http-services/non-user-player.service';
+import { GameService } from '../../core/http-services/game.service';
 
 @Component({
   selector: 'app-account',
@@ -34,7 +39,10 @@ export class AccountComponent implements OnInit {
     public userService: UserService,
     private readonly dialog: MatDialog,
     private readonly router: Router,
-    private readonly headerService: HeaderService
+    private readonly headerService: HeaderService,
+    private readonly gameCategoryService: GameCategoryService,
+    private readonly nonUserPlayerService: NonUserPlayerService,
+    private readonly gameService: GameService
   ) { }
 
   ngOnInit(): void {
@@ -49,7 +57,14 @@ export class AccountComponent implements OnInit {
     if (event.target.files && event.target.files.length) {
       const [file]: [File] = event.target.files;
       if (file.type === 'image/jpeg' || file.type === 'image/png') {
-        this.userService.updateProfile(this.userService.user, null, file).subscribe();
+        const reader  = new FileReader();
+        reader.onload = (e) => {
+          const img = document.createElement('img');
+          img.onload = () =>
+            this.userService.updateProfile(this.userService.user, null, img).subscribe();
+          img.src = e.target.result as string;
+        }
+        reader.readAsDataURL(file);
       }
     }
   }
@@ -70,7 +85,7 @@ export class AccountComponent implements OnInit {
     if (this.newEmail.valid) {
       this.openSignInDialog().subscribe(async isSignedIn => {
         if (isSignedIn) {
-          await this.userService.updateEmail(this.userService.user, this.newEmail.value);
+          await this.userService.updateEmail(this.newEmail.value);
         }
       });
     }
@@ -83,7 +98,7 @@ export class AccountComponent implements OnInit {
     if (this.newPassword.valid) {
       this.openSignInDialog().subscribe(async isSignedIn => {
         if (isSignedIn) {
-          await this.userService.updatePassword(this.userService.user, this.newPassword.value);
+          await this.userService.updatePassword(this.newPassword.value);
         }
       });
     }
@@ -94,11 +109,20 @@ export class AccountComponent implements OnInit {
    */
   public deleteUser() {
     const dialogRef = this.dialog.open(DeleteUserDialogComponent);
-    dialogRef.afterClosed().subscribe((isUserDeleted) => {
-      if (isUserDeleted) {
-        this.router.navigate(['/game-list']);
-      }
-    });
+    dialogRef.afterClosed().pipe(
+      flatMap((isUserDeleted) => {
+        if (isUserDeleted) {
+          return forkJoin([
+            this.gameCategoryService.unsyncAllElements(),
+            this.nonUserPlayerService.unsyncAllElements(),
+            this.gameService.unsyncAllElements()
+          ]).pipe(
+            tap(() => this.router.navigate(['/game-list']))
+          )
+        }
+        return of(null);
+      })
+    ).subscribe();
   }
 
   /**

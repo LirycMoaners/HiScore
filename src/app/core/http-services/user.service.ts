@@ -3,11 +3,13 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User, storage } from 'firebase/app';
-import { Observable, of, from } from 'rxjs';
+import { Observable, of, from, forkJoin } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
 import { Player } from '../../shared/models/player.model';
 import { PlayerService } from './player.service';
+import { UUID } from 'angular2-uuid';
+import { ImageResizer } from 'src/app/shared/tools/image-resizer';
 
 @Injectable()
 export class UserService {
@@ -29,44 +31,52 @@ export class UserService {
   /**
    * Update account email address
    */
-  public async updateEmail(user: User, email: string) {
-    await user.updateEmail(email);
+  public async updateEmail(email: string) {
+    await this.user.updateEmail(email);
   }
 
   /**
    * Update account password
    */
-  public async updatePassword(user: User, password: string) {
-    await user.updatePassword(password);
+  public async updatePassword(password: string) {
+    await this.user.updatePassword(password);
   }
 
   /**
    * Delete user account
    */
-  public delete(user: User): Observable<void> {
-    const obs = of(null);
-    if (user.photoURL && user.providerId === 'firebase') {
-      const ref = this.fireStorage.ref(`profile/${user.uid}/profile_picture.jpg`);
-      obs.pipe(flatMap(() => ref.delete()));
+  public deleteProfile(): Observable<void> {
+    let obs = of(null);
+    if (this.user.photoURL) {
+      const ref = this.fireStorage.ref(`profile/${this.user.uid}/picture`);
+      obs = obs.pipe(flatMap(() => ref.delete()));
     }
     return obs.pipe(
-      flatMap(() => this.playerService.deleteElement(new Player(user))),
-      flatMap(() => from(this.firestore.collection('userDatas').doc(user.uid).delete())),
-      flatMap(() => from(user.delete()))
+      flatMap(() => this.playerService.deleteElement(new Player(this.user))),
+      flatMap(() => forkJoin([
+        from(this.firestore.collection('userDatas').doc(this.user.uid).collection('gameCategories').get()),
+        from(this.firestore.collection('userDatas').doc(this.user.uid).collection('nonUserPlayers').get())
+      ])),
+      flatMap(([gameCategoriesQuerySnapshot, nonUserPlayersQuerySnapshot]) => forkJoin([
+        ...gameCategoriesQuerySnapshot.docs.map(doc => from(doc.ref.delete())),
+        ...nonUserPlayersQuerySnapshot.docs.map(doc => from(doc.ref.delete())),
+      ])),
+      flatMap(() => from(this.firestore.collection('userDatas').doc(this.user.uid).delete())),
+      flatMap(() => from(this.user.delete()))
     );
   }
 
   /**
    * Update username and/or user's picture
    */
-  public updateProfile(user: User, newUsername?: string, newPicture?: File, isNewUser = false): Observable<void> {
+  public updateProfile(user: User, newUsername?: string, newImg?: HTMLImageElement, isNewUser = false): Observable<void> {
     const updatedProfile: Player = new Player(user);
     let updatePhoto$: Observable<string>;
     if (newUsername) {
       updatedProfile.displayName = newUsername;
     }
-    if (newPicture) {
-      updatePhoto$ = this.updateProfilePicture(user.uid, newPicture);
+    if (newImg) {
+      updatePhoto$ = this.updateProfilePicture(newImg);
     } else {
       updatePhoto$ = of(null);
     }
@@ -93,10 +103,10 @@ export class UserService {
   /**
    * Update user's picture
    */
-  private updateProfilePicture(userId: string, file: File): Observable<string> {
-    const ref = this.fireStorage.ref(`profile/${userId}/profile_picture.jpg`);
+  private updateProfilePicture(img: HTMLImageElement): Observable<string> {
+    const ref = this.fireStorage.ref(`profile/${this.user.uid}/picture`);
 
-    return from(ref.put(file)).pipe(
+    return from(ref.putString(ImageResizer.resizeImage(img, 200, 200), 'data_url')).pipe(
       flatMap(snapshot => {
         if (snapshot.state === storage.TaskState.SUCCESS) {
           return ref.getDownloadURL();

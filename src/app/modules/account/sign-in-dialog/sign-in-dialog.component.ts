@@ -62,7 +62,7 @@ export class SignInDialogComponent implements OnInit {
     const password = this.signInForm.get('password').value;
 
     this.authenticationService.signIn(email, password).subscribe(
-      () => this.dialogRef.close(true),
+      () => this.signInSuccess(),
       () => this.errorMessage = 'Email or password incorrect'
     );
   }
@@ -72,7 +72,7 @@ export class SignInDialogComponent implements OnInit {
    */
   public signInWithProvider(provider: 'facebook' | 'google') {
     this.authenticationService.signInWithProvider(provider).subscribe(
-      () => this.dialogRef.close(true),
+      () => this.signInSuccess(),
       (error) => this.errorMessage = error
     );
   }
@@ -117,5 +117,13 @@ export class SignInDialogComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
     });
+  }
+
+  /**
+   * Show success message and close
+   */
+  private signInSuccess() {
+    this.snackBar.open('Successfully logged in !', null, { duration: 3000 })
+    this.dialogRef.close(true);
   }
 }

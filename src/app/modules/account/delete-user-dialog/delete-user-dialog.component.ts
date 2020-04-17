@@ -29,7 +29,7 @@ export class DeleteUserDialogComponent {
     dialogRef.afterClosed().pipe(
       flatMap(isSignedIn => {
         if (isSignedIn) {
-          return this.userService.delete(this.userService.user);
+          return this.userService.deleteProfile();
         }
         return of(null)
       })
