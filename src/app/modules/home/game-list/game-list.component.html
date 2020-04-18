@@ -1,12 +1,4 @@
 <div class="page">
-  <header>
-    <div class="new-game">
-      <button mat-raised-button color="accent" routerLink="/game-edition" aria-label="Create new game">
-        <mat-icon>add</mat-icon>
-        Start a new game
-      </button>
-    </div>
-  </header>
   <section [class.no-game-container]="!gameList || !gameList.length">
     <ng-container *ngIf="gameList && gameList.length; else noGame">
       <div *ngFor="let gamesInMonth of gameList; let i = index" class="month-container">
@@ -56,4 +48,7 @@
       </div>
     </ng-template>
   </section>
+  <button mat-fab color="accent" class="add-game" routerLink="/game-edition" aria-label="Create new game">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
