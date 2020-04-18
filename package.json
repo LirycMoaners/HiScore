@@ -1,7 +1,7 @@
 {
   "name": "hi-score",
   "displayName": "HiScore",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "An app to keep score running with angular, capacitor and electron.",
   "author": "Cyril Lefebvre",
   "license": "MIT",
