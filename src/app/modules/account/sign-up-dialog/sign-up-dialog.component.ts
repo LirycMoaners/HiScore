@@ -3,9 +3,9 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AuthenticationService } from '../../../core/http-services/authentication.service';
-import { PlayerService } from '../../../core/http-services/player.service';
 
 @Component({
   selector: 'app-sign-up-dialog',
@@ -40,7 +40,7 @@ export class SignUpDialogComponent implements OnInit {
     private readonly router: Router,
     private readonly authenticationService: AuthenticationService,
     private readonly sanitizer: DomSanitizer,
-    private readonly playerService: PlayerService
+    private readonly snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
@@ -58,13 +58,22 @@ export class SignUpDialogComponent implements OnInit {
     const areTermsAccepted = this.signUpForm.get('areTermsAccepted').value;
 
     if (areTermsAccepted) {
-      this.authenticationService.signUp(email, password, username, picture).subscribe(
-        () => {
-          this.router.navigate(['/game-list']);
-          this.dialogRef.close(true);
-        },
-        (error) => this.errorMessage = error
-      );
+      const reader  = new FileReader();
+      reader.onload = (e) => {
+        const img = document.createElement('img');
+        img.onload = () => {
+          this.authenticationService.signUp(email, password, username, img).subscribe(
+            () => {
+              this.router.navigate(['/game-list']);
+              this.snackBar.open('Successfully registerd !', null, { duration: 3000 });
+              this.dialogRef.close(true);
+            },
+            (error) => this.errorMessage = error
+          );
+        }
+        img.src = e.target.result as string;
+      }
+      reader.readAsDataURL(picture);
     }
   }
 
