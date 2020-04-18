@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
  */
 @Injectable()
 export class OptionMenuService {
+
   /**
    * Subject which handles each call to the last round edition
    */

@@ -7,15 +7,25 @@
           <input #newPlayer
             type="text"
             matInput
-            [(ngModel)]="newPlayerName"
+            [ngModel]="newPlayerName"
             (ngModelChange)="filterPlayerList($event)"
             (blur)="onNewPlayerOut($event, newPlayer)"
             (keypress)="onNewPlayerOut($event, newPlayer)"
             [matAutocomplete]="auto2"
             placeholder="Add player"
             aria-label="New player name">
-          <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="addPlayer($event.option.value, newPlayer)">
-            <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
+          <mat-autocomplete
+            #auto2="matAutocomplete"
+            autoActiveFirstOption
+            (optionSelected)="addPlayer($event.option.value, newPlayer)"
+          >
+            <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl" class="player-option">
+              <img *ngIf="pl.isUser && pl.photoURL" class="picture" [src]="pl.photoURL" [alt]="pl.displayName + 'player picture'">
+              <span class="name">{{pl.displayName}}</span>
+              <button *ngIf="!pl.isUser" class="delete" mat-icon-button color="warn" (click)="deleteNonUserPlayer($event, pl)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-option>
           </mat-autocomplete>
         </mat-form-field>
       </div>
@@ -29,13 +39,20 @@
             <input #playerInput
               type="text"
               matInput
-              [ngModel]="gamePlayerList[i].name"
+              [ngModel]="gamePlayerList[i].displayName"
               (ngModelChange)="filterPlayerList($event)"
               (change)="changePlayer(player, $event.target.value, playerInput)"
               [matAutocomplete]="auto"
               aria-label="Player name">
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="changePlayer(player, $event.option.value, playerInput)">
-              <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl">{{pl.name}}</mat-option>
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              autoActiveFirstOption
+              (optionSelected)="changePlayer(player, $event.option.value, playerInput)"
+            >
+              <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl" class="player-option">
+                <img *ngIf="pl.isUser && pl.photoURL" class="picture" [src]="pl.photoURL" [alt]="pl.displayName + 'player picture'">
+                <span class="name">{{pl.displayName}}</span>
+              </mat-option>
             </mat-autocomplete>
           </mat-form-field>
           <button mat-icon-button (click)="removePlayer(player)" aria-label="Remove player">
@@ -47,14 +64,31 @@
 
     <div class="game-category">
       <h2>Game Category</h2>
-
-      <div *ngIf="chosenGameCategory">
+      <div>
         <mat-form-field>
-          <mat-select  #gameCategory [(ngModel)]="chosenGameCategory" (ngModelChange)="onSelectGameCategory($event)" placeholder="Game category" required role="listbox">
-            <mat-option role="option" *ngFor="let cat of gameCategoryList" [value]="cat">{{cat.name}}</mat-option>
-          </mat-select>
+          <input #gameCategoryInput
+            type="text"
+            matInput
+            [ngModel]="gameCategoryName"
+            (ngModelChange)="filterGameCategoryList($event)"
+            (blur)="onGameCategoryOut($event, gameCategoryInput)"
+            (keypress)="onGameCategoryOut($event, gameCategoryInput)"
+            [matAutocomplete]="auto3"
+            placeholder="Game category"
+            aria-label="Game category">
+          <mat-autocomplete
+            #auto3="matAutocomplete"
+            autoActiveFirstOption
+            (optionSelected)="onSelectGameCategory($event.option.value, gameCategoryInput)"
+          >
+            <mat-option *ngFor="let gc of filteredGameCategoryList" [value]="gc" class="game-category-option">
+              <span class="name">{{gc.name}}</span>
+              <button *ngIf="gc.id !== 'common-0'" mat-icon-button color="warn" (click)="deleteGameCategory(gc)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
-        <button mat-raised-button (click)="openCategoryDialog()">Add category</button>
       </div>
       <div class="game-category-details" *ngIf="!!game && !!game.gameCategory">
         <mat-form-field>
@@ -81,13 +115,7 @@
       </div>
     </div>
   </section>
-  <footer>
-    <button mat-flat-button
-      cdkfocusinitial
-      color="accent"
-      (click)="startGame()"
-      aria-label="Start game">
-      {{isCreationMode ? 'Start !' : 'Resume'}}
-    </button>
-  </footer>
+  <button mat-fab color="accent" class="create-game" (click)="startGame()" aria-label="Start game">
+    <mat-icon>check</mat-icon>
+  </button>
 </div>

@@ -1,8 +1,11 @@
 <div class="page">
   <section>
+    <mat-error *ngIf="!canEditGame && isUserAdmin" class="offline-info">
+      If you are an admin of this game and you want to edit it, please connect to your account.
+    </mat-error>
     <div *ngIf="game" class="score-grid">
-      <div *ngFor="let score of game.scoreList" class="score-content block">
-        <div class="round-score">
+      <div *ngFor="let score of game.scoreList" class="score-content block" [class.hide-edition]="!canEditGame">
+        <div *ngIf="canEditGame" class="round-score">
           <button mat-icon-button
             class="score-button"
             (click)="onClickPlus(score)"
@@ -13,6 +16,7 @@
           </button>
           <input matInput
             pattern="[0-9]"
+            type="number"
             class="input-score"
             [ngModel]="score.roundScoreList[0]"
             (change)="onChangeRoundScore(score, $event.target)"
@@ -29,9 +33,14 @@
         <div class="current-score">
           <div class="name">
             <h2>
-              <mat-icon *ngIf="score.roundScoreList.length === 1 && firstPlayerId === score.playerId" color="warn">looks_one</mat-icon>
-              <mat-icon *ngIf="game.firstPlayerList.includes(score.playerId)" class="star">star</mat-icon>
-              {{score.playerId | playerName | async}}
+              <mat-icon *ngIf="score.roundScoreList.length === 1 && firstPlayerId === score.player.id" color="warn">looks_one</mat-icon>
+              <mat-icon *ngIf="game.firstPlayerList.includes(score.player.id)" class="star">star</mat-icon>
+              <img *ngIf="score.player.isUser && score.player.photoURL"
+                class="player-picture"
+                [src]="score.player.photoURL"
+                [alt]="score.player.displayName + 'player picture'"
+              >
+              {{score.player.displayName}}
             </h2>
           </div>
           <h1 class="mat-display-1">{{score.total}}</h1>
@@ -46,7 +55,7 @@
       </div>
     </div>
   </section>
-  <footer>
+  <footer *ngIf="canEditGame" >
     <button mat-flat-button color="accent" (click)="validateRound()" aria-label="Validate round">
       <mat-icon>checked</mat-icon>
     </button>

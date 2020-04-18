@@ -1,12 +1,27 @@
-<mat-list>
-  <h1 class="title">
-    <img src="assets/icons/icon-72x72.png" alt="HiScore logo">
-    HiScore
-    <button mat-icon-button color="primary" (click)="headerService.toggleMenu.emit()">
-      <mat-icon>arrow_back_ios</mat-icon>
+<div class="head">
+  <button
+    *ngIf="userService.user;else signIn"
+    mat-button
+    class="account"
+    routerLink="/account"
+    (click)="headerService.toggleMenu.emit()"
+  >
+    <img *ngIf="userService.user.photoURL;else default" [src]="userService.user.photoURL" alt="Profile picture">
+    <ng-template #default><mat-icon color="primary">person</mat-icon></ng-template>
+    <span>{{ userService.user.displayName }}</span>
+  </button>
+  <ng-template #signIn>
+    <button mat-button class="account" (click)="openSignInDialog()">
+      <mat-icon color="primary">person</mat-icon>
+      <span>Sign in</span>
     </button>
-  </h1>
-  <mat-divider></mat-divider>
+  </ng-template>
+  <button mat-icon-button color="primary" class="back" (click)="headerService.toggleMenu.emit()">
+    <mat-icon>arrow_back_ios</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<mat-list>
   <mat-list-item
     *ngFor="let menuItem of menuItems"
     [routerLink]="menuItem.link"
@@ -16,3 +31,7 @@
     <h4 mat-line>{{ menuItem.label }}</h4>
   </mat-list-item>
 </mat-list>
+<button *ngIf="userService.user" mat-button class="sign-out" (click)="signOut()">
+  <mat-icon>exit_to_app</mat-icon>
+  <span>Sign out</span>
+</button>

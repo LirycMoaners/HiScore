@@ -1,5 +1,6 @@
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import { Score } from '../../../shared/models/score.model';
 import { Game } from '../../../shared/models/game.model';
 import { Goal } from '../../../shared/models/goal.enum';
@@ -15,6 +16,7 @@ import { Goal } from '../../../shared/models/goal.enum';
   styleUrls: ['win-dialog.component.scss']
 })
 export class WinDialogComponent implements OnInit {
+
   /**
    * Identify if the user wants to leave the game or to continue the game
    */
@@ -26,13 +28,13 @@ export class WinDialogComponent implements OnInit {
   public orderedScoreList: Score[];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public game: Game
+    @Inject(MAT_DIALOG_DATA) public data: {game: Game, canEditGame: boolean}
   ) { }
 
   ngOnInit() {
-    this.orderedScoreList = Object.assign([], this.game.scoreList);
+    this.orderedScoreList = Object.assign([], this.data.game.scoreList);
 
-    if (this.game.gameCategory.goal === Goal.highestScore) {
+    if (this.data.game.gameCategory.goal === Goal.highestScore) {
       this.orderedScoreList.sort((scoreA: Score, scoreB: Score) => scoreB.total - scoreA.total);
     } else {
       this.orderedScoreList.sort((scoreA: Score, scoreB: Score) => scoreA.total - scoreB.total);

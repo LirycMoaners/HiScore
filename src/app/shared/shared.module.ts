@@ -1,4 +1,8 @@
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -12,36 +16,16 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 import { LongPressDirective } from './directives/long-press.directive';
-import { PlayerNamePipe } from './pipes/player-name.pipe';
 import { KeyEnumPipe } from './pipes/key-enum.pipe';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   imports: [
     FormsModule,
-    CommonModule,
-    RouterModule,
-    DragDropModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatInputModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatTableModule,
-    MatMenuModule,
-    MatSlideToggleModule,
-    MatFormFieldModule,
-    MatSidenavModule,
-    MatListModule
-  ],
-  exports: [
-    FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     RouterModule,
     DragDropModule,
@@ -58,13 +42,35 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatFormFieldModule,
     MatSidenavModule,
     MatListModule,
+    MatSnackBarModule,
+    MatCheckboxModule
+  ],
+  exports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    RouterModule,
+    DragDropModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatTableModule,
+    MatMenuModule,
+    MatSlideToggleModule,
+    MatFormFieldModule,
+    MatSidenavModule,
+    MatListModule,
+    MatSnackBarModule,
+    MatCheckboxModule,
     LongPressDirective,
-    PlayerNamePipe,
     KeyEnumPipe
   ],
   declarations: [
     LongPressDirective,
-    PlayerNamePipe,
     KeyEnumPipe
   ]
 })

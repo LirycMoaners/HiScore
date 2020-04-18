@@ -1,17 +1,20 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subscription, ReplaySubject, of } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
+import { User } from 'firebase/app';
+
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { WinDialogComponent } from './win-dialog/win-dialog.component';
-import { Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Game } from '../../shared/models/game.model';
-import { GameService } from '../../core/services/game.service';
+import { GameService } from '../../core/http-services/game.service';
 import { OptionMenuService } from '../../core/header/option-menu/option-menu.service';
 import { Score } from '../../shared/models/score.model';
 import { Goal } from '../../shared/models/goal.enum';
 import { EndingType } from '../../shared/models/ending-type.enum';
 import { HeaderService } from '../../core/header/header.service';
-import { flatMap } from 'rxjs/operators';
+import { UserService } from '../../core/http-services/user.service';
 
 /**
  * Component of the current game session
@@ -35,24 +38,37 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   public firstPlayerId: string;
 
   /**
+   * Indicates if the current user can modify the game
+   */
+  public canEditGame = false;
+
+  /**
+   * Indicate if the current user is an admin of this game
+   */
+  public isUserAdmin = true;
+
+  /**
    * List of all the subscription in the component to unsuscribe on destroy
    */
   private subscriptionList: Subscription[] = [];
 
   constructor(
-    private gameService: GameService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private headerService: HeaderService,
-    private optionMenuService: OptionMenuService,
-    private dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly gameService: GameService,
+    private readonly headerService: HeaderService,
+    private readonly optionMenuService: OptionMenuService,
+    private readonly userService: UserService
   ) { }
 
   ngOnInit() {
-    this.gameService.getGameById(this.route.snapshot.params.id)
-      .subscribe((game: Game) => {
+    this.subscriptionList.push(
+      this.gameService.getElementById(this.route.snapshot.params.id).subscribe((game: Game) => {
         this.game = game;
-        this.gameService.currentGameId = game.id;
+        this.gameService.currentGame.next(game);
+        this.canEditGame = this.gameService.getCanEditGame(game, this.userService.user);
+        this.isUserAdmin = this.getIsUserAdmin(game, this.userService.user);
         if (this.game.isGameEnd) {
           this.headerService.title = game.gameCategory.name + ' (round ' + (game.scoreList[0].roundScoreList.length - 1) + ')';
           this.openWinDialog();
@@ -61,10 +77,12 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
         }
         if (this.game.scoreList[0].roundScoreList.length === 1 && this.game.isFirstPlayerRandom) {
           const index: number = Math.floor(Math.random() * this.game.scoreList.length);
-          this.firstPlayerId = this.game.scoreList[index].playerId;
+          this.firstPlayerId = this.game.scoreList[index].player.id;
         }
-      });
-    this.headerService.isLeftSide = true;
+      })
+    );
+
+    setTimeout(() => this.headerService.isLeftSide = true, 0);
 
     this.subscriptionList.push(
       this.optionMenuService.editLastRound$.subscribe(() => {
@@ -72,7 +90,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
           for (const score of this.game.scoreList) {
             score.total -= score.roundScoreList.shift();
             this.refreshBestScore();
-            this.gameService.updateGame(this.game).subscribe(() => {
+            this.gameService.updateElement(this.game).subscribe(() => {
               this.headerService.title = this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')';
             });
           }
@@ -93,6 +111,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     for (const subscription of this.subscriptionList) {
       subscription.unsubscribe();
     }
+    this.gameService.currentGame = new ReplaySubject(1);
   }
 
   /**
@@ -112,7 +131,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     if (this.game.isGameEnd) {
       this.openWinDialog();
     } else {
-      this.gameService.updateGame(this.game).subscribe(() => {
+      this.gameService.updateElement(this.game).subscribe(() => {
         this.headerService.title = this.game.gameCategory.name + ' (round ' + this.game.scoreList[0].roundScoreList.length + ')';
       });
     }
@@ -138,15 +157,17 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
    * Open the score dialog and update the round score and the total of a player
    */
   public openScoreDialog(score: Score, roundIndex: number) {
-    const dialogRef = this.dialog.open(ScoreDialogComponent, {
-      width: '420px',
-      data: score.roundScoreList[roundIndex]
-    });
+    if (this.canEditGame) {
+      const dialogRef = this.dialog.open(ScoreDialogComponent, {
+        width: '420px',
+        data: score.roundScoreList[roundIndex]
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      score.roundScoreList[roundIndex] = result || score.roundScoreList[roundIndex];
-      this.calculateTotal(score);
-    });
+      dialogRef.afterClosed().subscribe(result => {
+        score.roundScoreList[roundIndex] = result || score.roundScoreList[roundIndex];
+        this.calculateTotal(score);
+      });
+    }
   }
 
   /**
@@ -159,6 +180,16 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Check if the current user is an admin of this game
+   */
+  private getIsUserAdmin(game: Game, user: User): boolean {
+    if (game.isSynced && !!user) {
+      return this.game.adminIds.includes(this.userService.user.uid);
+    }
+    return true;
+  }
+
+  /**
    * Calculate the total score for a player
    */
   private calculateTotal(score: Score) {
@@ -168,7 +199,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
       this.refreshBestScore();
     }
 
-    this.gameService.updateGame(this.game).subscribe();
+    this.gameService.updateElement(this.game).subscribe();
   }
 
   /**
@@ -181,7 +212,7 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
     } else {
       bestScore = Math.min(...this.game.scoreList.map((sc: Score) => sc.total));
     }
-    this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.playerId);
+    this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.player.id);
   }
 
   /**
@@ -202,15 +233,20 @@ export class CurrentGameComponent implements OnInit, OnDestroy {
   private openWinDialog() {
     const dialogRef = this.dialog.open(WinDialogComponent, {
       width: '420px',
-      data: this.game
+      data: {game : this.game, canEditGame: this.canEditGame},
+      disableClose: !this.canEditGame
     });
 
     dialogRef.afterClosed().pipe(
       flatMap(result => {
         if (!result) {
           this.game.isGameEnd = false;
+        } else {
+          for (const subscription of this.subscriptionList) {
+            subscription.unsubscribe();
+          }
         }
-        return this.gameService.updateGame(this.game);
+        return this.canEditGame ? this.gameService.updateElement(this.game) : of(null);
       })
     ).subscribe(_ => {
       if (this.game.isGameEnd) {

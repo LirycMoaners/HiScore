@@ -1,0 +1,10 @@
+<svg width="90" height="90" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="92" width="92" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path fill="#ffffff" id="Facebook__x28_alt_x29_" d="m90,15c0,-7.9 -7.1,-15 -15,-15l-60,0c-7.9,0 -15,7.1 -15,15l0,60c0,7.9 7.1,15 15,15l30,0l0,-34l-11,0l0,-15l11,0l0,-5.8c0,-10.1 7.6,-19.2 16.9,-19.2l12.1,0l0,15l-12.1,0c-1.3,0 -2.9,1.6 -2.9,4l0,6l15,0l0,15l-15,0l0,34l16,0c7.9,0 15,-7.1 15,-15l0,-60z"/>
+ </g>
+</svg>

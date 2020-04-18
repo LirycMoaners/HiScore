@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { HeaderService } from './header.service';
 import { Router } from '@angular/router';
+
+import { HeaderService } from './header.service';
 
 /**
  * Component of the application header

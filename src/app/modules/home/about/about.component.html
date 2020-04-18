@@ -6,15 +6,21 @@
 
 <h1>Help us</h1>
 <p>
-  If you enjoy the HiScore app, don't forget to rate it 5 stars on the play store.
+  If you enjoy the HiScore app, don't forget to rate it 5 stars on <a [href]="links.googlePlay">Google Play</a>.
   You can also leave a comment to help us improve the app.
   This app is also a PWA website, so you can access it with your browser at :<br>
-  <a href="https://hi-score-app.wep.app">https://hi-score-app.wep.app</a>
+  <a [href]="links.hiScoreWeb">{{links.hiScoreWeb}}</a>
 </p>
 
 <h1>Developer</h1>
 <p>
   Cyril Lefebvre<br>
-  <a href="https://www.linkedin.com/in/cyril-lefebvre-2a818294/">LinkedIn</a><br>
-  <a href="https://github.com/LirycMoaners">Github</a>
+  <a [href]="links.linkedIn">LinkedIn</a><br>
+  <a [href]="links.github">GitHub</a>
+</p>
+
+<h1>Terms and conditions of use</h1>
+<p>
+  HiScore uses collected data to allow you to save and get your games through all your devices and share games between users.<br>
+  To learn more about privacy policy and personal data protection you can consult our <a routerLink="/terms">legal terms</a>.
 </p>

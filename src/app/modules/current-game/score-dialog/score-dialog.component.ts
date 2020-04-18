@@ -12,6 +12,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['score-dialog.component.scss']
 })
 export class ScoreDialogComponent {
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public score: number
   ) { }

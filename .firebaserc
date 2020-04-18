@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "hi-score-app"
+  },
+  "targets": {
+    "hi-score-app": {
+      "hosting": {
+        "hi-score": [
+          "hi-score-app"
+        ]
+      }
+    }
   }
 }

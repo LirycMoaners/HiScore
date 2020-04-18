@@ -6,11 +6,11 @@ The HiScore project is an Angular 9 app based on the concept of the KeepScore ap
 
 [![GitHub forks](https://img.shields.io/github/forks/LirycMoaners/HiScore.svg?style=social&label=Fork)](https://github.com/LirycMoaners/HiScore/fork) [![GitHub stars](https://img.shields.io/github/stars/LirycMoaners/HiScore.svg?style=social&label=Star)](https://github.com/LirycMoaners/HiScore) 
 
-It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.2.
+It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.0.
 
-It includes build for Android with [Capacitor](https://github.com/ionic-team/capacitor) version 1.4.0.
+It includes build for Android with [Capacitor](https://github.com/ionic-team/capacitor) version 2.0.0.
 
-It includes build for Desktop with [Electron](https://github.com/electron/electron) version 7.0.0.
+It includes build for Desktop with [Electron](https://github.com/electron/electron) version 8.0.0.
 
 ## Dependencies
 
@@ -33,10 +33,6 @@ Run `npm run build:prod:electron` to build the project for Electron. Use electro
 ## Running unit tests
 
 Run `npm run test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `npm run e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
 ## Running linter
 

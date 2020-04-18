@@ -21,3 +21,28 @@ mat-sidenav-container {
     overflow: hidden;
   }
 }
+
+::ng-deep .game-category-option, ::ng-deep .player-option {
+  .mat-option-text {
+    display: contents;
+
+    .picture {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      object-fit: contain;
+    }
+
+    .name {
+      flex: 1
+    }
+
+    .mat-icon-button {
+      width: auto;
+
+      .mat-icon {
+        margin: 0;
+      }
+    }
+  }
+}

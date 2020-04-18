@@ -1,0 +1,42 @@
+[
+  {
+    "id": "common-0",
+    "name": "A Game",
+    "goal": "Highest score",
+    "endingNumber": null,
+    "endingType": null,
+    "isSynced": false
+  },
+  {
+    "id": "common-1",
+    "name": "Uno",
+    "goal": "Highest score",
+    "endingNumber": 500,
+    "endingType": "Points",
+    "isSynced": false
+  },
+  {
+    "id": "common-2",
+    "name": "6 Nimmt!",
+    "goal": "Lowest score",
+    "endingNumber": 66,
+    "endingType": "Points",
+    "isSynced": false
+  },
+  {
+    "id": "common-3",
+    "name": "The Dwark King",
+    "goal": "Highest score",
+    "endingNumber": 7,
+    "endingType": "Rounds",
+    "isSynced": false
+  },
+  {
+    "id": "common-4",
+    "name": "Mille Sabords !",
+    "goal": "Highest score",
+    "endingNumber": 6000,
+    "endingType": "Points",
+    "isSynced": false
+  }
+]

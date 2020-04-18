@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>Sign in</h1>
+<div mat-dialog-content>
+  <button mat-raised-button class="provider-button" (click)="signInWithProvider('google')">
+    <img src="assets/images/google_logo.svg" alt="Google logo">
+    <span>Sign in with Google</span>
+  </button>
+  <button mat-raised-button class="provider-button facebook" (click)="signInWithProvider('facebook')">
+    <img src="assets/images/facebook_logo.svg" alt="Facebook logo">
+    <span>Sign in with Facebook</span>
+  </button>
+  <p class="terms">By signing in you agree to the <a href (click)="openTerms($event)">terms and conditions</a></p>
+  <div class="or">
+    <span>Or</span>
+  </div>
+  <form [formGroup]="signInForm">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput [type]="isPasswordHidden ? 'password' : 'text'" formControlName="password">
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="isPasswordHidden = !isPasswordHidden"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="isPasswordHidden"
+      >
+        <mat-icon>{{isPasswordHidden ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-error>{{ errorMessage }}</mat-error>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button *ngIf="!data.isSignUpButtonPresent" mat-button [mat-dialog-close]="false">Cancel</button>
+  <button
+    mat-raised-button
+    color="accent"
+    class="sign-in-button"
+    cdkFocusInitial
+    [disabled]="!signInForm.valid"
+    (click)="signIn()"
+  >
+    Sign in
+  </button>
+</div>
+<div class="other-buttons">
+  <button *ngIf="data.isSignUpButtonPresent" mat-button (click)="openSignUp()">Sign up</button>
+  <button mat-button (click)="forgotPassword()">Forgot password ?</button>
+</div>

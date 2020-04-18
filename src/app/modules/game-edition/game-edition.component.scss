@@ -17,7 +17,7 @@
         }
       }
 
-      @media screen and (min-width: $break-small) {
+      @media (orientation: landscape) {
         display: flex;
         flex-direction: row;
         overflow: hidden;
@@ -45,10 +45,9 @@
     }
   }
 
-  footer {
-    button {
-      width: 100%;
-      height: 100%;
-    }
+  .create-game {
+    position: absolute;
+    bottom: 30px;
+    left: calc(50% - 28px);
   }
 }
