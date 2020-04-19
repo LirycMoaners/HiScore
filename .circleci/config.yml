@@ -87,9 +87,8 @@ jobs:
             rm -rv worker-basic.min.js;
             rm -rv safety-worker.js;
             rm -rv robots.txt;
+            rm -rv assets/icons;
             sed '13,15d' -r index.html;
-            cd ./assets/icons;
-            rm -rv;
       # Cache the dist folder for the deploy job
       - save_cache:
           key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
