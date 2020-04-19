@@ -4,7 +4,7 @@ ext {
   targetSdkVersion = 29
   androidxAppCompatVersion = '1.1.0'
   androidxCoreVersion =  '1.2.0'
-  androidxMaterialVersion =  '1.2.0-alpha6'
+  androidxMaterialVersion =  '1.2.0-alpha06'
   androidxBrowserVersion =  '1.2.0'
   androidxLocalbroadcastmanagerVersion =  '1.0.0'
   firebaseMessagingVersion =  '20.1.5'
