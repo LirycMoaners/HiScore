@@ -89,7 +89,7 @@ jobs:
             rm -rv robots.txt;
             sed '13,15d' -r index.html;
             cd ./assets/icons;
-            rm -rv !("icon-72x72.png") ;
+            rm -rv;
       # Cache the dist folder for the deploy job
       - save_cache:
           key: v1-android-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}

@@ -4,7 +4,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User, storage } from 'firebase/app';
 import { Observable, of, from, forkJoin } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, catchError } from 'rxjs/operators';
 
 import { Player } from '../../shared/models/player.model';
 import { PlayerService } from './player.service';
@@ -49,7 +49,9 @@ export class UserService {
     let obs = of(null);
     if (this.user.photoURL) {
       const ref = this.fireStorage.ref(`profile/${this.user.uid}/picture`);
-      obs = obs.pipe(flatMap(() => ref.delete()));
+      obs = obs.pipe(
+        flatMap(() => ref.delete().pipe(catchError(() => of(null))))
+      );
     }
     return obs.pipe(
       flatMap(() => this.playerService.deleteElement(new Player(this.user))),
