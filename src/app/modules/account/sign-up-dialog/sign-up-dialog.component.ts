@@ -57,23 +57,32 @@ export class SignUpDialogComponent implements OnInit {
     const picture = this.signUpForm.get('picture').value;
     const areTermsAccepted = this.signUpForm.get('areTermsAccepted').value;
 
+    const signUpCallback = () => {
+      this.router.navigate(['/game-list']);
+      this.snackBar.open('Successfully registerd !', null, { duration: 3000 });
+      this.dialogRef.close(true);
+    };
+
     if (areTermsAccepted) {
-      const reader  = new FileReader();
-      reader.onload = (e) => {
-        const img = document.createElement('img');
-        img.onload = () => {
-          this.authenticationService.signUp(email, password, username, img).subscribe(
-            () => {
-              this.router.navigate(['/game-list']);
-              this.snackBar.open('Successfully registerd !', null, { duration: 3000 });
-              this.dialogRef.close(true);
-            },
-            (error) => this.errorMessage = error
-          );
+      if (!!picture) {
+        const reader  = new FileReader();
+        reader.onload = (e) => {
+          const img = document.createElement('img');
+          img.onload = () => {
+            this.authenticationService.signUp(email, password, username, img).subscribe(
+              signUpCallback,
+              (error) => this.errorMessage = error
+            );
+          }
+          img.src = e.target.result as string;
         }
-        img.src = e.target.result as string;
+        reader.readAsDataURL(picture);
+      } else {
+        this.authenticationService.signUp(email, password, username).subscribe(
+          signUpCallback,
+          (error) => this.errorMessage = error
+        );
       }
-      reader.readAsDataURL(picture);
     }
   }
 

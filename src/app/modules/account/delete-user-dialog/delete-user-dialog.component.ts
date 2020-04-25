@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { flatMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { SignInDialogComponent } from '../sign-in-dialog/sign-in-dialog.component';
 import { UserService } from '../../../core/http-services/user.service';
+import { AuthenticationService } from '../../../core/http-services/authentication.service';
 
 @Component({
   selector: 'app-delete-user-dialog',
@@ -14,24 +14,47 @@ import { UserService } from '../../../core/http-services/user.service';
 })
 export class DeleteUserDialogComponent {
 
+  /**
+   * Boolean to know if the provider of the current user is password or not
+   */
+  public isPasswordProvider = this.userService.user.providerData[0].providerId;
+
+  /**
+   * Boolean that indicates if we need to show the password the user wrotes or not
+   */
+  public isPasswordHidden = true;
+
+  /**
+   * The password wrote by the user
+   */
+  public password = '';
+
   constructor(
     private readonly dialogRef: MatDialogRef<DeleteUserDialogComponent>,
     private readonly snackBar: MatSnackBar,
     private readonly dialog: MatDialog,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly authenticationService: AuthenticationService
   ) { }
 
   /**
    * Ask for log in before deleting the account
    */
   public validate() {
-    const dialogRef = this.dialog.open(SignInDialogComponent, {data: {isSignUpButtonPresent: false}});
-    dialogRef.afterClosed().pipe(
-      flatMap(isSignedIn => {
-        if (isSignedIn) {
-          return this.userService.deleteProfile();
-        }
-        return of(null)
+    let obs: Observable<any>;
+    const provider: string = this.userService.user.providerData[0].providerId.replace('.com', '');
+    switch (provider) {
+      case 'google':
+      case 'facebook':
+        obs = this.authenticationService.signInWithProvider(provider);
+        break;
+      default:
+        obs = this.authenticationService.signIn(this.userService.user.email, this.password);
+        break;
+    }
+    obs.pipe(
+      flatMap(() => {
+        return this.userService.deleteProfile();
       })
     ).subscribe(
       () => this.dialogRef.close(true),
