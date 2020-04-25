@@ -1,7 +1,28 @@
 <h1 mat-dialog-title>Delete account</h1>
+
 <div mat-dialog-content>
-  Are you sure you want to delete your account ?
+  <ng-container *ngIf="!isPasswordProvider; else pwd">
+    Are you sure you want to delete your account ?
+  </ng-container>
+
+  <ng-template #pwd>
+    <div>Provide your password to delete your account</div>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput [type]="isPasswordHidden ? 'password' : 'text'" [(ngModel)]="password">
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="isPasswordHidden = !isPasswordHidden"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="isPasswordHidden"
+      >
+        <mat-icon>{{isPasswordHidden ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+  </ng-template>
 </div>
+
 <div mat-dialog-actions>
   <button
     mat-button
