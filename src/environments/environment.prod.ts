@@ -12,7 +12,7 @@ export const environment = {
   },
   links: {
     googlePlay: 'https://play.google.com/store/apps/details?id=com.cyrillefebvre.hiscore',
-    hiScoreWeb: 'https://hi-score-app.wep.app',
+    hiScoreWeb: 'https://hi-score-app.web.app',
     linkedIn: 'https://www.linkedin.com/in/cyril-lefebvre-2a818294/',
     github: 'https://github.com/LirycMoaners'
   }
