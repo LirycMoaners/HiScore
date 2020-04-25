@@ -16,6 +16,7 @@
       section {
         display: flex;
         flex-direction: column;
+        padding: 15px 15px 0 15px;
 
         .offline-info {
           text-align: center;
@@ -27,7 +28,7 @@
           grid-template-columns: 1fr;
           height: 100%;
           box-sizing: border-box;
-          grid-gap: 0 5px;
+          grid-gap: 0 15px;
           overflow: auto;
 
           @media (orientation: landscape) {
@@ -41,7 +42,7 @@
             text-align: center;
             overflow: hidden;
             min-height: 100px;
-            margin-bottom: 5px;
+            margin-bottom: 15px;
 
             &.hide-edition {
               grid-template-columns: 80% 20%;

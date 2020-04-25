@@ -1,4 +1,8 @@
-:host {
+@import '../../../assets/scss/theme.scss';
+
+section {
+  display: flex;
+  flex-direction: column;
   align-items: center;
 
   .profile {

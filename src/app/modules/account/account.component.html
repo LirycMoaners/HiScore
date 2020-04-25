@@ -1,59 +1,61 @@
-<ng-container *ngIf="userService.user">
-  <div class="profile">
-    <div class="file">
-      <img *ngIf="userService.user.photoURL; else icon" [src]="userService.user.photoURL" alt="Profile picture">
-      <ng-template #icon>
-        <mat-icon class="avatar" color="primary">person</mat-icon>
-      </ng-template>
-      <input
-        type="file"
-        name="file"
-        id="file"
-        accept="image/png, image/jpeg"
-        (change)="onFileChange($event)"
-      >
-      <label for="file"><mat-icon>create</mat-icon></label>
+<div class="page">
+  <section *ngIf="userService.user">
+    <div class="profile">
+      <div class="file">
+        <img *ngIf="userService.user.photoURL; else icon" [src]="userService.user.photoURL" alt="Profile picture">
+        <ng-template #icon>
+          <mat-icon class="avatar" color="primary">person</mat-icon>
+        </ng-template>
+        <input
+          type="file"
+          name="file"
+          id="file"
+          accept="image/png, image/jpeg"
+          (change)="onFileChange($event)"
+        >
+        <label for="file"><mat-icon>create</mat-icon></label>
+      </div>
+      <mat-form-field>
+        <mat-label>Display name</mat-label>
+        <input
+          matInput
+          [ngModel]="userService.user.displayName"
+          (keyup.enter)="$event.target.blur()"
+          (blur)="onUsernameChange($event)"
+          required
+        >
+      </mat-form-field>
     </div>
-    <mat-form-field>
-      <mat-label>Display name</mat-label>
-      <input
-        matInput
-        [ngModel]="userService.user.displayName"
-        (keyup.enter)="$event.target.blur()"
-        (blur)="onUsernameChange($event)"
-        required
-      >
-    </mat-form-field>
-  </div>
-  <div class="security">
-    <ng-container *ngIf="userService.isProvider('password'); else provider">
-      <div class="email">
-        <mat-form-field>
-          <mat-label>New email</mat-label>
-          <input matInput type="email" [formControl]="newEmail">
-        </mat-form-field>
-        <button mat-raised-button class="change" (click)="changeEmail()">Change email</button>
-      </div>
-      <div class="password">
-        <mat-form-field>
-          <mat-label>New password</mat-label>
-          <input matInput [type]="isPasswordHidden ? 'password' : 'text'" [formControl]="newPassword">
-          <button
-            mat-icon-button
-            matSuffix
-            (click)="isPasswordHidden = !isPasswordHidden"
-            [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="isPasswordHidden"
-          >
-            <mat-icon>{{isPasswordHidden ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-        </mat-form-field>
-        <button mat-raised-button class="change" (click)="changePassword()">Change password</button>
-      </div>
-    </ng-container>
-    <ng-template #provider>
-      <div *ngFor="let provider of userService.user.providerData">You are logged in with your {{provider.providerId}} account.</div>
-    </ng-template>
-    <button mat-raised-button color="warn" class="delete" (click)="deleteUser()">Delete account</button>
-  </div>
-</ng-container>
+    <div class="security">
+      <ng-container *ngIf="userService.isProvider('password'); else provider">
+        <div class="email">
+          <mat-form-field>
+            <mat-label>New email</mat-label>
+            <input matInput type="email" [formControl]="newEmail">
+          </mat-form-field>
+          <button mat-raised-button class="change" (click)="changeEmail()">Change email</button>
+        </div>
+        <div class="password">
+          <mat-form-field>
+            <mat-label>New password</mat-label>
+            <input matInput [type]="isPasswordHidden ? 'password' : 'text'" [formControl]="newPassword">
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="isPasswordHidden = !isPasswordHidden"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="isPasswordHidden"
+            >
+              <mat-icon>{{isPasswordHidden ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+          <button mat-raised-button class="change" (click)="changePassword()">Change password</button>
+        </div>
+      </ng-container>
+      <ng-template #provider>
+        <div *ngFor="let provider of userService.user.providerData">You are logged in with your {{provider.providerId}} account.</div>
+      </ng-template>
+      <button mat-raised-button color="warn" class="delete" (click)="deleteUser()">Delete account</button>
+    </div>
+  </section>
+</div>
