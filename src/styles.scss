@@ -1,3 +1,6 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
 
@@ -15,8 +18,15 @@ $hi-score-app-accent:  mat-palette($mat-teal);
 // The warn palette is optional (defaults to red).
 $hi-score-app-warn:    mat-palette($mat-red);
 
-// Create the theme object (a Sass map containing all of the palettes).
-$hi-score-app-theme: mat-dark-theme($hi-score-app-primary, $hi-score-app-accent, $hi-score-app-warn);
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$hi-score-app-theme: mat-dark-theme((
+  color: (
+    primary: $hi-score-app-primary,
+    accent: $hi-score-app-accent,
+    warn: $hi-score-app-warn,
+  )
+));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component

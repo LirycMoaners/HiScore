@@ -13,7 +13,7 @@ export class HelpComponent implements OnInit {
     private readonly headerService: HeaderService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.headerService.title = 'Help';
   }
 }

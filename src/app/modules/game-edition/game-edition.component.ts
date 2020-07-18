@@ -19,6 +19,7 @@ import { HeaderService } from '../../core/header/header.service';
 import { NewPlayerScoreDialogComponent } from './new-player-score-dialog/new-player-score-dialog.component';
 import { PlayerService } from '../../core/http-services/player.service';
 import { UserService } from '../../core/http-services/user.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 /**
  * Component for game creation and edition
@@ -34,7 +35,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * The current game in edition
    */
-  public game: Game;
+  public game!: Game;
 
   /**
    * The complete player list without those who are already added
@@ -90,12 +91,12 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * The score of each player added on game edition
    */
-  private newPlayerScore: number;
+  private newPlayerScore = 0;
 
   /**
    * The subscription of the current game during update
    */
-  private currentUpdatedGameSubscription: Subscription;
+  private currentUpdatedGameSubscription: Subscription | undefined;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -109,11 +110,11 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     private readonly userService: UserService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     const gameId: string = this.route.snapshot.params.id;
     const isCopy: boolean = this.route.snapshot.queryParams.copy;
 
-    let game$: Observable<Game>;
+    let game$: Observable<Game | undefined>;
     const players$: Observable<[Player[], Player[]]> = combineLatest([
       this.nonUserPlayerService.elementListSubject,
       this.playerService.elementListSubject
@@ -121,7 +122,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
       first(),
       tap(([nonUserPlayerList, playerList]: [Player[], Player[]]) =>
         this.playerList = [...nonUserPlayerList, ...playerList]
-          .sort((p1, p2) => p1.displayName.localeCompare(p2.displayName))
+          .sort((p1, p2) => (!!p1.displayName ? p1.displayName : '').localeCompare(!!p2.displayName ? p2.displayName : ''))
       )
     );
 
@@ -141,18 +142,21 @@ export class GameEditionComponent implements OnInit, OnDestroy {
         this.headerService.title = 'New Game';
         game$ = this.gameService.getElementById(gameId).pipe(
           first(),
-          map((game: Game) => {
-            const newGame = { ...game };
-            newGame.id = UUID.UUID();
-            newGame.isGameEnd = false;
-            newGame.firstPlayerList = [];
-            return newGame;
+          map((game: Game | undefined) => {
+            if (!!game) {
+              const newGame = { ...game };
+              newGame.id = UUID.UUID();
+              newGame.isGameEnd = false;
+              newGame.firstPlayerList = [];
+              return newGame;
+            }
+            return new Game();
           })
         );
       }
 
-      this.currentUpdatedGameSubscription = game$.subscribe((game: Game) => {
-        this.game = game;
+      this.currentUpdatedGameSubscription = game$.subscribe((game: Game | undefined) => {
+        this.game = !!game ? game : new Game();
         this.gameCategoryName = this.game.gameCategory.name;
         this.gamePlayerList = this.game.scoreList.map(score => score.player);
       });
@@ -180,15 +184,15 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * Move the player in list when dropped
    */
-  public drop(event: CdkDragDrop<Player[]>) {
+  public drop(event: CdkDragDrop<Player[]>): void {
     moveItemInArray(this.gamePlayerList, event.previousIndex, event.currentIndex);
   }
 
   /**
    * Create a new player or copy a player to be added when new player output blur or enter key press
    */
-  public onNewPlayerOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
-    let player: Player = this.gamePlayerList.find((pl: Player) => input.value === pl.displayName);
+  public onNewPlayerOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement): void {
+    let player: Player | undefined = this.gamePlayerList.find((pl: Player) => input.value === pl.displayName);
     let shouldAddPlayer = false;
 
     if (input.value && !player) {
@@ -197,8 +201,8 @@ export class GameEditionComponent implements OnInit, OnDestroy {
         && (
           !event.relatedTarget
           || (
-            (event.relatedTarget as any).tagName !== 'MAT-OPTION'
-            && !((event.relatedTarget as any).className as string).includes('delete')
+            (event.relatedTarget as HTMLInputElement).tagName !== 'MAT-OPTION'
+            && !((event.relatedTarget as HTMLInputElement).className as string).includes('delete')
           )
         )
       ) {
@@ -221,12 +225,12 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * Add a player to the game player list
    */
-  public addPlayer(newPlayer: Player, input: HTMLInputElement) {
+  public addPlayer(newPlayer: Player, input: HTMLInputElement): void {
     const player = Object.assign({}, newPlayer);
     input.value = '';
     this.gamePlayerList.push(player);
 
-    if (!this.isCreationMode
+    if (!!this.game && !this.isCreationMode
       && !this.game.scoreList.find((score: Score) => score.player.id === player.id)
       && (this.newPlayerScore === null || this.newPlayerScore === undefined)
     ) {
@@ -240,29 +244,31 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * Change an added player by another player or a new player
    */
-  public changePlayer(oldPlayer: Player, player: Player | string, playerInput: HTMLInputElement) {
-    if (player) {
-      if (typeof player === 'string') {
-        if (!this.gamePlayerList.find((pl: Player) => player === pl.displayName)) {
-          const newPlayer: Player = this.playerList.find((pl: Player) => pl.displayName === player);
-          if (newPlayer) {
+  public changePlayer(oldPlayer: Player, event: Event | MatAutocompleteSelectedEvent, playerInput: HTMLInputElement): void {
+    if (event) {
+      if (event instanceof Event) {
+        const playerDisplayName = (event.target as HTMLInputElement).value;
+        if (!this.gamePlayerList.find((pl: Player) => playerDisplayName === pl.displayName)) {
+          const newPlayer: Player | undefined = this.playerList.find((pl: Player) => pl.displayName === playerDisplayName);
+          if (!!newPlayer) {
             oldPlayer.id = newPlayer.id;
             oldPlayer.displayName = newPlayer.displayName;
           } else {
             oldPlayer.id = UUID.UUID();
-            oldPlayer.displayName = player;
+            oldPlayer.displayName = playerDisplayName;
           }
         }
       } else {
+        const player = event.option.value;
         if (!this.gamePlayerList.find((pl: Player) => player.displayName === pl.displayName)) {
           oldPlayer.id = player.id;
           oldPlayer.displayName = player.displayName;
         }
       }
 
-      playerInput.value = oldPlayer.displayName;
+      playerInput.value = !!oldPlayer.displayName ? oldPlayer.displayName : '';
 
-      if (!this.isCreationMode
+      if (!!this.game && !this.isCreationMode
         && !this.game.scoreList.find((score: Score) => score.player.id === oldPlayer.id)
         && (this.newPlayerScore === null || this.newPlayerScore === undefined)
       ) {
@@ -278,7 +284,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * Remove a player from the game player list
    */
-  public removePlayer(player: Player) {
+  public removePlayer(player: Player): void {
     this.gamePlayerList.splice(this.gamePlayerList.indexOf(player), 1);
     this.filterPlayerList();
   }
@@ -286,7 +292,7 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * Delete the non user player in parameter
    */
-  public deleteNonUserPlayer(event: MouseEvent, player: Player) {
+  public deleteNonUserPlayer(event: MouseEvent, player: Player): void {
     event.stopPropagation();
     this.nonUserPlayerService.deleteElement(player).subscribe(() => {
       this.playerList.splice(this.playerList.findIndex(pl => pl.id === player.id), 1);
@@ -297,18 +303,18 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * Filter the player list with the input text and the already added players
    */
-  public filterPlayerList(name?: string) {
+  public filterPlayerList(name?: string): void {
     const filteredValue = name && typeof name === 'string' ? name.toLowerCase() : '';
     this.filteredPlayerList = this.playerList.filter(
       (player: Player) => !this.gamePlayerList.find((pl: Player) => pl.displayName === player.displayName)
-        && player.displayName.toLowerCase().includes(filteredValue)
+        && player.displayName?.toLowerCase().includes(filteredValue)
     );
   }
 
   /**
    * Filter the game category list with the input text
    */
-  public filterGameCategoryList(filteredValue: string) {
+  public filterGameCategoryList(filteredValue: string): void {
     if (filteredValue && filteredValue.length > 0) {
       this.filteredGameCategoryList = this.gameCategoryList.filter(
         (gameCategory: GameCategory) => gameCategory.name.toLowerCase().includes(filteredValue.toLowerCase())
@@ -321,11 +327,11 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * Choose or create the game category when out of the field
    */
-  public onGameCategoryOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement) {
+  public onGameCategoryOut(event: FocusEvent | KeyboardEvent, input: HTMLInputElement): void {
     let shouldChooseGameCategory = false;
 
     if (input.value) {
-      if (event instanceof FocusEvent && (!event.relatedTarget || (event.relatedTarget as any).tagName !== 'MAT-OPTION')) {
+      if (event instanceof FocusEvent && (!event.relatedTarget || (event.relatedTarget as HTMLInputElement).tagName !== 'MAT-OPTION')) {
         shouldChooseGameCategory = true;
         this.filterGameCategoryList(input.value);
       } else if (event instanceof KeyboardEvent && event.key === 'Enter') {
@@ -334,32 +340,35 @@ export class GameEditionComponent implements OnInit, OnDestroy {
     }
 
     if (shouldChooseGameCategory) {
-      let gameCategory: GameCategory = this.gameCategoryList.find((gc: GameCategory) => input.value === gc.name);
+      let gameCategory: GameCategory | undefined = this.gameCategoryList.find((gc: GameCategory) => input.value === gc.name);
       if (!gameCategory) {
         gameCategory = new GameCategory();
-        gameCategory.id = UUID.UUID();
         gameCategory.name = input.value;
       }
 
       this.onSelectGameCategory(gameCategory, input);
     } else {
-      this.game.gameCategory = new GameCategory();
+      if (!!this.game) {
+        this.game.gameCategory = new GameCategory();
+      }
     }
   }
 
   /**
    * Assign a game category to the current game
    */
-  public onSelectGameCategory(gameCategory: GameCategory, gameCategoryInput: HTMLInputElement) {
-    gameCategoryInput.value = gameCategory.name;
-    this.gameCategoryName = gameCategory.name;
-    this.game.gameCategory = {...gameCategory};
+  public onSelectGameCategory(gameCategory: GameCategory, gameCategoryInput: HTMLInputElement): void {
+    if (!!this.game) {
+      gameCategoryInput.value = gameCategory.name;
+      this.gameCategoryName = gameCategory.name;
+      this.game.gameCategory = {...gameCategory};
+    }
   }
 
   /**
    * Delete the game category in parameter
    */
-  public deleteGameCategory(gameCategory: GameCategory) {
+  public deleteGameCategory(gameCategory: GameCategory): void {
     this.gameCategoryService.deleteElement(gameCategory).subscribe(() => {
       this.gameCategoryList.splice(this.gameCategoryList.findIndex(gc => gc.id === gameCategory.id), 1);
       this.filteredGameCategoryList.splice(this.filteredGameCategoryList.findIndex(gc => gc.id === gameCategory.id), 1);
@@ -369,16 +378,17 @@ export class GameEditionComponent implements OnInit, OnDestroy {
   /**
    * Start a new game or resume the current game with the selected players and the selected game category
    */
-  public startGame() {
-    if (this.gamePlayerList.length && this.game.gameCategory.id) {
+  public startGame(): void {
+    if (!!this.game && this.gamePlayerList.length && this.game.gameCategory.id) {
       this.game.date = this.isCreationMode ? new Date() : this.game.date;
       this.game.scoreList = this.isCreationMode ? [] : this.game.scoreList;
       this.game.userIds = this.gamePlayerList.filter(player => player.isUser).map(player => player.id);
-      if (this.userService.user) {
-        this.game.adminIds = [this.userService.user.uid];
-        const userIdIndex = this.game.userIds.findIndex(uid => uid === this.userService.user.uid);
+      const currentUserUid = this.userService.user?.uid;
+      if (!!currentUserUid) {
+        this.game.adminIds = [currentUserUid];
+        const userIdIndex = this.game.userIds.findIndex(uid => uid === currentUserUid);
         if (userIdIndex === -1) {
-          this.game.userIds.push(this.userService.user.uid);
+          this.game.userIds.push(currentUserUid);
         }
       }
 
@@ -394,8 +404,8 @@ export class GameEditionComponent implements OnInit, OnDestroy {
         });
 
         if (!this.isCreationMode) {
-          const playerScore: Score = this.game.scoreList.find((score: Score) => score.player.id === player.id);
-          if (playerScore) {
+          const playerScore: Score | undefined = this.game.scoreList.find((score: Score) => score.player.id === player.id);
+          if (!!playerScore) {
             newScoreList[newScoreList.length - 1].roundScoreList = playerScore.roundScoreList;
             newScoreList[newScoreList.length - 1].total = playerScore.total;
           } else {
@@ -424,41 +434,47 @@ export class GameEditionComponent implements OnInit, OnDestroy {
         this.refreshBestScore();
       }
 
-      const gameCategory = this.gameCategoryList.find(gc => gc.id === this.game.gameCategory.id);
+      const gameCategory = this.gameCategoryList.find(gc => !!this.game ? gc.id === this.game.gameCategory.id : false);
 
       combineLatest([
         (newPlayerList.length ? this.nonUserPlayerService.createElementList(newPlayerList) : of(null)),
         (!gameCategory ? this.gameCategoryService.createElement(this.game.gameCategory) : of(null)),
       ]).pipe(
-        flatMap(() => this.isCreationMode ? this.gameService.createElement(this.game) : this.gameService.updateElement(this.game))
-      ).subscribe(() => this.router.navigate(['/current-game/' + this.game.id]));
+        flatMap(() =>
+          !!this.game ? (
+            this.isCreationMode ? this.gameService.createElement(this.game) : this.gameService.updateElement(this.game)
+          ) : of(null)
+        )
+      ).subscribe(() => !!this.game ? this.router.navigate(['/current-game/' + this.game.id]) : undefined);
     }
   }
 
   /**
    * Refresh best scores after modifying player list
    */
-  private refreshBestScore() {
-    let bestScore: number;
-    if (this.game.gameCategory.goal === Goal.highestScore) {
-      bestScore = Math.max(...this.game.scoreList.map((sc: Score) => sc.total));
-    } else {
-      bestScore = Math.min(...this.game.scoreList.map((sc: Score) => sc.total));
+  private refreshBestScore(): void {
+    if (!!this.game) {
+      let bestScore: number;
+      if (this.game.gameCategory.goal === Goal.highestScore) {
+        bestScore = Math.max(...this.game.scoreList.map((sc: Score) => sc.total));
+      } else {
+        bestScore = Math.min(...this.game.scoreList.map((sc: Score) => sc.total));
+      }
+      this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.player.id);
     }
-    this.game.firstPlayerList = this.game.scoreList.filter((sc: Score) => sc.total === bestScore).map((sc: Score) => sc.player.id);
   }
 
   /**
    * Open the dialog for chosing if the new players scores need to be zero or the average of the others scores
    */
-  private openNewPlayerScoreDialog() {
+  private openNewPlayerScoreDialog(): void {
     const dialogRef = this.dialog.open(NewPlayerScoreDialogComponent, {
       width: '400px',
       disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result && !!this.game) {
         this.newPlayerScore = Number((
             this.game.scoreList
               .map((score: Score) => score.total)

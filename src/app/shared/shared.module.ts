@@ -20,7 +20,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { LongPressDirective } from './directives/long-press.directive';
-import { KeyEnumPipe } from './pipes/key-enum.pipe';
 
 @NgModule({
   imports: [
@@ -66,12 +65,10 @@ import { KeyEnumPipe } from './pipes/key-enum.pipe';
     MatListModule,
     MatSnackBarModule,
     MatCheckboxModule,
-    LongPressDirective,
-    KeyEnumPipe
+    LongPressDirective
   ],
   declarations: [
-    LongPressDirective,
-    KeyEnumPipe
+    LongPressDirective
   ]
 })
 export class SharedModule { }

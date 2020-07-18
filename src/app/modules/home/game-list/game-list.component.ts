@@ -19,7 +19,7 @@ export class GameListComponent implements OnInit {
   /**
    * Complete game list
    */
-  public gameList: {date: Date, games: Game[]}[];
+  public gameList: {date: Date, games: Game[]}[] = [];
 
   /**
    * Today's date
@@ -31,19 +31,19 @@ export class GameListComponent implements OnInit {
     private readonly headerService: HeaderService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.headerService.title = 'Game List';
     this.gameService.elementListSubject.subscribe((gameList: Game[]) => {
       this.gameList = [];
       for (const game of gameList) {
         const indexSameMonth = this.gameList.findIndex(gamesInMonth =>
-          gamesInMonth.games[0].date.getMonth() === game.date.getMonth()
-          && gamesInMonth.games[0].date.getFullYear() === game.date.getFullYear()
+          (gamesInMonth.games[0].date as Date).getMonth() === (gamesInMonth.games[0].date as Date).getMonth()
+          && (gamesInMonth.games[0].date as Date).getFullYear() === (gamesInMonth.games[0].date as Date).getFullYear()
         );
         if (indexSameMonth >= 0) {
           this.gameList[indexSameMonth].games.push(game);
         } else {
-          this.gameList.push({ date: game.date, games: [game] });
+          this.gameList.push({ date: game.date as Date, games: [game] });
         }
       }
     });

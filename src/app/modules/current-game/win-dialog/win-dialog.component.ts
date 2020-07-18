@@ -25,13 +25,13 @@ export class WinDialogComponent implements OnInit {
   /**
    * The ordered score list of the current game
    */
-  public orderedScoreList: Score[];
+  public orderedScoreList: Score[] = [];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {game: Game, canEditGame: boolean}
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.orderedScoreList = Object.assign([], this.data.game.scoreList);
 
     if (this.data.game.gameCategory.goal === Goal.highestScore) {

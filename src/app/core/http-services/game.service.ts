@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { User } from 'firebase/app';
+import { User } from '@firebase/auth-types';
 import { ReplaySubject } from 'rxjs';
 
 import { Game } from '../../shared/models/game.model';
@@ -33,23 +33,26 @@ export class GameService extends FirstoreService<Game> {
       () => this.firestore.collection(
         'games',
         ref => ref
-          .where('userIds', 'array-contains', this.userService.user.uid)
+          .where('userIds', 'array-contains', this.userService.user?.uid)
           .orderBy('date', 'desc')
       ),
       (game: Game) => {
-        game.date = new Date(game.date);
+        game.date = new Date(game.date as Date);
         return game;
       },
       (g1: Game, g2: Game) => g1.date < g2.date ? 1 : -1,
       (game: Game) => {
-        game.date = new Date((game.date as any).seconds * 1000);
+        game.date = new Date((game.date as {seconds: number}).seconds * 1000);
         return game;
       },
       (game: Game) => {
-        game.adminIds = [this.userService.user.uid];
-        const userIdIndex = game.userIds.findIndex(uid => uid === this.userService.user.uid);
-        if (userIdIndex === -1) {
-          game.userIds.push(this.userService.user.uid);
+        const user = this.userService.user;
+        if (!!user) {
+          game.adminIds = [user.uid];
+          const userIdIndex = game.userIds.findIndex(uid => uid === user.uid);
+          if (userIdIndex === -1) {
+            game.userIds.push(user.uid);
+          }
         }
         return game;
       }
@@ -59,10 +62,10 @@ export class GameService extends FirstoreService<Game> {
   /**
    * Check if the current user can edit the current game
    */
-  public getCanEditGame(game: Game, user: User): boolean {
+  public getCanEditGame(game: Game, user: User | null): boolean {
     if (game.isSynced) {
       if (!!user) {
-        return game.adminIds.includes(this.userService.user.uid);
+        return game.adminIds.includes(user.uid);
       }
       return !game.scoreList.map(score => score.player).some(player => player.isUser);
     }

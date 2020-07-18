@@ -1,6 +1,6 @@
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestoreCollection } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
+import { Observable, from, Subscription, ReplaySubject } from 'rxjs';
 import { first, tap, map, flatMap } from 'rxjs/operators';
 import { UUID } from 'angular2-uuid';
 
@@ -16,7 +16,7 @@ export class FirstoreService<T extends FirestoreElement> {
   /**
    * Subject of all the elements
    */
-  public elementListSubject: BehaviorSubject<T[]>;
+  public elementListSubject: ReplaySubject<T[]> = new ReplaySubject(1);
 
   /**
    * Boolean to know if the user is logged in
@@ -26,7 +26,7 @@ export class FirstoreService<T extends FirestoreElement> {
   /**
    * Subcription to the element list for sync
    */
-  private elementListSubscription: Subscription;
+  private elementListSubscription: Subscription | null = null;
 
   constructor(
     protected readonly auth: AngularFireAuth,
@@ -61,7 +61,7 @@ export class FirstoreService<T extends FirestoreElement> {
   /**
    * Get an observable of a element find by its id
    */
-  public getElementById(id: string): Observable<T> {
+  public getElementById(id: string): Observable<T | undefined> {
     return this.auth.user.pipe(
       flatMap(user => {
         if (user) {
@@ -79,7 +79,7 @@ export class FirstoreService<T extends FirestoreElement> {
   /**
    * Return an observable of a element list filtered by a list of ids
    */
-  public getElementListById(idList: string[]): Observable<T[]> {
+  public getElementListById(idList: string[]): Observable<(T | undefined)[]> {
     return this.elementListSubject.pipe(
       first(),
       map((elementList: T[]) =>
@@ -199,11 +199,12 @@ export class FirstoreService<T extends FirestoreElement> {
   private initElementListSubject(
     mapFunction: (element: T) => T,
     sortFuntion: (element1: T, element2: T) => number
-  ) {
-    const elements: T[] = (JSON.parse(localStorage.getItem(this.elementNameInLocalStorage)) || [])
+  ): void {
+    const elementsString = localStorage.getItem(this.elementNameInLocalStorage);
+    const elements: T[] = JSON.parse(elementsString ? elementsString : '[]')
       .map(mapFunction)
       .sort(sortFuntion) || [];
-    this.elementListSubject = new BehaviorSubject<T[]>(elements);
+    this.elementListSubject.next(elements);
   }
 
   /**
@@ -214,11 +215,11 @@ export class FirstoreService<T extends FirestoreElement> {
     firestoreQuery: () => AngularFirestoreCollection<T>,
     mapFunction: (element: T) => T,
     mapFunctionBeforePush: (element: T) => T
-  ) {
+  ): void {
     if (!this.elementListSubscription || this.elementListSubscription.closed) {
       this.pushNotSyncedElements(firestoreCollection, mapFunctionBeforePush).subscribe(() => {
         this.elementListSubscription = firestoreQuery().snapshotChanges().subscribe(documentChangeActions => {
-          let elements = [];
+          let elements: T[] = [];
           documentChangeActions.forEach((documentChangeAction) => elements.push(documentChangeAction.payload.doc.data()));
           elements = elements.map(mapFunction);
           localStorage.setItem(this.elementNameInLocalStorage, JSON.stringify(elements));
@@ -234,7 +235,7 @@ export class FirstoreService<T extends FirestoreElement> {
   private pushNotSyncedElements(
     firestoreCollection: () => AngularFirestoreCollection<T>,
     mapFunction: (element: T) => T
-  ) {
+  ): Observable<T[]> {
     return this.elementListSubject.pipe(
       first(),
       tap(async elementList => {
@@ -255,7 +256,7 @@ export class FirstoreService<T extends FirestoreElement> {
   /**
    * Stop checking database updates
    */
-  private stopSyncElements() {
-    this.elementListSubscription.unsubscribe();
+  private stopSyncElements(): void {
+    this.elementListSubscription?.unsubscribe();
   }
 }
