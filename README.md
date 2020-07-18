@@ -6,9 +6,9 @@ The HiScore project is an Angular 9 app based on the concept of the KeepScore ap
 
 [![GitHub forks](https://img.shields.io/github/forks/LirycMoaners/HiScore.svg?style=social&label=Fork)](https://github.com/LirycMoaners/HiScore/fork) [![GitHub stars](https://img.shields.io/github/stars/LirycMoaners/HiScore.svg?style=social&label=Star)](https://github.com/LirycMoaners/HiScore) 
 
-It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.0.
+It was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.2.
 
-It includes build for Android with [Capacitor](https://github.com/ionic-team/capacitor) version 2.0.0.
+It includes build for Android with [Capacitor](https://github.com/ionic-team/capacitor) version 2.2.1.
 
 It includes build for Desktop with [Electron](https://github.com/electron/electron) version 8.0.0.
 
