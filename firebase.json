@@ -1,7 +1,7 @@
 {
   "hosting": {
     "target": "hi-score",
-    "public": "dist/hi-score",
+    "public": "dist/hi-score-gzip",
     "ignore": [
       "**/.*"
     ],

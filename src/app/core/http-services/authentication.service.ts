@@ -5,7 +5,7 @@ import { of, Observable, from } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { Plugins, registerWebPlugin, WebPlugin } from '@capacitor/core';
 import '@codetrix-studio/capacitor-google-auth';
-import { FacebookLoginResponse, FacebookLogin } from '@rdlabo/capacitor-facebook-login';
+import { FacebookLoginResponse, FacebookLogin } from '@capacitor-community/facebook-login';
 
 import { UserService } from './user.service';
 import { Authentication } from '@codetrix-studio/capacitor-google-auth/dist/esm/user';
