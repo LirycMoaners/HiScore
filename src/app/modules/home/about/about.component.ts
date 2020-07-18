@@ -10,14 +10,13 @@ import { environment } from '../../../../environments/environment';
 })
 export class AboutComponent implements OnInit {
 
-  public links: any;
+  public links = environment.links;
 
   constructor(
     private readonly headerService: HeaderService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.headerService.title = 'About';
-    this.links = environment.links;
   }
 }

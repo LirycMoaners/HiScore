@@ -24,14 +24,14 @@ export class NonUserPlayerService extends FirstoreService<Player> {
       'nonUserPlayers',
       () => this.firestore
         .collection('userDatas')
-        .doc(this.userService.user.uid)
+        .doc(this.userService.user?.uid)
         .collection('nonUserPlayers'),
       () => this.firestore
         .collection('userDatas')
-        .doc(this.userService.user.uid)
+        .doc(this.userService.user?.uid)
         .collection('nonUserPlayers', ref => ref.orderBy('displayName')),
       (player: Player) => player,
-      (p1: Player, p2: Player) => p1.displayName.localeCompare(p2.displayName)
+      (p1: Player, p2: Player) => (!!p1.displayName ? p1.displayName : '').localeCompare(!!p2.displayName ? p2.displayName : '')
     );
   }
 }

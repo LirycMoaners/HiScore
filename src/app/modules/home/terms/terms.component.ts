@@ -13,7 +13,7 @@ export class TermsComponent implements OnInit {
   /**
    * The HiScore web app URL
    */
-  public websiteURL: string;
+  public websiteURL = environment.links.hiScoreWeb;
 
   constructor(
     private readonly headerService: HeaderService
@@ -21,6 +21,5 @@ export class TermsComponent implements OnInit {
 
   ngOnInit(): void {
     this.headerService.title = 'Terms and conditions of use, privacy policy and personal data protection';
-    this.websiteURL = environment.links.hiScoreWeb;
   }
 }

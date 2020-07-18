@@ -6,7 +6,9 @@ export class ImageResizer {
   public static resizeImage(img: HTMLImageElement, maxWidth: number, maxHeight: number): string {
     const canvas = document.createElement('canvas');
     const ctxForNonResizedImage = canvas.getContext('2d');
-    ctxForNonResizedImage.drawImage(img, 0, 0);
+    if (!!ctxForNonResizedImage) {
+      ctxForNonResizedImage.drawImage(img, 0, 0);
+    }
 
     let width = img.width;
     let height = img.height;
@@ -26,7 +28,9 @@ export class ImageResizer {
     canvas.height = height;
 
     const ctxForResizedImage = canvas.getContext('2d');
-    ctxForResizedImage.drawImage(img, 0, 0, width, height);
+    if (!!ctxForResizedImage) {
+      ctxForResizedImage.drawImage(img, 0, 0, width, height);
+    }
     const dataUrl = canvas.toDataURL('image/png');
 
     img.remove();

@@ -5,7 +5,14 @@
   "projects": {
     "hi-score": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -29,7 +36,15 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "webWorkerTsConfig": "tsconfig.worker.json"
+            "allowedCommonJsDependencies": [
+              "hammerjs",
+              "firebase/app",
+              "@firebase/app",
+              "@firebase/auth",
+              "@firebase/firestore",
+              "@firebase/util",
+              "@firebase/component"
+            ]
           },
           "configurations": {
             "production": {
@@ -51,13 +66,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "1.5mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
                 }
               ],
               "ngswConfigPath": "ngsw-config.json"
@@ -105,8 +120,7 @@
             "tsConfig": [
               "tsconfig.app.json",
               "tsconfig.spec.json",
-              "e2e/tsconfig.json",
-              "tsconfig.worker.json"
+              "e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"

@@ -20,7 +20,7 @@ export class NewPlayerScoreDialogComponent {
   /**
    * Method to close the dialog and emit the score for new players
    */
-  public closeDialog(isNewPlayerScoreAverage: boolean) {
+  public closeDialog(isNewPlayerScoreAverage: boolean): void {
     this.dialogRef.close(isNewPlayerScoreAverage);
   }
 }

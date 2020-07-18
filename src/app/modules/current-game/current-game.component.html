@@ -19,7 +19,7 @@
             type="number"
             class="input-score"
             [ngModel]="score.roundScoreList[0]"
-            (change)="onChangeRoundScore(score, $event.target)"
+            (change)="onChangeRoundScore(score, $event)"
             aria-label="Round score">
           <button mat-icon-button
             class="score-button"
@@ -38,7 +38,7 @@
               <img *ngIf="score.player.isUser && score.player.photoURL"
                 class="player-picture"
                 [src]="score.player.photoURL"
-                [alt]="score.player.displayName + 'player picture'"
+                [alt]="score.player.displayName! + 'player picture'"
               >
               {{score.player.displayName}}
             </h2>

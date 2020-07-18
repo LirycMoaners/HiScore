@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { first, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -11,7 +12,7 @@ export class AuthGuard implements CanActivate {
     private readonly fireAuth: AngularFireAuth
   ) { }
 
-  public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.fireAuth.user.pipe(
       first(),
       map(user => {
@@ -22,6 +23,6 @@ export class AuthGuard implements CanActivate {
         }
         return true;
       })
-    )
+    );
   }
 }

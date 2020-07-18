@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
   /**
    * Sidenav menu
    */
-  @ViewChild('sidenav', {static: false}) sidenav: MatSidenav;
+  @ViewChild('sidenav', {static: false}) sidenav!: MatSidenav;
 
   constructor(
     public headerService: HeaderService,

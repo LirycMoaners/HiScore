@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
@@ -12,17 +12,23 @@ import { AuthenticationService } from '../../../core/http-services/authenticatio
   templateUrl: './sign-up-dialog.component.html',
   styleUrls: ['./sign-up-dialog.component.scss']
 })
-export class SignUpDialogComponent implements OnInit {
+export class SignUpDialogComponent {
 
   /**
    * Sign up form group
    */
-  public signUpForm: FormGroup;
+  public signUpForm: FormGroup = this.formBuilder.group({
+    picture: ['', []],
+    username: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
+    areTermsAccepted: ['', Validators.required]
+  });
 
   /**
    * Error message from register an account
    */
-  public errorMessage: string;
+  public errorMessage = '';
 
   /**
    * Used to show the password or not
@@ -32,7 +38,7 @@ export class SignUpDialogComponent implements OnInit {
   /**
    * Picture in base 64 before upload
    */
-  public picture: SafeUrl;
+  public picture!: SafeUrl;
 
   constructor(
     private readonly dialogRef: MatDialogRef<SignUpDialogComponent>,
@@ -43,27 +49,23 @@ export class SignUpDialogComponent implements OnInit {
     private readonly snackBar: MatSnackBar,
   ) { }
 
-  ngOnInit(): void {
-    this.initForm();
-  }
-
   /**
    * Create a username/password account
    */
-  public signUp() {
-    const email = this.signUpForm.get('email').value;
-    const password = this.signUpForm.get('password').value;
-    const username = this.signUpForm.get('username').value;
-    const picture = this.signUpForm.get('picture').value;
-    const areTermsAccepted = this.signUpForm.get('areTermsAccepted').value;
+  public signUp(): void {
+    const email = this.signUpForm.get('email')?.value;
+    const password = this.signUpForm.get('password')?.value;
+    const username = this.signUpForm.get('username')?.value;
+    const picture = this.signUpForm.get('picture')?.value;
+    const areTermsAccepted = this.signUpForm.get('areTermsAccepted')?.value;
 
     const signUpCallback = () => {
       this.router.navigate(['/game-list']);
-      this.snackBar.open('Successfully registerd !', null, { duration: 3000 });
+      this.snackBar.open('Successfully registerd !', undefined, { duration: 3000 });
       this.dialogRef.close(true);
     };
 
-    if (areTermsAccepted) {
+    if (!!email && !!password && !!username && areTermsAccepted) {
       if (!!picture) {
         const reader  = new FileReader();
         reader.onload = (e) => {
@@ -73,9 +75,9 @@ export class SignUpDialogComponent implements OnInit {
               signUpCallback,
               (error) => this.errorMessage = error
             );
-          }
-          img.src = e.target.result as string;
-        }
+          };
+          img.src = e.target ? (e.target.result as string) : '';
+        };
         reader.readAsDataURL(picture);
       } else {
         this.authenticationService.signUp(email, password, username).subscribe(
@@ -89,9 +91,9 @@ export class SignUpDialogComponent implements OnInit {
   /**
    * Update user's picture
    */
-  public onFileChange(event) {
-    if (event.target.files && event.target.files.length) {
-      const [file]: [File] = event.target.files;
+  public onFileChange(event: Event): void {
+    const file: File | null | undefined = (event.target as HTMLInputElement)?.files?.item(0);
+    if (!!file) {
       if (file.type === 'image/jpeg' || file.type === 'image/png') {
         this.signUpForm.patchValue({
           picture: file
@@ -104,22 +106,9 @@ export class SignUpDialogComponent implements OnInit {
   /**
    * Redirect to terms page
    */
-  public openTerms(event: Event) {
+  public openTerms(event: Event): void {
     event.preventDefault();
     this.router.navigate(['/terms']);
     this.dialogRef.close();
-  }
-
-  /**
-   * Init the form group with form controls
-   */
-  private initForm() {
-    this.signUpForm = this.formBuilder.group({
-      picture: ['', []],
-      username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
-      areTermsAccepted: ['', Validators.required]
-    });
   }
 }

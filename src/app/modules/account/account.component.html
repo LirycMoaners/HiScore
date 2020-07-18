@@ -19,8 +19,8 @@
         <mat-label>Display name</mat-label>
         <input
           matInput
-          [ngModel]="userService.user.displayName"
-          (keyup.enter)="$event.target.blur()"
+          [ngModel]="userService.user?.displayName"
+          (keyup.enter)="onUsernameKeyUp($event)"
           (blur)="onUsernameChange($event)"
           required
         >
@@ -53,7 +53,7 @@
         </div>
       </ng-container>
       <ng-template #provider>
-        <div *ngFor="let provider of userService.user.providerData">You are logged in with your {{provider.providerId}} account.</div>
+        <div *ngFor="let provider of userService.user.providerData">You are logged in with your {{provider?.providerId}} account.</div>
       </ng-template>
       <button mat-raised-button color="warn" class="delete" (click)="deleteUser()">Delete account</button>
     </div>
