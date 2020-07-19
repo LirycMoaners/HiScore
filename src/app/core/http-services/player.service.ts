@@ -25,7 +25,7 @@ export class PlayerService extends FirstoreService<Player> {
       () => this.firestore
         .collection('players', ref => ref.orderBy('displayName')),
       (player: Player) => player,
-      (p1: Player, p2: Player) => p1.displayName.localeCompare(p2.displayName)
+      (p1: Player, p2: Player) => (!!p1.displayName ? p1.displayName : '').localeCompare(!!p2.displayName ? p2.displayName : '')
     );
   }
 }

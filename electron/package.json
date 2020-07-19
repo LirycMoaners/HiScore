@@ -1,7 +1,7 @@
 {
   "name": "hi-score-app",
   "productName": "HiScore",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "An Amazing Capacitor App",
   "main": "index.js",
   "scripts": {
@@ -9,12 +9,12 @@
     "electron:package": "electron-packager . hi-score --overwrite --asar=true --platform=win32 --arch=ia32 --icon=app/favicon.ico --prune=true --out=release-builds --version-string.CompanyName=CL --version-string.FileDescription=CL --version-string.ProductName=\"HiScore\""
   },
   "dependencies": {
-    "@capacitor/electron": "^2.0.0",
-    "electron-is-dev": "^1.1.0"
+    "@capacitor/electron": "^2.2.1",
+    "electron-is-dev": "^1.2.0"
   },
   "devDependencies": {
-    "electron": "^8.0.0",
-    "electron-packager": "^14.2.1"
+    "electron": "^8.4.0",
+    "electron-packager": "^15.0.0"
   },
   "keywords": [
     "capacitor",

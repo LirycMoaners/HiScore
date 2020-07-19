@@ -6,8 +6,8 @@ android {
         applicationId "com.cyrillefebvre.hiscore"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "2.0.2"
+        versionCode 8
+        versionName "2.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -42,7 +42,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
-    implementation 'com.facebook.android:facebook-android-sdk:6.4.0'
+    implementation 'com.facebook.android:facebook-android-sdk:7.1.0'
 }
 
 apply from: 'capacitor.build.gradle'
@@ -54,7 +54,7 @@ try {
 
         dependencies {
           // Add the Firebase SDK for Google Analytics
-          implementation 'com.google.firebase:firebase-analytics:17.3.0'
+          implementation 'com.google.firebase:firebase-analytics:17.4.4'
         }
     }
 } catch(Exception ignored) {

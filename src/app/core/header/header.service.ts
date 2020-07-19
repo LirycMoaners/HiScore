@@ -11,7 +11,7 @@ export class HeaderService {
   /**
    * Title showed in the main bar
    */
-  public title: string;
+  public title = '';
 
   /**
    * Specify if the main bar is on the left side of the screen

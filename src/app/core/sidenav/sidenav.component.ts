@@ -48,7 +48,7 @@ export class SidenavComponent {
   /**
    * Log out
    */
-  public signOut() {
+  public signOut(): void {
     this.authenticationService.signOut();
     this.headerService.toggleMenu.emit();
     this.router.navigate(['/game-list']);

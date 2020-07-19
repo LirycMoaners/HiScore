@@ -1,9 +1,6 @@
 @import './color';
 
-$break-small: 500px;
-$break-medium: 1200px;
-
-div {
+::ng-deep div {
   &.page {
     display: flex;
     flex-direction: column;
@@ -16,7 +13,7 @@ div {
     section {
       flex: 1;
       overflow: auto;
-      padding: 5px 5px 0 5px;
+      padding: 15px;
     }
 
     footer {

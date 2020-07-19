@@ -27,11 +27,11 @@ export class GameCategoryService extends FirstoreService<GameCategory> {
       'gameCategories',
       () => this.firestore
         .collection('userDatas')
-        .doc(this.userService.user.uid)
+        .doc(this.userService.user ? this.userService.user.uid : undefined)
         .collection('gameCategories'),
       () => this.firestore
         .collection('userDatas')
-        .doc(this.userService.user.uid)
+        .doc(this.userService.user ? this.userService.user.uid : undefined)
         .collection('gameCategories', ref => ref.orderBy('name')),
       (gameCategory: GameCategory) => gameCategory,
       (g1: GameCategory, g2: GameCategory) => g1.name.localeCompare(g2.name)

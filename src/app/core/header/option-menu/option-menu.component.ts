@@ -22,7 +22,7 @@ export class OptionMenuComponent implements OnInit {
   /**
    * The currently played game
    */
-  public currentGame: Game;
+  public currentGame!: Game;
 
   /**
    * Indicates if the user can modify the game
@@ -36,7 +36,7 @@ export class OptionMenuComponent implements OnInit {
     private readonly userService: UserService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.gameService.currentGame.pipe(first()).subscribe(game => {
       this.currentGame = game;
       this.canEditGame = this.gameService.getCanEditGame(game, this.userService.user);
@@ -46,14 +46,14 @@ export class OptionMenuComponent implements OnInit {
   /**
    * Emit that we want to edit the last round
    */
-  public editLastRound() {
+  public editLastRound(): void {
     this.optionMenuService.editLastRound$.next();
   }
 
   /**
    * Emit that we want to end the game
    */
-  public endGame() {
+  public endGame(): void {
     this.optionMenuService.endGame$.next();
   }
 }

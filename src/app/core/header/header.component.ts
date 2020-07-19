@@ -19,7 +19,7 @@ export class HeaderComponent {
     public router: Router
   ) { }
 
-  openMenu() {
+  public openMenu(): void {
     this.headerService.toggleMenu.emit();
   }
 }

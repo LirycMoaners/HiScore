@@ -11,12 +11,12 @@ export class LongPressDirective {
   /**
    * The emitter of the long press event
    */
-  @Output() longPressDetected: EventEmitter<any> = new EventEmitter<any>();
+  @Output() longPressDetected: EventEmitter<void> = new EventEmitter<void>();
 
   /**
    * Keep the timer of the press event
    */
-  private pressTimer: number;
+  private pressTimer = 0;
 
   constructor() { }
 
@@ -25,7 +25,7 @@ export class LongPressDirective {
    */
   @HostListener('touchstart', ['$event'])
   @HostListener('mousedown', ['$event'])
-  public onMouseDown(event: Event) {
+  public onMouseDown(event: Event): void {
     this.pressTimer = window.setTimeout(() => {
       event.preventDefault();
       this.longPressDetected.emit();
@@ -38,7 +38,7 @@ export class LongPressDirective {
    */
   @HostListener('touchend')
   @HostListener('mouseup')
-  public onMouseUp() {
+  public onMouseUp(): void {
     clearTimeout(this.pressTimer);
   }
 }

@@ -20,7 +20,7 @@
             (optionSelected)="addPlayer($event.option.value, newPlayer)"
           >
             <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl" class="player-option">
-              <img *ngIf="pl.isUser && pl.photoURL" class="picture" [src]="pl.photoURL" [alt]="pl.displayName + 'player picture'">
+              <img *ngIf="pl.isUser && pl.photoURL" class="picture" [src]="pl.photoURL" [alt]="pl.displayName! + 'player picture'">
               <span class="name">{{pl.displayName}}</span>
               <button *ngIf="!pl.isUser" class="delete" mat-icon-button color="warn" (click)="deleteNonUserPlayer($event, pl)">
                 <mat-icon>delete</mat-icon>
@@ -41,16 +41,16 @@
               matInput
               [ngModel]="gamePlayerList[i].displayName"
               (ngModelChange)="filterPlayerList($event)"
-              (change)="changePlayer(player, $event.target.value, playerInput)"
+              (change)="changePlayer(player, $event, playerInput)"
               [matAutocomplete]="auto"
               aria-label="Player name">
             <mat-autocomplete
               #auto="matAutocomplete"
               autoActiveFirstOption
-              (optionSelected)="changePlayer(player, $event.option.value, playerInput)"
+              (optionSelected)="changePlayer(player, $event, playerInput)"
             >
               <mat-option *ngFor="let pl of filteredPlayerList" [value]="pl" class="player-option">
-                <img *ngIf="pl.isUser && pl.photoURL" class="picture" [src]="pl.photoURL" [alt]="pl.displayName + 'player picture'">
+                <img *ngIf="pl.isUser && pl.photoURL" class="picture" [src]="pl.photoURL" [alt]="pl.displayName! + 'player picture'">
                 <span class="name">{{pl.displayName}}</span>
               </mat-option>
             </mat-autocomplete>
@@ -93,8 +93,7 @@
       <div class="game-category-details" *ngIf="!!game && !!game.gameCategory">
         <mat-form-field>
           <mat-select [(ngModel)]="game.gameCategory.endingType" placeholder="Ending type">
-            <mat-option [value]="null">None</mat-option>
-            <mat-option *ngFor="let endingType of EndingType | keyEnum" [value]="endingType.value">
+            <mat-option *ngFor="let endingType of EndingType | keyvalue" [value]="endingType.value">
               {{endingType.value}}
             </mat-option>
           </mat-select>
@@ -104,7 +103,7 @@
         </mat-form-field>
         <mat-form-field>
           <mat-select [(ngModel)]="game.gameCategory.goal" placeholder="Goal">
-            <mat-option *ngFor="let goal of Goal | keyEnum" [value]="goal.value">
+            <mat-option *ngFor="let goal of Goal | keyvalue" [value]="goal.value">
               {{goal.value}}
             </mat-option>
           </mat-select>
