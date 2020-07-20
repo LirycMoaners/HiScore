@@ -4,8 +4,8 @@
   "theme_color": "#9c27b0",
   "background_color": "#303030",
   "display": "standalone",
-  "scope": "/hi-score/",
-  "start_url": "/hi-score/",
+  "scope": "./",
+  "start_url": "./",
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",
